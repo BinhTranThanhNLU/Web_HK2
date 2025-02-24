@@ -1,6 +1,6 @@
-
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!-- ========================= FOOTER ========================= -->
 <footer class="section-footer border-top bg-light py-4">
     <div class="container">
@@ -33,9 +33,11 @@
             <div class="col-md-3">
                 <h6 class="text-uppercase">Kết nối với chúng tôi</h6>
                 <a href="#" class="text-muted me-3"><i class="fab fa-facebook fa-lg"></i></a> <a href="#"
-                                                                                                 class="text-muted me-3"><i class="fab fa-twitter fa-lg"></i></a> <a href="#"
-                                                                                                                                                                     class="text-muted me-3"><i class="fab fa-instagram fa-lg"></i></a> <a href="#"
-                                                                                                                                                                                                                                           class="text-muted"><i class="fab fa-linkedin fa-lg"></i></a>
+                                                                                                 class="text-muted me-3"><i
+                    class="fab fa-twitter fa-lg"></i></a> <a href="#"
+                                                             class="text-muted me-3"><i
+                    class="fab fa-instagram fa-lg"></i></a> <a href="#"
+                                                               class="text-muted"><i class="fab fa-linkedin fa-lg"></i></a>
             </div>
         </div>
 
