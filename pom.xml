@@ -24,6 +24,8 @@
             <version>6.1.0</version>
             <scope>provided</scope>
         </dependency>
+
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -43,6 +45,11 @@
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
             <version>3.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version> <!-- Hoặc phiên bản mới nhất -->
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.glassfish.web/jakarta.servlet.jsp.jstl -->
         <dependency>
@@ -50,6 +57,10 @@
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <version>3.0.1</version>
         </dependency>
+
+
+        <!-- Thư viện Servlet API -->
+
 
 
     </dependencies>
