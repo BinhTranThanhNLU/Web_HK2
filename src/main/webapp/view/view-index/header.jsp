@@ -10,39 +10,28 @@
 
 <head>
     <meta charset="utf-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="${pageContext.request.contextPath}/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
-
     <!-- jQuery -->
     <script src="${pageContext.request.contextPath}/js/jquery-2.0.0.min.js" type="text/javascript"></script>
-
     <!-- Bootstrap4 files-->
     <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js" type="text/javascript"></script>
     <link href="<%= request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-
     <!-- Font awesome 5 -->
     <link href="${pageContext.request.contextPath}/fonts/fontawesome/css/all.min.css" type="text/css"
           rel="stylesheet">
-
     <!-- custom style -->
-
-
     <link href="${pageContext.request.contextPath}/css/ui.css" rel="stylesheet" type="text/css"/>
     <link href="${pageContext.request.contextPath}/css/responsive.css" rel="stylesheet"
           media="only screen and (max-width: 1200px)"/>
-
     <!-- custom javascript -->
     <script src="${pageContext.request.contextPath}/js/script.js" type="text/javascript"></script>
-
     <script type="text/javascript">
         /// some script
-
         // jquery ready start
         $(document).ready(function () {
             // jQuery code
-
         });
         // jquery end
     </script>
@@ -81,7 +70,6 @@
                             <span class="dark-transp"> | </span>
                             <a href="<%= request.getContextPath() %>/view/view-account/register.jsp">Đăng Ký</a>
                         </div>
-
                     </div>
                     <a href="/cart.html" class="widget-header pl-3 ml-3">
                         <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>

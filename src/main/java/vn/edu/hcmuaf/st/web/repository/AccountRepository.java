@@ -75,6 +75,23 @@ public class AccountRepository {
         }
     }
 
+    public boolean updatePasswordByEmail(String email, String hashedPassword) {
+        String sql = "UPDATE users SET password = ? WHERE email = ?";
+
+        try (Connection conn = MysqlConfig.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setString(1, hashedPassword);
+            pst.setString(2, email);
+
+            return pst.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     // Kiểm tra username có tồn tại không
 //    public boolean isUsernameExists(String username) {

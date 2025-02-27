@@ -1,20 +1,20 @@
 package vn.edu.hcmuaf.st.web.controller;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
+
+
 import vn.edu.hcmuaf.st.web.service.AccountService;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(urlPatterns = {"/sign", "/register"})
+@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password","/enter-otp"})
 public class AccountController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private final AccountService accountService = new AccountService(); // Sử dụng một AccountService duy nhất
+    private final AccountService accountService = new AccountService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -25,6 +25,12 @@ public class AccountController extends HttpServlet {
         switch (action) {
             case "/register":
                 request.getRequestDispatcher("/view/view-account/register.jsp").forward(request, response);
+                break;
+            case "/forgot-password":
+                request.getRequestDispatcher("/view/view-account/forgot-password.jsp").forward(request, response);
+                break;
+            case "/enter-otp":
+                request.getRequestDispatcher("/view/view-account/enter-otp.jsp").forward(request, response);
                 break;
             case "/sign":
             default:
@@ -44,13 +50,23 @@ public class AccountController extends HttpServlet {
                 handleRegister(request, response);
                 break;
             case "/sign":
-            default:
                 handleLogin(request, response);
+                break;
+            case "/forgot-password":
+                handleForgotPassword(request, response);
+                break;
+            case "/enter-otp":
+                handleOtpValidation(request, response);
+                break;
+            case "/reset-password":
+                handleResetPassword(request, response);
+                break;
+            default:
+                response.sendRedirect("/sign");
                 break;
         }
     }
 
-    // Cài đặt chung cho request và response
     private void commonSettings(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setCharacterEncoding("UTF-8");
@@ -61,7 +77,6 @@ public class AccountController extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
     }
 
-    // Xử lý đăng nhập
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
@@ -83,7 +98,6 @@ public class AccountController extends HttpServlet {
         }
     }
 
-    // Xử lý đăng ký
     private void handleRegister(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
@@ -93,7 +107,6 @@ public class AccountController extends HttpServlet {
         String email = request.getParameter("email");
         String phoneNumber = request.getParameter("phoneNumber");
 
-        // Kiểm tra dữ liệu đầu vào
         if (username == null || password == null || confirmPassword == null ||
                 fullname == null || email == null || phoneNumber == null ||
                 username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() ||
@@ -109,7 +122,6 @@ public class AccountController extends HttpServlet {
             return;
         }
 
-        // Đăng ký tài khoản
         boolean isRegistered = accountService.register(username, password, fullname, email, phoneNumber);
         if (isRegistered) {
             response.sendRedirect(request.getContextPath() + "/sign?success=registered");
@@ -117,6 +129,80 @@ public class AccountController extends HttpServlet {
             request.setAttribute("error", "Tên người dùng đã tồn tại hoặc lỗi hệ thống!");
             request.getRequestDispatcher("/view/view-account/register.jsp").forward(request, response);
         }
+    }
 
+    private void handleForgotPassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String userEmail = request.getParameter("email");
+        HttpSession mySession = request.getSession();
+
+        if (userEmail == null || userEmail.trim().isEmpty()) {
+            response.sendRedirect("forgot-password.jsp?error=Invalid Email");
+            return;
+        }
+
+        int otpvalue = accountService.generateOTP();
+
+        try {
+            accountService.sendOTP(userEmail, otpvalue);
+
+            request.setAttribute("message", "OTP đã được gửi tới email của bạn.");
+            mySession.setAttribute("otp", otpvalue);
+            mySession.setAttribute("email", userEmail);
+
+            request.getRequestDispatcher("/view/view-account/enter-otp.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServletException("Lỗi khi gửi OTP qua email", e);
+        }
+    }
+
+    // Xử lý xác thực OTP
+    public void handleOtpValidation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int value = Integer.parseInt(request.getParameter("otp"));
+        HttpSession session = request.getSession();
+        int otp = (int) session.getAttribute("otp");
+        RequestDispatcher dispatcher;
+
+        if (value == otp) {
+            request.setAttribute("email", request.getParameter("email"));
+            request.setAttribute("status", "success");
+            dispatcher = request.getRequestDispatcher("/view/view-account/reset-password.jsp");
+        } else {
+            request.setAttribute("message", "wrong otp");
+            dispatcher = request.getRequestDispatcher("/view/view-account/enter-otp.jsp");
+        }
+        dispatcher.forward(request, response);
+    }
+
+    private void handleResetPassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+        String password = request.getParameter("password");
+        String confPassword = request.getParameter("confPassword");
+        String email = (String) session.getAttribute("email");
+
+        RequestDispatcher dispatcher;
+
+        if (password == null || confPassword == null || email == null || !password.equals(confPassword)) {
+            request.setAttribute("status", "invalidInput");
+            dispatcher = request.getRequestDispatcher("/view/view-account/reset-password.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+
+        boolean isUpdated = accountService.updatePassword(email, password);
+
+        if (isUpdated) {
+            request.setAttribute("status", "resetSuccess");
+            dispatcher = request.getRequestDispatcher("/view/view-account/signin.jsp");
+        } else {
+            request.setAttribute("status", "resetFailed");
+            dispatcher = request.getRequestDispatcher("/view/view-account/reset-password.jsp");
+        }
+
+        dispatcher.forward(request, response);
     }
 }
