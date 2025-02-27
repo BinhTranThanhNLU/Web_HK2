@@ -7,13 +7,14 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="/view/view-index/header.jsp" %>
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
-    <title>Đăng Ký</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<!-- ========================= SECTION CONTENT ========================= -->
+<%@ include file="/view/view-index/header.jsp" %>
 <section class="section-content padding-y">
     <!-- ============================ COMPONENT REGISTER   ================================= -->
     <!-- ============================ COMPONENT ĐĂNG KÝ ================================= -->
@@ -77,8 +78,8 @@
 
     <!-- ============================ COMPONENT REGISTER  END.// ================================= -->
 </section>
-
-<!-- ========================= SECTION CONTENT END// ========================= -->
 <%@ include file="/view/view-index/footer.jsp" %>
 </body>
 </html>
+
+

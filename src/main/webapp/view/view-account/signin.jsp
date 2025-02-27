@@ -7,15 +7,15 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="/view/view-index/header.jsp" %>
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
-    <title>Đăng Nhập</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-
-<!-- ========================= SECTION CONTENT ========================= -->
+<%@ include file="/view/view-index/header.jsp" %>
 <section class="section-conten padding-y" style="min-height:84vh">
     <!-- ============================ COMPONENT LOGIN   ================================= -->
     <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
@@ -29,13 +29,12 @@
                     <input name="password" type="password" class="form-control" placeholder="Mật Khẩu" required>
                 </div>
                 <div class="form-group">
-                    <a href="#" class="float-right">Quên Mật Khẩu?</a>
+                    <a href="<%= request.getContextPath() %>/view/view-account/forgot-password.jsp" class="float-right">Quên Mật Khẩu?</a>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block"> Đăng Nhập </button>
                 </div>
             </form>
-
             <!-- Nút đăng nhập bằng Google -->
             <div class="form-group">
                 <a href="https://accounts.google.com/o/oauth2/auth?client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=email%20profile"
