@@ -77,9 +77,9 @@
                     <div class="widget-header">
                         <small class="title text-muted">Khách!</small>
                         <div>
-                            <a href="<%= request.getContextPath() %>/view/view-login/signin.jsp">Đăng Nhập</a>
+                            <a href="<%= request.getContextPath() %>/view/view-account/signin.jsp">Đăng Nhập</a>
                             <span class="dark-transp"> | </span>
-                            <a href="<%= request.getContextPath() %>/view/view-login/register.jsp">Đăng Ký</a>
+                            <a href="<%= request.getContextPath() %>/view/view-account/register.jsp">Đăng Ký</a>
                         </div>
 
                     </div>
