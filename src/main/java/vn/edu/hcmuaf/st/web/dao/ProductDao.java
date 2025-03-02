@@ -2,8 +2,14 @@ package vn.edu.hcmuaf.st.web.dao;
 
 import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
+import vn.edu.hcmuaf.st.web.dao.model.Category;
+import vn.edu.hcmuaf.st.web.dao.model.Discount;
 import vn.edu.hcmuaf.st.web.dao.model.Product;
+import vn.edu.hcmuaf.st.web.dao.model.ProductImage;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +23,58 @@ public class ProductDao {
 
     public List<Product> getAll() {
         return jdbi.withHandle(handle ->
-            handle.createQuery("SELECT * FROM products")
-                    .mapToBean(Product.class)
-                    .list()
+                handle.createQuery("""
+                                    SELECT 
+                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM products p
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+                                    ORDER BY p.idProduct, pi.`order`
+                                """)
+                        .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
+                            int productId = row.getColumn("idProduct", Integer.class);
+                            Product product = map.computeIfAbsent(productId, id -> new Product(
+                                    id,
+                                    new Category(
+                                            row.getColumn("idCategory", Integer.class),
+                                            row.getColumn("categoryType", String.class),
+                                            row.getColumn("categoryName", String.class),
+                                            row.getColumn("categoryDescription", String.class)
+                                    ),
+                                    row.getColumn("idDiscount", Integer.class) != null ? new Discount(
+                                            row.getColumn("idDiscount", Integer.class),
+                                            row.getColumn("discountAmount", Double.class),
+                                            row.getColumn("startDate", LocalDateTime.class),
+                                            row.getColumn("endDate", LocalDateTime.class)
+                                    ) : null,
+                                    row.getColumn("title", String.class),
+                                    row.getColumn("price", Double.class),
+                                    row.getColumn("description", String.class),
+                                    row.getColumn("status", Boolean.class),
+                                    row.getColumn("createAt", LocalDateTime.class)
+                            ));
+
+                            if (row.getColumn("idImage", Integer.class) != null) {
+                                // Kiểm tra xem danh sách productImages đã được khởi tạo chưa
+                                if (product.getProductImages() == null) {
+                                    product.setProductImages(new ArrayList<>());
+                                }
+
+                                // Sau khi đảm bảo danh sách không null, thêm sản phẩm vào
+                                product.getProductImages().add(new ProductImage(
+                                        row.getColumn("idImage", Integer.class),
+                                        product,
+                                        row.getColumn("imageUrl", String.class),
+                                        row.getColumn("order", Integer.class)
+                                ));
+                            }
+                            return map;
+                        }).values().stream().toList()
+
         );
     }
 
@@ -31,6 +86,7 @@ public class ProductDao {
                         .findOne()
         );
     }
+
     public boolean add(Product product) {
         return jdbi.withHandle(handle ->
                 handle.createUpdate("INSERT INTO products (idCategory, idDiscount, title, price, description, status, createAt) VALUES (:idCategory, :idDiscount, :title, :price, :description, :status, NOW())")
@@ -66,6 +122,12 @@ public class ProductDao {
         );
     }
 
+    public static void main(String[] args) {
+        List<Product> products = new ProductDao().getAll();
+        for (Product product : products) {
+            System.out.println(product);
+        }
+    }
 
 
 }

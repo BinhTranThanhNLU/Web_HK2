@@ -50,4 +50,13 @@ public class ProductImage implements Serializable {
     public void setOrder(int order) {
         this.order = order;
     }
+
+    @Override
+    public String toString() {
+        return "ProductImage{" +
+                "idImage=" + idImage +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", order=" + order +
+                '}';
+    }
 }

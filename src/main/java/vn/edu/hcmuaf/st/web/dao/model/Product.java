@@ -2,6 +2,8 @@ package vn.edu.hcmuaf.st.web.dao.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Product implements Serializable {
 
@@ -14,6 +16,7 @@ public class Product implements Serializable {
     private boolean status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<ProductImage> productImages = new ArrayList<>();
 
     public Product() {}
 
@@ -99,5 +102,32 @@ public class Product implements Serializable {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<ProductImage> getProductImages() {
+        if (productImages == null) {
+            productImages = new ArrayList<>();
+        }
+        return productImages;
+    }
+
+    public void setProductImages(List<ProductImage> productImages) {
+        this.productImages = productImages;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "idProduct=" + idProduct +
+                ", category=" + category +
+                ", discount=" + discount +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", productImages=" + productImages +
+                '}';
     }
 }

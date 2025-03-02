@@ -2,6 +2,7 @@ package vn.edu.hcmuaf.st.web.service;
 
 import vn.edu.hcmuaf.st.web.dao.ProductDao;
 import vn.edu.hcmuaf.st.web.dao.model.Product;
+import vn.edu.hcmuaf.st.web.dao.model.ProductImage;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,5 +33,13 @@ public class ProductService {
 
     public boolean deleteProduct(int id) {
         return productDao.delete(id);
+    }
+
+    public static void main(String[] args) {
+        ProductService productService = new ProductService();
+        List<Product> products = productService.getAllProducts();
+        for (Product product : products) {
+            System.out.println(product);
+        }
     }
 }

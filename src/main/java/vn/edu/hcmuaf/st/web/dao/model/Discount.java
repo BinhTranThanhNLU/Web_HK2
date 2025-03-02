@@ -57,4 +57,14 @@ public class Discount implements Serializable {
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    public String toString() {
+        return "Discount{" +
+                "idDiscount=" + idDiscount +
+                ", discountAmount=" + discountAmount +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 }
