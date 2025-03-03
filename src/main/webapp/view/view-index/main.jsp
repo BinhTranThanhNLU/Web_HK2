@@ -1,8 +1,6 @@
-<%@ page import="java.util.List, java.util.ArrayList" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<title>Trang Chủ</title>
+<%--<%@ page import="java.util.List, java.util.ArrayList" %>--%>
+<%--<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>--%>
+<%--<title>Trang Chủ</title>--%>
 <%--<%--%>
 <%--    // Lấy danh sách ảnh từ request--%>
 <%--    Object imageObj = request.getAttribute("images");--%>
@@ -38,76 +36,121 @@
 <%--        }--%>
 <%--    }--%>
 <%--%>--%>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="vn.edu.hcmuaf.st.web.entity.Account" %>
+<%--<%--%>
+<%--    Account user = (Account) session.getAttribute("user");--%>
+<%--    if (user == null) {--%>
+<%--        // Nếu không có thông tin người dùng trong session, chuyển hướng đến trang đăng nhập--%>
+<%--        response.sendRedirect(request.getContextPath() + "/view/view-account/login.jsp");--%>
+<%--        return;--%>
+<%--    }--%>
+<%--%>--%>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin người dùng</title>
+</head>
+<body>
+<!-- ========================= SECTION MAIN ========================= -->
+<section class="section-intro padding-y-sm">
+    <div class="container">
+
+        <div class="intro-banner-wrap">
+            <img src="images/banners/1.jpg" class="img-fluid rounded">
+        </div>
+
+    </div> <!-- container //  -->
+</section>
+<!-- ========================= SECTION MAIN END// ========================= -->
+<!-- ========================= SECTION  ========================= -->
+<section class="section-name padding-y-sm">
+    <div class="container">
+
+        <header class="section-heading">
+            <a href="./store.html" class="btn btn-outline-primary float-right">See all</a>
+            <h3 class="section-title">Popular products</h3>
+        </header><!-- sect-heading -->
 
 
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="./product-detail.html" class="img-wrap"> <img src="images/items/1.jpg"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="./product-detail.html" class="title">Just another product name</a>
+                        <div class="price mt-1">$179.00</div> <!-- price-wrap.// -->
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="./product-detail.html" class="img-wrap"> <img src="images/items/2.jpg"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="./product-detail.html" class="title">Some item name here</a>
+                        <div class="price mt-1">$280.00</div> <!-- price-wrap.// -->
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="./product-detail.html" class="img-wrap"> <img src="images/items/3.jpg"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="./product-detail.html" class="title">Great product name here</a>
+                        <div class="price mt-1">$56.00</div> <!-- price-wrap.// -->
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="./product-detail.html" class="img-wrap"> <img src="images/items/4.jpg"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="./product-detail.html" class="title">Just another product name</a>
+                        <div class="price mt-1">$179.00</div> <!-- price-wrap.// -->
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="./product-detail.html" class="img-wrap"> <img src="images/items/5.jpg"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="./product-detail.html" class="title">Just another product name</a>
+                        <div class="price mt-1">$179.00</div> <!-- price-wrap.// -->
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="./product-detail.html" class="img-wrap"> <img src="images/items/6.jpg"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="./product-detail.html" class="title">Some item name here</a>
+                        <div class="price mt-1">$280.00</div> <!-- price-wrap.// -->
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="./product-detail.html" class="img-wrap"> <img src="images/items/7.jpg"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="./product-detail.html" class="title">Great product name here</a>
+                        <div class="price mt-1">$56.00</div> <!-- price-wrap.// -->
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="./product-detail.html" class="img-wrap"> <img src="images/items/9.jpg"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="./product-detail.html" class="title">Just another product name</a>
+                        <div class="price mt-1">$179.00</div> <!-- price-wrap.// -->
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+        </div> <!-- row.// -->
 
-
-<%--<c:choose>--%>
-<%--    <c:when test="${empty products}">--%>
-<%--        <p>Không có sản phẩm nào để hiển thị.</p>--%>
-<%--    </c:when>--%>
-<%--    <c:otherwise>--%>
-<%--        <c:forEach var="product" items="${products}">--%>
-<%--            <div class="col-md-3">--%>
-<%--                <div class="card card-product-grid">--%>
-<%--                    <c:set var="imageUrl" value="default-image.jpg" /> <!-- Ảnh mặc định -->--%>
-
-<%--                    <c:if test="${not empty product.productImages}">--%>
-<%--                        <c:forEach var="image" items="${product.productImages}" varStatus="loop">--%>
-<%--                            <c:if test="${loop.index == 0}">--%>
-<%--                                <c:set var="imageUrl" value="${image.imageUrl}" />--%>
-<%--                            </c:if>--%>
-<%--                        </c:forEach>--%>
-<%--                    </c:if>--%>
-
-<%--                    <a href="./product-detail.jsp?id=${product.idProduct}" class="img-wrap">--%>
-<%--                        <img src="${imageUrl}"--%>
-<%--                             alt="${product.title}"--%>
-<%--                             onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/default-image.jpg';">--%>
-<%--                    </a>--%>
-<%--                    <figcaption class="info-wrap">--%>
-<%--                        <a href="./product-detail.jsp?id=${product.idProduct}" class="title">${product.title}</a>--%>
-<%--                        <div class="price mt-1">$${product.price}</div>--%>
-<%--                    </figcaption>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </c:forEach>--%>
-<%--    </c:otherwise>--%>
-<%--</c:choose>--%>
-
-
-<div class="col-md-3">
-    <div class="card card-product-grid">
-        <a href="./product-detail.html" class="img-wrap">
-            <img src="path/to/image.jpg" alt="Product">
-        </a>
-        <figcaption class="info-wrap">
-            <a href="./product-detail.html" class="title">Tên Sản Phẩm</a>
-            <div class="price mt-1">$179.00</div>
-        </figcaption>
-    </div>
-</div>
-
-<div class="col-md-3">
-    <div class="card card-product-grid">
-        <a href="./product-detail.html" class="img-wrap">
-            <img src="path/to/image.jpg" alt="Product">
-        </a>
-        <figcaption class="info-wrap">
-            <a href="./product-detail.html" class="title">Tên Sản Phẩm</a>
-            <div class="price mt-1">$179.00</div>
-        </figcaption>
-    </div>
-</div>
-
-<div class="col-md-3">
-    <div class="card card-product-grid">
-        <a href="./product-detail.html" class="img-wrap">
-            <img src="path/to/image.jpg" alt="Product">
-        </a>
-        <figcaption class="info-wrap">
-            <a href="./product-detail.html" class="title">Tên Sản Phẩm</a>
-            <div class="price mt-1">$179.00</div>
-        </figcaption>
-    </div>
-</div>
+    </div><!-- container // -->
+</section>
+<!-- ========================= SECTION  END// ========================= -->
+</body>
+</html>
