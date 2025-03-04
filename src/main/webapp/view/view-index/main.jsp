@@ -8,7 +8,8 @@
 <%--    }--%>
 <%--%>--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -36,171 +37,39 @@
             <a href="./store.html" class="btn btn-outline-primary float-right">Xem tất cả</a>
             <h3 class="section-title">Đồ Bé Trai</h3>
         </header><!-- sect-heading -->
-
-
+        
         <div class="row">
-            <div class="col-md-3">
-                <div class="product-card">
-                    <div class="badge-custome">Hot</div>
-                    <div class="product-tumb">
-                        <img src="https://i.imgur.com/xdbHo4E.png" alt="">
-                    </div>
-                    <div class="product-details">
-                        <span class="product-catagory">Women,bag</span>
-                        <h4><a href="">Women leather bag</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, possimus nostrum!</p>
-                        <div class="product-bottom-details">
-                            <div class="product-price"><small>$96.00</small>$230.99</div>
-                            <div class="product-links">
-                                <a href=""><i class="fa fa-heart"></i></a>
-                                <a href=""><i class="fa fa-shopping-cart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- col.// -->
-            <div class="col-md-3">
-                <div class="product-card">
-                    <div class="badge-custome">Hot</div>
-                    <div class="product-tumb">
-                        <img src="https://i.imgur.com/xdbHo4E.png" alt="">
-                    </div>
-                    <div class="product-details">
-                        <span class="product-catagory">Women,bag</span>
-                        <h4><a href="">Women leather bag</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, possimus nostrum!</p>
-                        <div class="product-bottom-details">
-                            <div class="product-price"><small>$96.00</small>$230.99</div>
-                            <div class="product-links">
-                                <a href=""><i class="fa fa-heart"></i></a>
-                                <a href=""><i class="fa fa-shopping-cart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- col.// -->
-            <div class="col-md-3">
-                <div class="product-card">
-                    <div class="badge-custome">Hot</div>
-                    <div class="product-tumb">
-                        <img src="https://i.imgur.com/xdbHo4E.png" alt="">
-                    </div>
-                    <div class="product-details">
-                        <span class="product-catagory">Women,bag</span>
-                        <h4><a href="">Women leather bag</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, possimus nostrum!</p>
-                        <div class="product-bottom-details">
-                            <div class="product-price"><small>$96.00</small>$230.99</div>
-                            <div class="product-links">
-                                <a href=""><i class="fa fa-heart"></i></a>
-                                <a href=""><i class="fa fa-shopping-cart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- col.// -->
-            <div class="col-md-3">
-                <div class="product-card">
-                    <div class="badge-custome">Hot</div>
-                    <div class="product-tumb">
-                        <img src="https://i.imgur.com/xdbHo4E.png" alt="">
-                    </div>
-                    <div class="product-details">
-                        <span class="product-catagory">Women,bag</span>
-                        <h4><a href="">Women leather bag</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, possimus nostrum!</p>
-                        <div class="product-bottom-details">
-                            <div class="product-price"><small>$96.00</small>$230.99</div>
-                            <div class="product-links">
-                                <a href=""><i class="fa fa-heart"></i></a>
-                                <a href=""><i class="fa fa-shopping-cart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- col.// -->
-            <div class="col-md-3">
-                <div class="product-card">
-                    <div class="badge-custome">Hot</div>
-                    <div class="product-tumb">
-                        <img src="https://i.imgur.com/xdbHo4E.png" alt="">
-                    </div>
-                    <div class="product-details">
-                        <span class="product-catagory">Women,bag</span>
-                        <h4><a href="">Women leather bag</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, possimus nostrum!</p>
-                        <div class="product-bottom-details">
-                            <div class="product-price"><small>$96.00</small>$230.99</div>
-                            <div class="product-links">
-                                <a href=""><i class="fa fa-heart"></i></a>
-                                <a href=""><i class="fa fa-shopping-cart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- col.// -->
-            <div class="col-md-3">
-                <div class="product-card">
-                    <div class="badge-custome">Hot</div>
-                    <div class="product-tumb">
-                        <img src="https://i.imgur.com/xdbHo4E.png" alt="">
-                    </div>
-                    <div class="product-details">
-                        <span class="product-catagory">Women,bag</span>
-                        <h4><a href="">Women leather bag</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, possimus nostrum!</p>
-                        <div class="product-bottom-details">
-                            <div class="product-price"><small>$96.00</small>$230.99</div>
-                            <div class="product-links">
-                                <a href=""><i class="fa fa-heart"></i></a>
-                                <a href=""><i class="fa fa-shopping-cart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- col.// -->
-            <div class="col-md-3">
-                <div class="product-card">
-                    <div class="badge-custome">Hot</div>
-                    <div class="product-tumb">
-                        <img src="https://i.imgur.com/xdbHo4E.png" alt="">
-                    </div>
-                    <div class="product-details">
-                        <span class="product-catagory">Women,bag</span>
-                        <h4><a href="">Women leather bag</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, possimus nostrum!</p>
-                        <div class="product-bottom-details">
-                            <div class="product-price"><small>$96.00</small>$230.99</div>
-                            <div class="product-links">
-                                <a href=""><i class="fa fa-heart"></i></a>
-                                <a href=""><i class="fa fa-shopping-cart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- col.// -->
-            <div class="col-md-3">
-                <div class="product-card">
-                    <div class="badge-custome">Hot</div>
-                    <div class="product-tumb">
-                        <img src="https://i.imgur.com/xdbHo4E.png" alt="">
-                    </div>
-                    <div class="product-details">
-                        <span class="product-catagory">Women,bag</span>
-                        <h4><a href="">Women leather bag</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, possimus nostrum!</p>
-                        <div class="product-bottom-details">
-                            <div class="product-price"><small>$96.00</small>$230.99</div>
-                            <div class="product-links">
-                                <a href=""><i class="fa fa-heart"></i></a>
-                                <a href=""><i class="fa fa-shopping-cart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- col.// -->
+            <c:forEach var="product" items="${products}">
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <div class="badge-custome">Hot</div>
 
+                        <c:set var="imageUrl" value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}" />
+
+                        <div class="product-tumb">
+                            <img src="${imageUrl}" alt="${product.title}">
+                        </div>
+                        <div class="product-details">
+                            <span class="product-catagory">${product.category.name}</span>
+                            <h4>
+                                <a href="#">${product.title}</a>
+                            </h4>
+                            <div class="product-bottom-details">
+                                <div class="product-price">
+                                    <fmt:formatNumber value="${product.price}" pattern="#,##0 đ" />
+                                    $230.99
+                                </div>
+                                <div class="product-links">
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- col.// -->
+            </c:forEach>
         </div> <!-- row.// -->
+
 
     </div><!-- container // -->
 </section>
