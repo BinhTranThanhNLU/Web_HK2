@@ -1,6 +1,6 @@
 package vn.edu.hcmuaf.st.web.entity;
 
-public class RoleEntiry {
+public class Role {
     private int idRole;
     private RoleName nameRole;
 

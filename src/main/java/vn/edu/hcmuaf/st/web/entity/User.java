@@ -2,7 +2,7 @@ package vn.edu.hcmuaf.st.web.entity;
 
 import java.util.Date;
 
-public class UserEntity {
+public class User {
     private int idUser;
     private int idRole;
     private String username;

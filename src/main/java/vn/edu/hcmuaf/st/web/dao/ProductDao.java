@@ -2,10 +2,11 @@ package vn.edu.hcmuaf.st.web.dao;
 
 import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
-import vn.edu.hcmuaf.st.web.dao.model.Category;
-import vn.edu.hcmuaf.st.web.dao.model.Discount;
-import vn.edu.hcmuaf.st.web.dao.model.Product;
-import vn.edu.hcmuaf.st.web.dao.model.ProductImage;
+import vn.edu.hcmuaf.st.web.entity.Category;
+import vn.edu.hcmuaf.st.web.entity.Discount;
+import vn.edu.hcmuaf.st.web.entity.Product;
+import vn.edu.hcmuaf.st.web.entity.ProductImage;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

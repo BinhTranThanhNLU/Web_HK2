@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.st.web.dao.model;
+package vn.edu.hcmuaf.st.web.entity;
 
 import java.io.Serializable;
 

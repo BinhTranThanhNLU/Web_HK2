@@ -1,7 +1,7 @@
 package vn.edu.hcmuaf.st.web.service;
 
 import vn.edu.hcmuaf.st.web.dao.CategoryDao;
-import vn.edu.hcmuaf.st.web.dao.model.Category;
+import vn.edu.hcmuaf.st.web.entity.Category;
 
 import java.util.List;
 import java.util.Optional;
