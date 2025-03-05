@@ -17,7 +17,7 @@ public class Product implements Serializable {
     private LocalDateTime updatedAt;
     private List<ProductImage> productImages = new ArrayList<>();
 
-    public Product() {}
+    public Product(int idProduct, String title, double price, String imageUrl) {}
 
     public Product(int idProduct, Category category, Discount discount, String title, double price, String description, boolean status, LocalDateTime createdAt) {
         this.idProduct = idProduct;
@@ -116,7 +116,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "ProductRepository{" +
                 "idProduct=" + idProduct +
                 ", category=" + category +
                 ", discount=" + discount +

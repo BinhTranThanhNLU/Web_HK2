@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.st.web.repository;
+package vn.edu.hcmuaf.st.web.dao;
 
 import vn.edu.hcmuaf.st.web.config.MysqlConfig;
 import org.mindrot.jbcrypt.BCrypt;

@@ -1,7 +1,7 @@
 package vn.edu.hcmuaf.st.web.service;
 
 import org.mindrot.jbcrypt.BCrypt;
-import vn.edu.hcmuaf.st.web.repository.AccountRepository;
+import vn.edu.hcmuaf.st.web.dao.AccountRepository;
 
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
