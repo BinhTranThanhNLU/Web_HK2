@@ -37,6 +37,7 @@
 <%--    }--%>
 <%--%>--%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="vn.edu.hcmuaf.st.web.entity.Account" %>
 <%--<%--%>
 <%--    Account user = (Account) session.getAttribute("user");--%>
 <%--    if (user == null) {--%>

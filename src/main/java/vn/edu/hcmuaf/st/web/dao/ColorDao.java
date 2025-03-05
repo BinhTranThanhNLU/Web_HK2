@@ -2,7 +2,8 @@ package vn.edu.hcmuaf.st.web.dao;
 
 import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
-import vn.edu.hcmuaf.st.web.dao.model.Color;
+import vn.edu.hcmuaf.st.web.entity.Color;
+
 import java.util.List;
 import java.util.Optional;
 

@@ -6,7 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import vn.edu.hcmuaf.st.web.dao.model.Product;
+import vn.edu.hcmuaf.st.web.entity.Product;
 import vn.edu.hcmuaf.st.web.service.ProductService;
 
 import java.io.IOException;
@@ -23,10 +23,6 @@ public class HomeController extends HttpServlet {
         ProductService productService = new ProductService();
         List<Product> products = productService.getAllProducts();
 
-        // In ra console để kiểm tra dữ liệu
-        for (Product product : products) {
-            System.out.println(product);
-        }
 
         request.setAttribute("products", products);
         request.getRequestDispatcher("/view/view-index/index.jsp").forward(request, response);
