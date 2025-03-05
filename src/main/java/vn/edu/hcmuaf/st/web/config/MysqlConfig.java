@@ -9,7 +9,7 @@ import jakarta.servlet.ServletContextListener;
 
 
 public class MysqlConfig {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/project";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/project_web";
     private static final String USER = "root";
     private static final String PASSWORD = "";
 

@@ -6,8 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="vn.edu.hcmuaf.st.web.entity.GoogleAccount" %>
 <head>
     <meta charset="utf-8">
     <meta name="viewport"
@@ -39,6 +39,7 @@
 
 <body>
 <section class="header-main ">
+
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg col-sm col-md col-6 flex-grow-0">
@@ -64,11 +65,22 @@
             <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
                 <div class="d-flex justify-content-end mb-3 mb-lg-0">
                     <div class="widget-header">
-                        <small class="title text-muted">Khách!</small>
+                        <small class="title text-muted">
+                            ${not empty googleAccount ? googleAccount.name : "Khách!"}
+                        </small>
                         <div>
-                            <a href="<%= request.getContextPath() %>/view/view-account/signin.jsp">Đăng Nhập</a>
-                            <span class="dark-transp"> | </span>
-                            <a href="<%= request.getContextPath() %>/view/view-account/register.jsp">Đăng Ký</a>
+                            <c:choose>
+                                <c:when test="${not empty googleAccount}">
+                                    <a href="${pageContext.request.contextPath}/account">Xem Tài Khoản</a>
+                                    <span class="dark-transp"> | </span>
+                                    <a href="${pageContext.request.contextPath}/logout">Đăng Xuất</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/view/view-account/signin.jsp">Đăng Nhập</a>
+                                    <span class="dark-transp"> | </span>
+                                    <a href="${pageContext.request.contextPath}/view/view-account/register.jsp">Đăng Ký</a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                     <a href="/cart.html" class="widget-header pl-3 ml-3">
@@ -87,8 +99,8 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-2 col-md-3 col-6">
-                    <a href=".." class="brand-wrap"> <img class="logo"
-                                                          src="${pageContext.request.contextPath}/images/logo.png">
+                    <a href="${pageContext.request.contextPath}/home" class="brand-wrap"> <img class="logo"
+                                                                                               src="${pageContext.request.contextPath}/images/logo.png">
                     </a>
                     <!-- brand-wrap.// -->
                 </div>
@@ -168,8 +180,6 @@
 
                         </div>
                         <!-- col.// -->
-
-
                     </nav>
                 </div>
                 <!-- col.// -->
@@ -185,5 +195,3 @@
 <!-- section-header.// -->
 
 <body>
-
-

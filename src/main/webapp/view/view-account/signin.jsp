@@ -37,7 +37,7 @@
             </form>
             <!-- Nút đăng nhập bằng Google -->
             <div class="form-group">
-                <a href="https://accounts.google.com/o/oauth2/auth?client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=email%20profile"
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/web/login&response_type=code&client_id=783371694466-v4tsjt4ch1ulqtbdinv02of0q3t4tpm8.apps.googleusercontent.com&approval_prompt=force"
                    class="btn btn-danger btn-block">
                     <i class="fa-brands fa-google"></i> Đăng nhập với Google
                 </a>

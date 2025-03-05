@@ -6,12 +6,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 
+import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
 import vn.edu.hcmuaf.st.web.service.AccountService;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password","/enter-otp"})
+@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login"})
 public class AccountController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final AccountService accountService = new AccountService();
@@ -33,6 +34,10 @@ public class AccountController extends HttpServlet {
                 request.getRequestDispatcher("/view/view-account/enter-otp.jsp").forward(request, response);
                 break;
             case "/sign":
+                break;
+            case "/login":
+                handleGoogleLogin(request, response);
+                break;
             default:
                 request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
                 break;
@@ -205,4 +210,40 @@ public class AccountController extends HttpServlet {
 
         dispatcher.forward(request, response);
     }
+
+    private void handleGoogleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            HttpSession session = request.getSession();
+            GoogleAccount googleAccount = (GoogleAccount) session.getAttribute("googleAccount");
+
+            // Nếu đã đăng nhập, chuyển hướng về trang home thay vì đăng nhập lại
+            if (googleAccount != null) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+
+            // Lấy mã code từ request
+            String code = request.getParameter("code");
+            if (code == null || code.isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=missing_code");
+                return;
+            }
+
+            // Xử lý đăng nhập Google
+            GoogleLogin gg = new GoogleLogin();
+            String accessToken = gg.getToken(code);
+            googleAccount = gg.getUserInfo(accessToken);
+
+            // Lưu vào session
+            session.setAttribute("googleAccount", googleAccount);
+
+            // Chuyển hướng đến trang home sau khi đăng nhập thành công
+            response.sendRedirect(request.getContextPath() + "/home");
+
+        } catch (Exception e) {
+            response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=true");
+        }
+    }
+
+
 }
