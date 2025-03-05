@@ -32,9 +32,9 @@
 <!-- ========================= SECTION  ========================= -->
 <section class="section-name padding-y-sm">
     <div class="container">
-
         <header class="section-heading">
-            <a href="./store.html" class="btn btn-outline-primary float-right">Xem tất cả</a>
+            <a href="${pageContext.request.contextPath}/view/view-product/store.jsp"
+               class="btn btn-outline-primary float-right">Xem tất cả</a>
             <h3 class="section-title">Đồ Bé Trai</h3>
         </header><!-- sect-heading -->
 
@@ -44,7 +44,8 @@
                     <div class="product-card">
                         <div class="badge-custome">Hot</div>
 
-                        <c:set var="imageUrl" value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}" />
+                        <c:set var="imageUrl"
+                               value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
 
                         <div class="product-tumb">
                             <img src="${imageUrl}" alt="${product.title}">
@@ -56,8 +57,8 @@
                             </h4>
                             <div class="product-bottom-details">
                                 <div class="product-price">
-                                    <fmt:formatNumber value="${product.price}" pattern="#,##0 đ" />
-                                 
+                                    <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
+
                                 </div>
                                 <div class="product-links">
                                     <a href="#"><i class="fa fa-heart"></i></a>
@@ -66,7 +67,8 @@
                             </div>
                         </div>
                     </div>
-                </div> <!-- col.// -->
+                </div>
+                <!-- col.// -->
             </c:forEach>
         </div> <!-- row.// -->
 
