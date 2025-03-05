@@ -12,7 +12,7 @@ import vn.edu.hcmuaf.st.web.service.AccountService;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login"})
+@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login", "/reset-password"})
 public class AccountController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final AccountService accountService = new AccountService();
@@ -34,10 +34,15 @@ public class AccountController extends HttpServlet {
                 request.getRequestDispatcher("/view/view-account/enter-otp.jsp").forward(request, response);
                 break;
             case "/sign":
+                request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
                 break;
             case "/login":
                 handleGoogleLogin(request, response);
                 break;
+            case "/reset-password":
+                request.getRequestDispatcher("/view/view-account/reset-password.jsp").forward(request, response);
+                break;
+
             default:
                 request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
                 break;
@@ -66,6 +71,7 @@ public class AccountController extends HttpServlet {
             case "/reset-password":
                 handleResetPassword(request, response);
                 break;
+
             default:
                 response.sendRedirect("/sign");
                 break;
@@ -96,7 +102,7 @@ public class AccountController extends HttpServlet {
         if (accountService.login(username, password)) {
             HttpSession session = request.getSession();
             session.setAttribute("user", username);
-            response.sendRedirect(request.getContextPath() + "/view/view-index/index.jsp");
+            response.sendRedirect(request.getContextPath() + "/home");
         } else {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
@@ -129,7 +135,7 @@ public class AccountController extends HttpServlet {
 
         boolean isRegistered = accountService.register(username, password, fullname, email, phoneNumber);
         if (isRegistered) {
-            response.sendRedirect(request.getContextPath() + "/sign?success=registered");
+            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
         } else {
             request.setAttribute("error", "Tên người dùng đã tồn tại hoặc lỗi hệ thống!");
             request.getRequestDispatcher("/view/view-account/register.jsp").forward(request, response);
@@ -191,15 +197,18 @@ public class AccountController extends HttpServlet {
 
         RequestDispatcher dispatcher;
 
+        // Kiểm tra các trường mật khẩu và xác nhận mật khẩu
         if (password == null || confPassword == null || email == null || !password.equals(confPassword)) {
-            request.setAttribute("status", "invalidInput");
+            request.setAttribute("status", "invalidInput");  // Hiển thị lỗi nếu không hợp lệ
             dispatcher = request.getRequestDispatcher("/view/view-account/reset-password.jsp");
             dispatcher.forward(request, response);
             return;
         }
 
+        // Cập nhật mật khẩu vào cơ sở dữ liệu
         boolean isUpdated = accountService.updatePassword(email, password);
 
+        // Nếu cập nhật thành công
         if (isUpdated) {
             request.setAttribute("status", "resetSuccess");
             dispatcher = request.getRequestDispatcher("/view/view-account/signin.jsp");
@@ -207,7 +216,6 @@ public class AccountController extends HttpServlet {
             request.setAttribute("status", "resetFailed");
             dispatcher = request.getRequestDispatcher("/view/view-account/reset-password.jsp");
         }
-
         dispatcher.forward(request, response);
     }
 

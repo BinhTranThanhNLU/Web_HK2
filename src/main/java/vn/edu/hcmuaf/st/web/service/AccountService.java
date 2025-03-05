@@ -62,13 +62,11 @@ public class AccountService {
 
         Transport.send(message);
     }
+
     public boolean updatePassword(String email, String newPassword) {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         return accountRepository.updatePasswordByEmail(email, hashedPassword);
+
     }
-    // Xác thực OTP
-//    public boolean validateOtp(int userOtp, int sessionOtp) {
-//        return userOtp == sessionOtp;
-//    }
 }
 

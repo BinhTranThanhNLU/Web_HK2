@@ -49,7 +49,7 @@
                     </button>
                 </div>  <!-- category-wrap.// -->
             </div> <!-- col.// -->
-            <a href="./store.html" class="btn btn-outline-primary">Liên Hệ</a>
+            <a href="" class="btn btn-outline-primary">Liên Hệ</a>
             <div class="col-lg  col-md-6 col-sm-12 col">
                 <form action="#" class="search">
                     <div class="input-group w-100">
