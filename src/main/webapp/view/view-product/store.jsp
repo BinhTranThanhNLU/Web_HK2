@@ -1,21 +1,24 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <%--
   Created by IntelliJ IDEA.
   User: hdanh
   Date: 24/02/2025
-  Time: 8:51 SA
+  Time: 8:50 SA
   To change this template use File | Settings | File Templates.
 --%>
 
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
-    <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
 <%@ include file="/view/view-index/header.jsp" %>
-<!-- ========================= SECTION PAGETOP ========================= -->
 <section class="section-pagetop bg">
     <div class="container">
         <h2 class="title-page">Tất Cả Sản Phẩm</h2>
@@ -27,10 +30,8 @@
 <!-- ========================= SECTION CONTENT ========================= -->
 <section class="section-content padding-y">
     <div class="container">
-
         <div class="row">
             <aside class="col-md-3">
-
                 <div class="card">
                     <article class="filter-group">
                         <header class="card-header">
@@ -137,31 +138,7 @@
                     <div class="form-inline">
                         <span class="mr-md-auto">32 Sản Phẩm </span>
                     </div>
-                </header><!-- sect-heading -->
-                <%--                <div class="row">--%>
-                <%--                    <c:forEach var="product" items="${products}">--%>
-                <%--                        <div class="col-md-4 mb-4">--%>
-                <%--                            <figure class="card card-product-grid">--%>
-                <%--                                <div class="img-wrap">--%>
-                <%--                                    <c:set var="imageUrl" value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>--%>
-                <%--                                    <img src="${imageUrl}" alt="${product.title}">--%>
-                <%--                                </div>--%>
-                <%--                                <figcaption class="info-wrap">--%>
-                <%--                                    <div class="fix-height">--%>
-                <%--                                        <a href="#" class="title">${product.title}</a>--%>
-                <%--                                        <div class="price-wrap mt-2">--%>
-                <%--                                    <span class="price">--%>
-                <%--                                        <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>--%>
-                <%--                                    </span>--%>
-                <%--                                        </div>--%>
-                <%--                                    </div>--%>
-                <%--                                    <a href="#" class="btn btn-block btn-primary">Add to cart</a>--%>
-                <%--                                </figcaption>--%>
-                <%--                            </figure>--%>
-                <%--                        </div>--%>
-                <%--                    </c:forEach>--%>
-                <%--                </div>--%>
-
+                </header>
                 <div class="row">
                     <c:forEach var="product" items="${products}" varStatus="status">
                         <c:if test="${status.index < 32}">
@@ -197,14 +174,10 @@
                         <li class="page-item"><a class="page-link" href="#">Tiến</a></li>
                     </ul>
                 </nav>
-
             </main> <!-- col.// -->
-
         </div>
-
     </div> <!-- container .//  -->
 </section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
 <%@ include file="/view/view-index/footer.jsp" %>
 </body>
 </html>

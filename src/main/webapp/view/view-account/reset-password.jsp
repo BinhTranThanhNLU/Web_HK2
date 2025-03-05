@@ -39,6 +39,20 @@
                 <c:if test="${not empty success}">
                     <div class="success-message" style="color: green;">${success}</div>
                 </c:if>
+                <c:if test="${not empty status}">
+                    <c:choose>
+                        <c:when test="${status == 'invalidInput'}">
+                            <div class="alert alert-danger">Mật khẩu không hợp lệ hoặc không trùng khớp.</div>
+                        </c:when>
+                        <c:when test="${status == 'resetSuccess'}">
+                            <div class="alert alert-success">Mật khẩu đã được thay đổi thành công!</div>
+                        </c:when>
+                        <c:when test="${status == 'resetFailed'}">
+                            <div class="alert alert-danger">Đổi mật khẩu thất bại. Vui lòng thử lại!</div>
+                        </c:when>
+                    </c:choose>
+                </c:if>
+
             </form>
 
         </article>
