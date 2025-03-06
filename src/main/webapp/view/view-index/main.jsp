@@ -62,7 +62,7 @@
                                         <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
                                     </div>
                                     <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
+                                        <a href="#"><i class="fa-solid fa-eye"></i></a>
                                         <a href="#"><i class="fa fa-shopping-cart"></i></a>
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@
                                         <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
                                     </div>
                                     <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
+                                        <a href="#"><i class="fa-solid fa-eye"></i></a>
                                         <a href="#"><i class="fa fa-shopping-cart"></i></a>
                                     </div>
                                 </div>
@@ -133,154 +133,64 @@
 <section class="section-name padding-y-sm my-4">
     <div class="container">
         <header class="section-heading">
-            <a href="${pageContext.request.contextPath}/view/view-product/store.jsp"
-               class="btn btn-outline-primary float-right">Xem tất cả</a>
+            <a href="${pageContext.request.contextPath}/view/view-product/store.jsp" class="btn btn-outline-primary float-right">Xem tất cả</a>
             <h3 class="section-title">Thời Trang Bé Trai</h3>
         </header>
 
         <div class="nav-category" data-category="boy">
-            <p class="tab" onclick="showTabBoy('ao-boy', 'boy')">Áo</p>
-            <p class="tab" onclick="showTabBoy('quan-boy','boy')">Quần</p>
-            <p class="tab" onclick="showTabBoy('giay-boy','boy')">Giày</p>
-            <p class="tab" onclick="showTabBoy('do-bo-boy','boy')">Đồ bộ</p>
+            <p class="tab" data-tab="ao-boy">Áo</p>
+            <p class="tab" data-tab="quan-boy">Quần</p>
+            <p class="tab" data-tab="giay-boy">Giày</p>
+            <p class="tab" data-tab="do-bo-boy">Đồ bộ</p>
         </div>
 
-        <div class="products-category" id="ao-boy">
-            <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
-                    <div class="col-md-3 gap-3 mb-5">
-                        <div class="product-card">
-                            <div class="badge-custome">Hot</div>
+        <c:forEach var="category" items="${productsByCategory1}">
+            <div class="products-category" id="${category.key}" style="display: ${category.key == 'ao-boy' ? 'flex' : 'none'};">
+                <div class="row">
+                    <c:forEach var="product" items="${category.value}" begin="0" end="7">
+                        <div class="col-md-3 gap-3 mb-5">
+                            <div class="product-card">
+                                <div class="badge-custome">Hot</div>
 
-                            <c:set var="imageUrl"
-                                   value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
+                                <c:set var="imageUrl" value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
 
-                            <div class="product-tumb">
-                                <img src="${imageUrl}" alt="${product.title}">
-                            </div>
-                            <div class="product-details">
-                                <span class="product-catagory">${product.category.name}</span>
-                                <h4>
-                                    <a href="#">${product.title}</a>
-                                </h4>
-                                <div class="product-bottom-details">
-                                    <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
-                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                <div class="product-tumb">
+                                    <img src="${imageUrl}" alt="${product.title}">
+                                </div>
+                                <div class="product-details">
+                                    <span class="product-catagory">${product.category.name}</span>
+                                    <h4><a href="#">${product.title}</a></h4>
+                                    <div class="product-bottom-details">
+                                        <div class="product-price">
+                                            <c:choose>
+                                                <c:when test="${product.hasDiscount}">
+                                                    <small class="ori-price" style="text-decoration: line-through;">
+                                                        <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
+                                                    </small>
+                                                    <p class="dis-price">
+                                                        <fmt:formatNumber value="${product.finalPrice}" pattern="#,##0 đ"/>
+                                                    </p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <small class="ori-price">
+                                                        <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
+                                                    </small>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+
+                                        <div class="product-links">
+                                            <a href="#"><i class="fa-solid fa-eye"></i></a>
+                                            <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </c:forEach>
+                    </c:forEach>
+                </div>
             </div>
-        </div>
-        <div class="products-category" id="quan-boy" style="display: none;">
-            <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
-                    <div class="col-md-3 gap-3 mb-5">
-                        <div class="product-card">
-                            <div class="badge-custome">Hot</div>
-
-                            <c:set var="imageUrl"
-                                   value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
-
-                            <div class="product-tumb">
-                                <img src="${imageUrl}" alt="${product.title}">
-                            </div>
-                            <div class="product-details">
-                                <span class="product-catagory">${product.category.name}</span>
-                                <h4>
-                                    <a href="#">${product.title}</a>
-                                </h4>
-                                <div class="product-bottom-details">
-                                    <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
-                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
-        <div class="products-category" id="giay-boy" style="display: none;">
-            <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
-                    <div class="col-md-3 gap-3 mb-5">
-                        <div class="product-card">
-                            <div class="badge-custome">Hot</div>
-
-                            <c:set var="imageUrl"
-                                   value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
-
-                            <div class="product-tumb">
-                                <img src="${imageUrl}" alt="${product.title}">
-                            </div>
-                            <div class="product-details">
-                                <span class="product-catagory">${product.category.name}</span>
-                                <h4>
-                                    <a href="#">${product.title}</a>
-                                </h4>
-                                <div class="product-bottom-details">
-                                    <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
-                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
-        <div class="products-category" id="do-bo-boy" style="display: none;">
-            <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
-                    <div class="col-md-3 gap-3 mb-5">
-                        <div class="product-card">
-                            <div class="badge-custome">Hot</div>
-
-                            <c:set var="imageUrl"
-                                   value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
-
-                            <div class="product-tumb">
-                                <img src="${imageUrl}" alt="${product.title}">
-                            </div>
-                            <div class="product-details">
-                                <span class="product-catagory">${product.category.name}</span>
-                                <h4>
-                                    <a href="#">${product.title}</a>
-                                </h4>
-                                <div class="product-bottom-details">
-                                    <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
-                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
+        </c:forEach>
 
         <div class="load-more">
             <button>Xem thêm</button>
@@ -298,148 +208,59 @@
         </header>
 
         <div class="nav-category" data-category="girl">
-            <p class="tab" onclick="showTabBoy('ao-girl', 'girl')">Áo</p>
-            <p class="tab" onclick="showTabBoy('quan-girl','girl')">Quần</p>
-            <p class="tab" onclick="showTabBoy('vay-girl','girl')">Giày</p>
-            <p class="tab" onclick="showTabBoy('do-bo-girl','girl')">Đồ bộ</p>
+            <p class="tab" data-tab="ao-girl">Áo</p>
+            <p class="tab" data-tab="quan-girl">Quần</p>
+            <p class="tab" data-tab="vay-girl">Váy</p>
+            <p class="tab" data-tab="do-bo-girl">Đồ bộ</p>
         </div>
 
-        <div class="products-category" id="ao-girl">
-            <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
-                    <div class="col-md-3 gap-3 mb-5">
-                        <div class="product-card">
-                            <div class="badge-custome">Hot</div>
+        <c:forEach var="category" items="${productsByCategory2}">
+            <div class="products-category" id="${category.key}" style="display: ${category.key == 'ao-girl' ? 'flex' : 'none'};">
+                <div class="row">
+                    <c:forEach var="product" items="${category.value}" begin="0" end="7">
+                        <div class="col-md-3 gap-3 mb-5">
+                            <div class="product-card">
+                                <div class="badge-custome">Hot</div>
 
-                            <c:set var="imageUrl"
-                                   value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
+                                <c:set var="imageUrl" value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
 
-                            <div class="product-tumb">
-                                <img src="${imageUrl}" alt="${product.title}">
-                            </div>
-                            <div class="product-details">
-                                <span class="product-catagory">${product.category.name}</span>
-                                <h4>
-                                    <a href="#">${product.title}</a>
-                                </h4>
-                                <div class="product-bottom-details">
-                                    <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
-                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                <div class="product-tumb">
+                                    <img src="${imageUrl}" alt="${product.title}">
+                                </div>
+                                <div class="product-details">
+                                    <span class="product-catagory">${product.category.name}</span>
+                                    <h4><a href="#">${product.title}</a></h4>
+                                    <div class="product-bottom-details">
+                                        <div class="product-price">
+                                            <c:choose>
+                                                <c:when test="${product.hasDiscount}">
+                                                    <small class="ori-price" style="text-decoration: line-through;">
+                                                        <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
+                                                    </small>
+                                                    <p class="dis-price">
+                                                        <fmt:formatNumber value="${product.finalPrice}" pattern="#,##0 đ"/>
+                                                    </p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <small class="ori-price">
+                                                        <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
+                                                    </small>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+
+                                        <div class="product-links">
+                                            <a href="#"><i class="fa-solid fa-eye"></i></a>
+                                            <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </c:forEach>
+                    </c:forEach>
+                </div>
             </div>
-        </div>
-        <div class="products-category" id="quan-girl" style="display: none;">
-            <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
-                    <div class="col-md-3 gap-3 mb-5">
-                        <div class="product-card">
-                            <div class="badge-custome">Hot</div>
-
-                            <c:set var="imageUrl"
-                                   value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
-
-                            <div class="product-tumb">
-                                <img src="${imageUrl}" alt="${product.title}">
-                            </div>
-                            <div class="product-details">
-                                <span class="product-catagory">${product.category.name}</span>
-                                <h4>
-                                    <a href="#">${product.title}</a>
-                                </h4>
-                                <div class="product-bottom-details">
-                                    <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
-                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
-        <div class="products-category" id="vay-girl" style="display: none;">
-            <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
-                    <div class="col-md-3 gap-3 mb-5">
-                        <div class="product-card">
-                            <div class="badge-custome">Hot</div>
-
-                            <c:set var="imageUrl"
-                                   value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
-
-                            <div class="product-tumb">
-                                <img src="${imageUrl}" alt="${product.title}">
-                            </div>
-                            <div class="product-details">
-                                <span class="product-catagory">${product.category.name}</span>
-                                <h4>
-                                    <a href="#">${product.title}</a>
-                                </h4>
-                                <div class="product-bottom-details">
-                                    <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
-                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
-        <div class="products-category" id="do-bo-girl" style="display: none;">
-            <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
-                    <div class="col-md-3 gap-3 mb-5">
-                        <div class="product-card">
-                            <div class="badge-custome">Hot</div>
-
-                            <c:set var="imageUrl"
-                                   value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
-
-                            <div class="product-tumb">
-                                <img src="${imageUrl}" alt="${product.title}">
-                            </div>
-                            <div class="product-details">
-                                <span class="product-catagory">${product.category.name}</span>
-                                <h4>
-                                    <a href="#">${product.title}</a>
-                                </h4>
-                                <div class="product-bottom-details">
-                                    <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#"><i class="fa fa-heart"></i></a>
-                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
+        </c:forEach>
 
         <div class="load-more">
             <button>Xem thêm</button>

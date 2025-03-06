@@ -10,7 +10,9 @@ import vn.edu.hcmuaf.st.web.entity.Product;
 import vn.edu.hcmuaf.st.web.service.ProductService;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "homeController", urlPatterns = "/home")
 public class HomeController extends HttpServlet {
@@ -23,8 +25,13 @@ public class HomeController extends HttpServlet {
         ProductService productService = new ProductService();
         List<Product> products = productService.getAllProducts();
 
+        //lấy danh sách sản phẩm theo category
+        Map<String, List<Product>> productsByCategory1 = getProductsByCategoryBoy();
+        Map<String, List<Product>> productsByCategory2 = getProductsByCategoryGirl();
 
         request.setAttribute("products", products);
+        request.setAttribute("productsByCategory1", productsByCategory1);
+        request.setAttribute("productsByCategory2", productsByCategory2);
         request.getRequestDispatcher("/view/view-index/index.jsp").forward(request, response);
     }
 
@@ -36,6 +43,32 @@ public class HomeController extends HttpServlet {
 
         RequestDispatcher rd = request.getRequestDispatcher("/view/view-index/index.jsp");
         rd.forward(request, response);
+    }
+
+    public Map<String,List<Product>> getProductsByCategoryBoy() {
+        Map<String, List<Product>> productsByCategory = new HashMap<>();
+
+        ProductService productService = new ProductService();
+
+        productsByCategory.put("ao-boy", productService.getProductsByCategory(1));
+        productsByCategory.put("quan-boy", productService.getProductsByCategory(2));
+        productsByCategory.put("giay-boy", productService.getProductsByCategory(3));
+        productsByCategory.put("do-bo-boy", productService.getProductsByCategory(4));
+
+        return productsByCategory;
+    }
+
+    public Map<String,List<Product>> getProductsByCategoryGirl() {
+        Map<String, List<Product>> productsByCategory = new HashMap<>();
+
+        ProductService productService = new ProductService();
+
+        productsByCategory.put("ao-girl", productService.getProductsByCategory(5));
+        productsByCategory.put("quan-girl", productService.getProductsByCategory(6));
+        productsByCategory.put("vay-girl", productService.getProductsByCategory(7));
+        productsByCategory.put("do-bo-girl", productService.getProductsByCategory(8));
+
+        return productsByCategory;
     }
 
 }
