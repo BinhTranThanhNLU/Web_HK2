@@ -34,6 +34,14 @@ public class ProductService {
     public boolean deleteProduct(int id) {
         return productDao.delete(id);
     }
+    public List<Product> getProductsByPage(int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        return productDao.getByPage(offset, pageSize);
+    }
+
+    public int getTotalProducts() {
+        return productDao.countTotalProducts();
+    }
 
     public static void main(String[] args) {
         ProductService productService = new ProductService();

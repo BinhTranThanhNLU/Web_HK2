@@ -122,6 +122,35 @@ public class ProductDao {
                         .execute() > 0
         );
     }
+    public List<Product> getByPage(int offset, int limit) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("""
+            SELECT 
+                p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                pi.idImage, pi.imageUrl, pi.`order`
+            FROM products p
+            JOIN categories c ON p.idCategory = c.idCategory
+            LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+            LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+            ORDER BY p.idProduct 
+            LIMIT :limit OFFSET :offset
+        """)
+                        .bind("limit", limit)
+                        .bind("offset", offset)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+
+    public int countTotalProducts() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM products")
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
 
     public static void main(String[] args) {
         List<Product> products = new ProductDao().getAll();

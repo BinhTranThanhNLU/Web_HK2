@@ -1,4 +1,5 @@
 package vn.edu.hcmuaf.st.web.entity;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,7 +18,17 @@ public class Product implements Serializable {
     private LocalDateTime updatedAt;
     private List<ProductImage> productImages = new ArrayList<>();
 
-    public Product(int idProduct, String title, double price, String imageUrl) {}
+    public Product() {
+    }
+
+    public Product(int idProduct, String title, double price, String imageUrl) {
+        this.idProduct = idProduct;
+        this.title = title;
+        this.price = price;
+        this.productImages = new ArrayList<>();
+        this.productImages.add(new ProductImage(imageUrl)); // Giả sử ProductImage có constructor nhận imageUrl
+    }
+
 
     public Product(int idProduct, Category category, Discount discount, String title, double price, String description, boolean status, LocalDateTime createdAt) {
         this.idProduct = idProduct;

@@ -2,14 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%--
-  Created by IntelliJ IDEA.
-  User: hdanh
-  Date: 24/02/2025
-  Time: 8:50 SA
-  To change this template use File | Settings | File Templates.
---%>
-
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -165,15 +157,28 @@
                         </c:if>
                     </c:forEach>
                 </div>
-                <nav class="mt-4" aria-label="Page navigation sample">
+                <nav class="mt-4" aria-label="Page navigation">
                     <ul class="pagination">
-                        <li class="page-item disabled"><a class="page-link" href="#">Lùi</a></li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Tiến</a></li>
+                        <c:if test="${currentPage > 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=${currentPage - 1}">Lùi</a>
+                            </li>
+                        </c:if>
+
+                        <c:forEach var="i" begin="1" end="${totalPages}">
+                            <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                <a class="page-link" href="?page=${i}">${i}</a>
+                            </li>
+                        </c:forEach>
+
+                        <c:if test="${currentPage < totalPages}">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=${currentPage + 1}">Tiến</a>
+                            </li>
+                        </c:if>
                     </ul>
                 </nav>
+
             </main> <!-- col.// -->
         </div>
     </div> <!-- container .//  -->
