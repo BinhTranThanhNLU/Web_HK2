@@ -31,9 +31,13 @@ public class HomeController extends HttpServlet {
         Map<String, List<Product>> productsByCategory1 = getProductsByCategoryBoy(productService);
         Map<String, List<Product>> productsByCategory2 = getProductsByCategoryGirl(productService);
 
+        //lấy danh sách sản phẩm có giảm giá
+        List<Product> productsHasDisount = getProductsHasDiscount(productService);
+
         request.setAttribute("products", products);
         request.setAttribute("productsByCategory1", productsByCategory1);
         request.setAttribute("productsByCategory2", productsByCategory2);
+        request.setAttribute("productsHasDisount", productsHasDisount);
 
         request.getRequestDispatcher("/view/view-index/index.jsp").forward(request, response);
     }
@@ -68,6 +72,10 @@ public class HomeController extends HttpServlet {
         productsByCategory.put("do-bo-girl", productService.getProductsByCategory(8));
 
         return productsByCategory;
+    }
+
+    public List<Product> getProductsHasDiscount(ProductService productService) {
+        return productService.getProductsHasDiscount();
     }
 
 }

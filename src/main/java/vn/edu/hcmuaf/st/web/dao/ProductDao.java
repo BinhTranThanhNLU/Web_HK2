@@ -98,7 +98,7 @@ public class ProductDao {
             """)
                         .bind("categoryId", categoryId)
                         .reduceRows(new LinkedHashMap<Integer, Product>(), (map, rowView) -> {
-                            int productId = rowView.getColumn("idProduct", Integer.class); // Sửa lại phương thức getColumn -> get
+                            int productId = rowView.getColumn("idProduct", Integer.class);
 
                             // Nếu sản phẩm chưa tồn tại trong map, tạo mới
                             Product product = map.computeIfAbsent(productId, id -> {
@@ -143,6 +143,68 @@ public class ProductDao {
         );
     }
 
+    public List<Product> getProductsHasDiscount() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("""
+                    SELECT
+                        p.idProduct, p.title, p.price, p.description, p.STATUS, p.createAt, p.updateAt,
+                        c.idCategory, c.categoryType, c.NAME AS categoryName, c.description AS categoryDescription,
+                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                        pi.idImage, pi.imageUrl, pi.`order`
+                    FROM products p
+                    JOIN categories c ON p.idCategory = c.idCategory
+                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+                    WHERE p.idDiscount IS NOT NULL AND d.discountAmount > 0
+                    ORDER BY p.idProduct;
+            """)
+                        .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
+                            int productId = row.getColumn("idProduct", Integer.class);
+
+                            Product product = map.computeIfAbsent(productId, id -> {
+                                Category category = new Category(
+                                        row.getColumn("idCategory", Integer.class),
+                                        row.getColumn("categoryType", String.class),
+                                        row.getColumn("categoryName", String.class),
+                                        row.getColumn("categoryDescription", String.class)
+                                );
+
+                                Discount discount = (row.getColumn("idDiscount", Integer.class) != null) ?
+                                        new Discount(
+                                                row.getColumn("idDiscount", Integer.class),
+                                                row.getColumn("discountAmount", Double.class),
+                                                row.getColumn("startDate", LocalDateTime.class),
+                                                row.getColumn("endDate", LocalDateTime.class) // có thể là null
+                                        ) : null;
+
+                                return new Product(
+                                        id,
+                                        category,
+                                        discount,
+                                        row.getColumn("title", String.class),
+                                        row.getColumn("price", Double.class),
+                                        row.getColumn("description", String.class),
+                                        row.getColumn("status", Boolean.class),
+                                        row.getColumn("createAt", LocalDateTime.class)
+                                );
+                            });
+
+                            // Thêm ảnh sản phẩm nếu có
+                            Integer imageId = row.getColumn("idImage", Integer.class);
+                            if (imageId != null) {
+                                product.getProductImages().add(new ProductImage(
+                                        imageId,
+                                        product,
+                                        row.getColumn("imageUrl", String.class),
+                                        row.getColumn("order", Integer.class)
+                                ));
+                            }
+
+                            return map;
+                        })
+                        .values().stream().toList()
+        );
+    }
 
     public Optional<Product> getById(int idProduct) {
         return jdbi.withHandle(handle ->
@@ -189,7 +251,7 @@ public class ProductDao {
     }
 
     public static void main(String[] args) {
-        List<Product> products = new ProductDao().getProductsByCategory(1);
+        List<Product> products = new ProductDao().getProductsHasDiscount();
         for (Product product : products) {
             System.out.println(product);
         }

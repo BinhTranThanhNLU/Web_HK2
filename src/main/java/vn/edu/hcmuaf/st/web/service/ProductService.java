@@ -23,6 +23,10 @@ public class ProductService {
         return productDao.getProductsByCategory(categoryId);
     }
 
+    public List<Product> getProductsHasDiscount() {
+        return productDao.getProductsHasDiscount();
+    }
+
     public Optional<Product> getProductById(int idProduct) {
         return productDao.getById(idProduct);
     }

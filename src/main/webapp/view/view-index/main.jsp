@@ -92,7 +92,7 @@
 
         <div class="disount-products" id="disount-products">
             <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
+                <c:forEach var="product" items="${productsHasDisount}" begin="0" end="7">
                     <div class="col-md-3 gap-3 mb-5">
                         <div class="product-card">
                             <div class="badge-custome">Hot</div>
@@ -110,8 +110,12 @@
                                 </h4>
                                 <div class="product-bottom-details">
                                     <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
+                                        <small class="ori-price" style="text-decoration: line-through;">
+                                            <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
+                                        </small>
+                                        <p class="dis-price">
+                                            <fmt:formatNumber value="${product.finalPrice}" pattern="#,##0 đ"/>
+                                        </p>
                                     </div>
                                     <div class="product-links">
                                         <a href="#"><i class="fa-solid fa-eye"></i></a>
