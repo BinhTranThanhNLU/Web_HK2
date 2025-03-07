@@ -21,17 +21,20 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
 
-        // Lấy danh sách sản phẩm
+        // Khởi tạo service một lần
         ProductService productService = new ProductService();
+
+        // Lấy danh sách sản phẩm
         List<Product> products = productService.getAllProducts();
 
-        //lấy danh sách sản phẩm theo category
-        Map<String, List<Product>> productsByCategory1 = getProductsByCategoryBoy();
-        Map<String, List<Product>> productsByCategory2 = getProductsByCategoryGirl();
+        // Lấy danh sách sản phẩm theo category
+        Map<String, List<Product>> productsByCategory1 = getProductsByCategoryBoy(productService);
+        Map<String, List<Product>> productsByCategory2 = getProductsByCategoryGirl(productService);
 
         request.setAttribute("products", products);
         request.setAttribute("productsByCategory1", productsByCategory1);
         request.setAttribute("productsByCategory2", productsByCategory2);
+
         request.getRequestDispatcher("/view/view-index/index.jsp").forward(request, response);
     }
 
@@ -45,10 +48,8 @@ public class HomeController extends HttpServlet {
         rd.forward(request, response);
     }
 
-    public Map<String,List<Product>> getProductsByCategoryBoy() {
+    public Map<String, List<Product>> getProductsByCategoryBoy(ProductService productService) {
         Map<String, List<Product>> productsByCategory = new HashMap<>();
-
-        ProductService productService = new ProductService();
 
         productsByCategory.put("ao-boy", productService.getProductsByCategory(1));
         productsByCategory.put("quan-boy", productService.getProductsByCategory(2));
@@ -58,10 +59,8 @@ public class HomeController extends HttpServlet {
         return productsByCategory;
     }
 
-    public Map<String,List<Product>> getProductsByCategoryGirl() {
+    public Map<String, List<Product>> getProductsByCategoryGirl(ProductService productService) {
         Map<String, List<Product>> productsByCategory = new HashMap<>();
-
-        ProductService productService = new ProductService();
 
         productsByCategory.put("ao-girl", productService.getProductsByCategory(5));
         productsByCategory.put("quan-girl", productService.getProductsByCategory(6));

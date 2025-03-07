@@ -15,10 +15,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Trang chủ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/card-product.css">
 </head>
 <body>
+
 <!-- ========================= SECTION MAIN ========================= -->
 <section class="section-intro padding-y-sm">
     <div class="container">
@@ -163,7 +165,7 @@
                                     <div class="product-bottom-details">
                                         <div class="product-price">
                                             <c:choose>
-                                                <c:when test="${product.hasDiscount}">
+                                                <c:when test="${product.discount != null && product.discount.discountAmount>0}">
                                                     <small class="ori-price" style="text-decoration: line-through;">
                                                         <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
                                                     </small>
@@ -172,7 +174,7 @@
                                                     </p>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <small class="ori-price">
+                                                    <small class="ori-price" style="color: #ff9800; font-size: 16px;">
                                                         <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
                                                     </small>
                                                 </c:otherwise>
@@ -233,7 +235,7 @@
                                     <div class="product-bottom-details">
                                         <div class="product-price">
                                             <c:choose>
-                                                <c:when test="${product.hasDiscount}">
+                                                <c:when test="${product.discount != null && product.discount.discountAmount>0}">
                                                     <small class="ori-price" style="text-decoration: line-through;">
                                                         <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
                                                     </small>
@@ -248,7 +250,6 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
-
                                         <div class="product-links">
                                             <a href="#"><i class="fa-solid fa-eye"></i></a>
                                             <a href="#"><i class="fa fa-shopping-cart"></i></a>
