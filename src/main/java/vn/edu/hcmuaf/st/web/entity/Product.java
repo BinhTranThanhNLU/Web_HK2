@@ -41,6 +41,17 @@ public class Product implements Serializable {
         this.createdAt = createdAt;
     }
 
+    public boolean hasDiscount() {
+        return discount != null && discount.getDiscountAmount() > 0;
+    }
+
+    public double getFinalPrice() {
+        if (hasDiscount()) {
+            return price * (1 - discount.getDiscountAmount() / 100.0);
+        }
+        return price;
+    }
+
     //Get & Set
     public int getIdProduct() {
         return idProduct;

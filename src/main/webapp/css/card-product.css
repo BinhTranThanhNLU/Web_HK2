@@ -126,7 +126,7 @@ a
 .product-price .ori-price {
     font-size: 14px;
     font-weight: 400;
-    text-decoration: line-through;
+    /*text-decoration: line-through;*/
     color: #999;
     margin-right: 10px;
 }

@@ -19,6 +19,10 @@ public class ProductService {
         return productDao.getAll();
     }
 
+    public List<Product> getProductsByCategory(int categoryId) {
+        return productDao.getProductsByCategory(categoryId);
+    }
+
     public Optional<Product> getProductById(int idProduct) {
         return productDao.getById(idProduct);
     }
