@@ -257,6 +257,68 @@ public class ProductDao {
         );
     }
 
+    public List<Product> getProductsByCategory(int categoryId) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("""
+                                    SELECT 
+                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM products p
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+                                    WHERE p.idCategory = :categoryId
+                                    ORDER BY p.idProduct, pi.`order`
+                                """)
+                        .bind("categoryId", categoryId)
+                        .reduceRows(new LinkedHashMap<Integer, Product>(), (map, rowView) -> {
+                            int productId = rowView.getColumn("idProduct", Integer.class); // Sửa lại phương thức getColumn -> get
+
+                            // Nếu sản phẩm chưa tồn tại trong map, tạo mới
+                            Product product = map.computeIfAbsent(productId, id -> {
+                                Product p = new Product(
+                                        id,
+                                        new Category(
+                                                rowView.getColumn("idCategory", Integer.class),
+                                                rowView.getColumn("categoryType", String.class),
+                                                rowView.getColumn("categoryName", String.class),
+                                                rowView.getColumn("categoryDescription", String.class)
+                                        ),
+                                        rowView.getColumn("idDiscount", Integer.class) != null ? new Discount(
+                                                rowView.getColumn("idDiscount", Integer.class),
+                                                rowView.getColumn("discountAmount", Double.class),
+                                                rowView.getColumn("startDate", LocalDateTime.class),
+                                                rowView.getColumn("endDate", LocalDateTime.class)
+                                        ) : null,
+                                        rowView.getColumn("title", String.class),
+                                        rowView.getColumn("price", Double.class),
+                                        rowView.getColumn("description", String.class),
+                                        rowView.getColumn("status", Boolean.class),
+                                        rowView.getColumn("createAt", LocalDateTime.class)
+                                );
+                                p.setProductImages(new ArrayList<>());
+                                return p;
+                            });
+
+                            // Nếu có hình ảnh, thêm vào danh sách hình ảnh của sản phẩm
+                            if (rowView.getColumn("idImage", Integer.class) != null) {
+                                product.getProductImages().add(new ProductImage(
+                                        rowView.getColumn("idImage", Integer.class),
+                                        product,
+                                        rowView.getColumn("imageUrl", String.class),
+                                        rowView.getColumn("order", Integer.class)
+                                ));
+                            }
+
+                            return map; // Thêm return map để tránh lỗi Missing return statement
+                        })
+                        .values().stream().toList()
+
+        );
+    }
+
     public static void main(String[] args) {
         // Kết nối đến cơ sở dữ liệu (ví dụ sử dụng MySQL)
         String dbUrl = "jdbc:mysql://localhost:3306/project_web";
@@ -285,5 +347,6 @@ public class ProductDao {
             System.out.println("Không có sản phẩm nào.");
         }
     }
+
 
 }
