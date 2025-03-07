@@ -122,29 +122,134 @@ public class ProductDao {
                         .execute() > 0
         );
     }
-    public List<Product> getByPage(int offset, int limit) {
+
+    // Phân Trang
+//    public List<Product> getProducts(int page, int recordsPerPage) {
+//        int offset = (page - 1) * recordsPerPage; // Tính toán offset dựa trên trang và số lượng bản ghi mỗi trang
+//
+//        return jdbi.withHandle(handle ->
+//                handle.createQuery("""
+//            SELECT
+//                p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+//                c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+//                d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+//                pi.idImage, pi.imageUrl, pi.`order`
+//            FROM products p
+//            JOIN categories c ON p.idCategory = c.idCategory
+//            LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+//            LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+//            WHERE pi.`order` = 1  -- Chỉ lấy hình ảnh có order = 1
+//            ORDER BY p.idProduct
+//            LIMIT :limit OFFSET :offset;
+//        """)
+//                        .bind("limit", recordsPerPage)
+//                        .bind("offset", offset)
+//                        .map((rs, ctx) -> {
+//                            // Map sản phẩm
+//                            Product product = new Product();
+//                            product.setIdProduct(rs.getInt("idProduct"));
+//                            product.setTitle(rs.getString("title"));
+//                            product.setPrice(rs.getDouble("price"));
+//                            product.setDescription(rs.getString("description"));
+//                            product.setStatus(rs.getBoolean("status"));
+//                            product.setCreatedAt(rs.getObject("createAt", LocalDateTime.class));
+//                            product.setUpdatedAt(rs.getObject("updateAt", LocalDateTime.class));
+//
+//                            // Map category
+//                            Category category = new Category();
+//                            category.setIdCategory(rs.getInt("idCategory"));
+//                            category.setCategoryType(rs.getString("categoryType"));
+//                            category.setName(rs.getString("categoryName"));
+//                            category.setDescription(rs.getString("categoryDescription"));
+//                            product.setCategory(category);
+//
+//                            // Map discount
+//                            Discount discount = new Discount();
+//                            discount.setIdDiscount(rs.getInt("idDiscount"));
+//                            discount.setDiscountAmount(rs.getDouble("discountAmount"));
+//                            discount.setStartDate(rs.getObject("startDate", LocalDateTime.class));
+//                            discount.setEndDate(rs.getObject("endDate", LocalDateTime.class));
+//                            product.setDiscount(discount);
+//
+//                            // Map product images
+//                            List<ProductImage> productImages = new ArrayList<>();
+//                            ProductImage productImage = new ProductImage();
+//                            productImage.setIdImage(rs.getInt("idImage"));
+//                            productImage.setImageUrl(rs.getString("imageUrl"));
+//                            productImage.setOrder(rs.getInt("order"));
+//                            productImages.add(productImage);
+//
+//                            product.setProductImages(productImages);
+//
+//                            return product;
+//                        }).list()
+//        );
+//    }
+    public List<Product> getProducts(int page, int pageSize) {
+        int offset = (page - 1) * pageSize; // Tính toán offset dựa trên trang và số lượng bản ghi mỗi trang
+
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
-            SELECT 
-                p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
-                c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
-                d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-                pi.idImage, pi.imageUrl, pi.`order`
-            FROM products p
-            JOIN categories c ON p.idCategory = c.idCategory
-            LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-            LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
-            ORDER BY p.idProduct 
-            LIMIT :limit OFFSET :offset
-        """)
-                        .bind("limit", limit)
+                                    SELECT 
+                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM products p
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+                                    WHERE pi.`order` = 1  -- Chỉ lấy hình ảnh có order = 1
+                                    ORDER BY p.idProduct
+                                    LIMIT :limit OFFSET :offset;  -- Thay FETCH bằng LIMIT và OFFSET
+                                """)
+                        .bind("limit", pageSize)
                         .bind("offset", offset)
-                        .mapToBean(Product.class)
-                        .list()
+                        .map((rs, ctx) -> {
+                            // Map sản phẩm
+                            Product product = new Product();
+                            product.setIdProduct(rs.getInt("idProduct"));
+                            product.setTitle(rs.getString("title"));
+                            product.setPrice(rs.getDouble("price"));
+                            product.setDescription(rs.getString("description"));
+                            product.setStatus(rs.getBoolean("status"));
+                            product.setCreatedAt(rs.getObject("createAt", LocalDateTime.class));
+                            product.setUpdatedAt(rs.getObject("updateAt", LocalDateTime.class));
+
+                            // Map category
+                            Category category = new Category();
+                            category.setIdCategory(rs.getInt("idCategory"));
+                            category.setCategoryType(rs.getString("categoryType"));
+                            category.setName(rs.getString("categoryName"));
+                            category.setDescription(rs.getString("categoryDescription"));
+                            product.setCategory(category);
+
+                            // Map discount
+                            Discount discount = new Discount();
+                            discount.setIdDiscount(rs.getInt("idDiscount"));
+                            discount.setDiscountAmount(rs.getDouble("discountAmount"));
+                            discount.setStartDate(rs.getObject("startDate", LocalDateTime.class));
+                            discount.setEndDate(rs.getObject("endDate", LocalDateTime.class));
+                            product.setDiscount(discount);
+
+                            // Map product images
+                            List<ProductImage> productImages = new ArrayList<>();
+                            ProductImage productImage = new ProductImage();
+                            productImage.setIdImage(rs.getInt("idImage"));
+                            productImage.setImageUrl(rs.getString("imageUrl"));
+                            productImage.setOrder(rs.getInt("order"));
+                            productImages.add(productImage);
+
+                            product.setProductImages(productImages);
+
+                            return product;
+                        }).list()
         );
     }
 
-    public int countTotalProducts() {
+
+    // đếm tổng sản phẩm trong cơ sở dữ liệu để chia số sản phẩm cho mỗi trang
+    public int getNumberOfRecords() {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT COUNT(*) FROM products")
                         .mapTo(Integer.class)
@@ -153,11 +258,32 @@ public class ProductDao {
     }
 
     public static void main(String[] args) {
-        List<Product> products = new ProductDao().getAll();
-        for (Product product : products) {
-            System.out.println(product);
+        // Kết nối đến cơ sở dữ liệu (ví dụ sử dụng MySQL)
+        String dbUrl = "jdbc:mysql://localhost:3306/project_web";
+        String username = "root";
+        String password = "password";
+
+        // Tạo đối tượng Jdbi từ URL kết nối cơ sở dữ liệu
+        Jdbi jdbi = Jdbi.create(dbUrl, username, password);
+
+        // Tạo đối tượng ProductDao
+        ProductDao productDao = new ProductDao();
+
+        // Giả sử bạn muốn lấy trang 1 với 5 sản phẩm mỗi trang
+        int page = 1;
+        int recordsPerPage = 150;
+
+        // Lấy danh sách sản phẩm phân trang
+        List<Product> products = productDao.getProducts(page, recordsPerPage);
+
+        // Kiểm tra và in ra danh sách sản phẩm
+        if (products != null && !products.isEmpty()) {
+            for (Product product : products) {
+                System.out.println(product);
+            }
+        } else {
+            System.out.println("Không có sản phẩm nào.");
         }
     }
-
 
 }

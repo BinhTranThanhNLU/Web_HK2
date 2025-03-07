@@ -35,6 +35,8 @@
         <header class="section-heading">
             <a href="${pageContext.request.contextPath}/all-product"
                class="btn btn-outline-primary float-right">Xem tất cả</a>
+            <a href="${pageContext.request.contextPath}/product?page=2"
+               class="btn btn-outline-primary float-right">Xem Phân Trang</a>
             <h3 class="section-title">Các Sản Phẩm Hot</h3>
         </header>
 

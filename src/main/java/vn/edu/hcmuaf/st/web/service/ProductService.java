@@ -36,11 +36,11 @@ public class ProductService {
     }
     public List<Product> getProductsByPage(int page, int pageSize) {
         int offset = (page - 1) * pageSize;
-        return productDao.getByPage(offset, pageSize);
+        return productDao.getProducts(offset, pageSize);
     }
 
     public int getTotalProducts() {
-        return productDao.countTotalProducts();
+        return productDao.getNumberOfRecords();
     }
 
     public static void main(String[] args) {
