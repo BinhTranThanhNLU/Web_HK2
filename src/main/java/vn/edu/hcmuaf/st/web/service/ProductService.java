@@ -19,14 +19,6 @@ public class ProductService {
         return productDao.getAll();
     }
 
-    public List<Product> getProductsByCategory(int categoryId) {
-        return productDao.getProductsByCategory(categoryId);
-    }
-
-    public List<Product> getProductsHasDiscount() {
-        return productDao.getProductsHasDiscount();
-    }
-
     public Optional<Product> getProductById(int idProduct) {
         return productDao.getById(idProduct);
     }
@@ -43,9 +35,25 @@ public class ProductService {
         return productDao.delete(id);
     }
 
+    public List<Product> getTop8ProductsHasDiscount() {
+        return productDao.getProductsHasDiscount(8, 0);
+    }
+
+    public List<Product> getNextTop8ProductsHasDiscount(int offset) {
+        return productDao.getProductsHasDiscount(8, offset);
+    }
+
+    public List<Product> getTop8ProductsByCategory(int categoryId) {
+        return productDao.getProductsByCategory(categoryId, 8, 0);
+    }
+
+    public List<Product> getNextTop8ProductsByCategory(int categoryId, int offset) {
+        return productDao.getProductsByCategory(categoryId, 8, offset);
+    }
+
     public static void main(String[] args) {
         ProductService productService = new ProductService();
-        List<Product> products = productService.getAllProducts();
+        List<Product> products = productService.getTop8ProductsByCategory(1);
         for (Product product : products) {
             System.out.println(product);
         }

@@ -19,7 +19,7 @@ public class Product implements Serializable {
 
     public Product(int idProduct, String title, double price, String imageUrl) {}
 
-    public Product(int idProduct, Category category, Discount discount, String title, double price, String description, boolean status, LocalDateTime createdAt) {
+    public Product(int idProduct, Category category, Discount discount, String title, double price, String description, boolean status) {
         this.idProduct = idProduct;
         this.category = category;
         this.discount = discount;
@@ -27,7 +27,6 @@ public class Product implements Serializable {
         this.price = price;
         this.description = description;
         this.status = status;
-        this.createdAt = createdAt;
     }
 
     public boolean hasDiscount() {

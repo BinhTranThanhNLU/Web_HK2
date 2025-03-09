@@ -31,4 +31,31 @@ function showTab(tabName, category) {
     if (selectedTab) {
         selectedTab.style.display = "flex";
     }
+
 }
+
+$(document).ready(function () {
+    $(".btn-load").click(function () {
+        let type = $(this).data("type");
+        let category = $(".nav-category[data-category='" + type + "'] .tab.active").data("tab");
+
+        let amount = 0;
+        if (type === "discount") {
+            amount = $("#" + type + " .product").length; // Lấy tổng số sản phẩm discount
+        } else {
+            amount = $("#" + type + " ." + category + " .product").length;
+        }
+
+        console.log("Load more:", "Type =", type, "Current amount =", amount, "Category =", category);
+
+        $.get("/web/loadmore", { total: amount, type: type, category: category })
+            .done(function(data) {
+                $("#" + type).append(data);
+            })
+            .fail(function() {
+                alert("Lỗi khi tải thêm sản phẩm!");
+            });
+    });
+});
+
+

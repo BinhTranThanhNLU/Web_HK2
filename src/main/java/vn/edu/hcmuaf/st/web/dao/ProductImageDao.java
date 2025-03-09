@@ -42,28 +42,6 @@ public class ProductImageDao {
         );
     }
 
-    public boolean add(ProductImage image) {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate("INSERT INTO product_images (idProduct, imageUrl, `order`) " +
-                                "VALUES (:idProduct, :imageUrl, :order)")
-                        .bind("idProduct", image.getProduct().getIdProduct())
-                        .bind("imageUrl", image.getImageUrl())
-                        .bind("order", image.getOrder())
-                        .execute() > 0
-        );
-    }
-
-    public boolean update(ProductImage image) {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate("UPDATE product_images SET idProduct = :idProduct, imageUrl = :imageUrl, `order` = :order " +
-                                "WHERE idImage = :idImage")
-                        .bind("idImage", image.getIdImage())
-                        .bind("idProduct", image.getProduct().getIdProduct())
-                        .bind("imageUrl", image.getImageUrl())
-                        .bind("order", image.getOrder())
-                        .execute() > 0
-        );
-    }
 
     public boolean delete(int idImage) {
         return jdbi.withHandle(handle ->

@@ -27,14 +27,6 @@ public class ProductImageService {
         return productImageDao.getById(idImage);
     }
 
-    public boolean addProductImage(ProductImage productImage) {
-        return productImageDao.add(productImage);
-    }
-
-    public boolean updateProductImage(ProductImage productImage) {
-        return productImageDao.update(productImage);
-    }
-
     public boolean deleteProductImage(int id) {
         return productImageDao.delete(id);
     }

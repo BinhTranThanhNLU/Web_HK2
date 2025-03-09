@@ -17,12 +17,11 @@ import java.util.Map;
 @WebServlet(name = "homeController", urlPatterns = "/home")
 public class HomeController extends HttpServlet {
 
+    private final ProductService productService = new ProductService();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
-
-        // Khởi tạo service một lần
-        ProductService productService = new ProductService();
 
         // Lấy danh sách sản phẩm
         List<Product> products = productService.getAllProducts();
@@ -32,12 +31,12 @@ public class HomeController extends HttpServlet {
         Map<String, List<Product>> productsByCategory2 = getProductsByCategoryGirl(productService);
 
         //lấy danh sách sản phẩm có giảm giá
-        List<Product> productsHasDisount = getProductsHasDiscount(productService);
+        List<Product> productsTop8HasDisount = getTop8ProductsHasDiscount(productService);
 
         request.setAttribute("products", products);
         request.setAttribute("productsByCategory1", productsByCategory1);
         request.setAttribute("productsByCategory2", productsByCategory2);
-        request.setAttribute("productsHasDisount", productsHasDisount);
+        request.setAttribute("productsTop8HasDisount", productsTop8HasDisount);
 
         request.getRequestDispatcher("/view/view-index/index.jsp").forward(request, response);
     }
@@ -55,10 +54,10 @@ public class HomeController extends HttpServlet {
     public Map<String, List<Product>> getProductsByCategoryBoy(ProductService productService) {
         Map<String, List<Product>> productsByCategory = new HashMap<>();
 
-        productsByCategory.put("ao-boy", productService.getProductsByCategory(1));
-        productsByCategory.put("quan-boy", productService.getProductsByCategory(2));
-        productsByCategory.put("giay-boy", productService.getProductsByCategory(3));
-        productsByCategory.put("do-bo-boy", productService.getProductsByCategory(4));
+        productsByCategory.put("ao-boy", productService.getTop8ProductsByCategory(1));
+        productsByCategory.put("quan-boy", productService.getTop8ProductsByCategory(2));
+        productsByCategory.put("giay-boy", productService.getTop8ProductsByCategory(3));
+        productsByCategory.put("do-bo-boy", productService.getTop8ProductsByCategory(4));
 
         return productsByCategory;
     }
@@ -66,16 +65,16 @@ public class HomeController extends HttpServlet {
     public Map<String, List<Product>> getProductsByCategoryGirl(ProductService productService) {
         Map<String, List<Product>> productsByCategory = new HashMap<>();
 
-        productsByCategory.put("ao-girl", productService.getProductsByCategory(5));
-        productsByCategory.put("quan-girl", productService.getProductsByCategory(6));
-        productsByCategory.put("vay-girl", productService.getProductsByCategory(7));
-        productsByCategory.put("do-bo-girl", productService.getProductsByCategory(8));
+        productsByCategory.put("ao-girl", productService.getTop8ProductsByCategory(5));
+        productsByCategory.put("quan-girl", productService.getTop8ProductsByCategory(6));
+        productsByCategory.put("vay-girl", productService.getTop8ProductsByCategory(7));
+        productsByCategory.put("do-bo-girl", productService.getTop8ProductsByCategory(8));
 
         return productsByCategory;
     }
 
-    public List<Product> getProductsHasDiscount(ProductService productService) {
-        return productService.getProductsHasDiscount();
+    public List<Product> getTop8ProductsHasDiscount(ProductService productService) {
+        return productService.getTop8ProductsHasDiscount();
     }
 
 }

@@ -91,9 +91,9 @@
         </header>
 
         <div class="disount-products" id="disount-products">
-            <div class="row">
-                <c:forEach var="product" items="${productsHasDisount}" begin="0" end="7">
-                    <div class="col-md-3 gap-3 mb-5">
+            <div class="row" id="discount">
+                <c:forEach var="product" items="${productsTop8HasDisount}">
+                    <div class="product col-md-3 gap-3 mb-5">
                         <div class="product-card">
                             <div class="badge-custome">Hot</div>
 
@@ -130,7 +130,7 @@
         </div>
 
         <div class="load-more">
-            <button>Xem thêm</button>
+            <button class="btn-load" data-type="discount">Xem thêm</button>
         </div>
     </div>
 </section>
@@ -152,9 +152,9 @@
 
         <c:forEach var="category" items="${productsByCategory1}">
             <div class="products-category" id="${category.key}" style="display: ${category.key == 'ao-boy' ? 'flex' : 'none'};">
-                <div class="row">
-                    <c:forEach var="product" items="${category.value}" begin="0" end="7">
-                        <div class="col-md-3 gap-3 mb-5">
+                <div class="row" id="boy">
+                    <c:forEach var="product" items="${category.value}">
+                        <div class="product col-md-3 gap-3 mb-5">
                             <div class="product-card">
                                 <div class="badge-custome">Hot</div>
 
@@ -199,7 +199,7 @@
         </c:forEach>
 
         <div class="load-more">
-            <button>Xem thêm</button>
+            <button class="btn-load" data-type="boy">Xem thêm</button>
         </div>
     </div>
 </section>
@@ -222,9 +222,9 @@
 
         <c:forEach var="category" items="${productsByCategory2}">
             <div class="products-category" id="${category.key}" style="display: ${category.key == 'ao-girl' ? 'flex' : 'none'};">
-                <div class="row">
-                    <c:forEach var="product" items="${category.value}" begin="0" end="7">
-                        <div class="col-md-3 gap-3 mb-5">
+                <div class="row" id="girl">
+                    <c:forEach var="product" items="${category.value}">
+                        <div class="product col-md-3 gap-3 mb-5">
                             <div class="product-card">
                                 <div class="badge-custome">Hot</div>
 
@@ -268,11 +268,14 @@
         </c:forEach>
 
         <div class="load-more">
-            <button>Xem thêm</button>
+            <button class="btn-load" data-type="girl">Xem thêm</button>
         </div>
     </div>
 </section>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+
 </body>
 </html>
