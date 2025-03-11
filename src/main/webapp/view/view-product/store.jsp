@@ -133,7 +133,7 @@
                 </header>
                 <div class="row">
                     <c:forEach var="product" items="${products}" varStatus="status">
-                        <c:if test="${status.index < 32}">
+                        <c:if test="${status.index < 151}">
                             <div class="col-md-4 mb-4">
                                 <figure class="card card-product-grid">
                                     <div class="img-wrap">

@@ -61,7 +61,7 @@ public class ProductController extends HttpServlet {
             // Kiểm tra tham số "page", nếu không có thì mặc định là 1
             String pageParam = request.getParameter("page");
             int page = 1;
-            int pageSize = 3;
+            int pageSize = 9;
 
             if (request.getParameter("page") != null) {
                 try {

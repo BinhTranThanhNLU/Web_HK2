@@ -122,27 +122,24 @@ public class ProductDao {
                         .execute() > 0
         );
     }
-
-    // Phân Trang
-//    public List<Product> getProducts(int page, int recordsPerPage) {
-//        int offset = (page - 1) * recordsPerPage; // Tính toán offset dựa trên trang và số lượng bản ghi mỗi trang
-//
+//    public List<Product> getProducts(int page, int pageSize) {
+//        int offset = (page - 1) * pageSize; // Tính toán offset dựa trên trang và số lượng bản ghi mỗi trang
 //        return jdbi.withHandle(handle ->
 //                handle.createQuery("""
-//            SELECT
-//                p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
-//                c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
-//                d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-//                pi.idImage, pi.imageUrl, pi.`order`
-//            FROM products p
-//            JOIN categories c ON p.idCategory = c.idCategory
-//            LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-//            LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
-//            WHERE pi.`order` = 1  -- Chỉ lấy hình ảnh có order = 1
-//            ORDER BY p.idProduct
-//            LIMIT :limit OFFSET :offset;
-//        """)
-//                        .bind("limit", recordsPerPage)
+//                                    SELECT
+//                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+//                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+//                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+//                                        pi.idImage, pi.imageUrl, pi.`order`
+//                                    FROM products p
+//                                    JOIN categories c ON p.idCategory = c.idCategory
+//                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+//                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+//                                    WHERE pi.`order` = 1  -- Chỉ lấy hình ảnh có order = 1
+//                                    ORDER BY p.idProduct
+//                                    LIMIT :limit OFFSET :offset;  -- Thay FETCH bằng LIMIT và OFFSET
+//                                """)
+//                        .bind("limit", pageSize)
 //                        .bind("offset", offset)
 //                        .map((rs, ctx) -> {
 //                            // Map sản phẩm
@@ -185,68 +182,116 @@ public class ProductDao {
 //                        }).list()
 //        );
 //    }
-    public List<Product> getProducts(int page, int pageSize) {
-        int offset = (page - 1) * pageSize; // Tính toán offset dựa trên trang và số lượng bản ghi mỗi trang
+//public List<Product> getProducts(int offset, int pageSize) {
+//    return jdbi.withHandle(handle ->
+//            handle.createQuery("""
+//                SELECT
+//                    p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+//                    c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+//                    d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+//                    pi.idImage, pi.imageUrl, pi.`order`
+//                FROM products p
+//                JOIN categories c ON p.idCategory = c.idCategory
+//                LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+//                LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+//                ORDER BY p.idProduct, pi.`order`
+//                LIMIT :pageSize OFFSET :offset
+//            """)
+//                    .bind("pageSize", pageSize)
+//                    .bind("offset", offset)
+//                    .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
+//                        int productId = row.getColumn("idProduct", Integer.class);
+//                        Product product = map.computeIfAbsent(productId, id -> new Product(
+//                                id,
+//                                new Category(
+//                                        row.getColumn("idCategory", Integer.class),
+//                                        row.getColumn("categoryType", String.class),
+//                                        row.getColumn("categoryName", String.class),
+//                                        row.getColumn("categoryDescription", String.class)
+//                                ),
+//                                row.getColumn("idDiscount", Integer.class) != null ? new Discount(
+//                                        row.getColumn("idDiscount", Integer.class),
+//                                        row.getColumn("discountAmount", Double.class),
+//                                        row.getColumn("startDate", LocalDateTime.class),
+//                                        row.getColumn("endDate", LocalDateTime.class)
+//                                ) : null,
+//                                row.getColumn("title", String.class),
+//                                row.getColumn("price", Double.class),
+//                                row.getColumn("description", String.class),
+//                                row.getColumn("status", Boolean.class),
+//                                row.getColumn("createAt", LocalDateTime.class)
+//                        ));
+//
+//                        if (row.getColumn("idImage", Integer.class) != null) {
+//                            if (product.getProductImages() == null) {
+//                                product.setProductImages(new ArrayList<>());
+//                            }
+//                            product.getProductImages().add(new ProductImage(
+//                                    row.getColumn("idImage", Integer.class),
+//                                    product,
+//                                    row.getColumn("imageUrl", String.class),
+//                                    row.getColumn("order", Integer.class)
+//                            ));
+//                        }
+//                        return map;
+//                    }).values().stream().toList()
+//    );
+//}
+//
+public List<Product> getProducts(int offset, int pageSize) {
+    return jdbi.withHandle(handle ->
+            handle.createQuery("""
+                SELECT 
+                    p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                    c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                    d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                    pi.idImage, pi.imageUrl, pi.`order`
+                FROM products p
+                JOIN categories c ON p.idCategory = c.idCategory
+                LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+                ORDER BY p.idProduct
+                LIMIT :pageSize OFFSET :offset
+            """)
+                    .bind("pageSize", pageSize)
+                    .bind("offset", offset)
+                    .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
+                        int productId = row.getColumn("idProduct", Integer.class);
+                        Product product = map.computeIfAbsent(productId, id -> new Product(
+                                id,
+                                new Category(
+                                        row.getColumn("idCategory", Integer.class),
+                                        row.getColumn("categoryType", String.class),
+                                        row.getColumn("categoryName", String.class),
+                                        row.getColumn("categoryDescription", String.class)
+                                ),
+                                row.getColumn("idDiscount", Integer.class) != null ? new Discount(
+                                        row.getColumn("idDiscount", Integer.class),
+                                        row.getColumn("discountAmount", Double.class),
+                                        row.getColumn("startDate", LocalDateTime.class),
+                                        row.getColumn("endDate", LocalDateTime.class)
+                                ) : null,
+                                row.getColumn("title", String.class),
+                                row.getColumn("price", Double.class),
+                                row.getColumn("description", String.class),
+                                row.getColumn("status", Boolean.class),
+                                row.getColumn("createAt", LocalDateTime.class)
+                        ));
 
-        return jdbi.withHandle(handle ->
-                handle.createQuery("""
-                                    SELECT 
-                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
-                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
-                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-                                        pi.idImage, pi.imageUrl, pi.`order`
-                                    FROM products p
-                                    JOIN categories c ON p.idCategory = c.idCategory
-                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
-                                    WHERE pi.`order` = 1  -- Chỉ lấy hình ảnh có order = 1
-                                    ORDER BY p.idProduct
-                                    LIMIT :limit OFFSET :offset;  -- Thay FETCH bằng LIMIT và OFFSET
-                                """)
-                        .bind("limit", pageSize)
-                        .bind("offset", offset)
-                        .map((rs, ctx) -> {
-                            // Map sản phẩm
-                            Product product = new Product();
-                            product.setIdProduct(rs.getInt("idProduct"));
-                            product.setTitle(rs.getString("title"));
-                            product.setPrice(rs.getDouble("price"));
-                            product.setDescription(rs.getString("description"));
-                            product.setStatus(rs.getBoolean("status"));
-                            product.setCreatedAt(rs.getObject("createAt", LocalDateTime.class));
-                            product.setUpdatedAt(rs.getObject("updateAt", LocalDateTime.class));
-
-                            // Map category
-                            Category category = new Category();
-                            category.setIdCategory(rs.getInt("idCategory"));
-                            category.setCategoryType(rs.getString("categoryType"));
-                            category.setName(rs.getString("categoryName"));
-                            category.setDescription(rs.getString("categoryDescription"));
-                            product.setCategory(category);
-
-                            // Map discount
-                            Discount discount = new Discount();
-                            discount.setIdDiscount(rs.getInt("idDiscount"));
-                            discount.setDiscountAmount(rs.getDouble("discountAmount"));
-                            discount.setStartDate(rs.getObject("startDate", LocalDateTime.class));
-                            discount.setEndDate(rs.getObject("endDate", LocalDateTime.class));
-                            product.setDiscount(discount);
-
-                            // Map product images
-                            List<ProductImage> productImages = new ArrayList<>();
-                            ProductImage productImage = new ProductImage();
-                            productImage.setIdImage(rs.getInt("idImage"));
-                            productImage.setImageUrl(rs.getString("imageUrl"));
-                            productImage.setOrder(rs.getInt("order"));
-                            productImages.add(productImage);
-
-                            product.setProductImages(productImages);
-
-                            return product;
-                        }).list()
-        );
-    }
-
+                        if (row.getColumn("idImage", Integer.class) != null) {
+                            List<ProductImage> images = new ArrayList<>();
+                            images.add(new ProductImage(
+                                    row.getColumn("idImage", Integer.class),
+                                    product,
+                                    row.getColumn("imageUrl", String.class),
+                                    row.getColumn("order", Integer.class)
+                            ));
+                            product.setProductImages(images);
+                        }
+                        return map;
+                    }).values().stream().toList()
+    );
+}
 
     // đếm tổng sản phẩm trong cơ sở dữ liệu để chia số sản phẩm cho mỗi trang
     public int getNumberOfRecords() {

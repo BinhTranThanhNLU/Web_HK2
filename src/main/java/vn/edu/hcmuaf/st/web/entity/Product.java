@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import vn.edu.hcmuaf.st.web.entity.ProductImage;
 
 public class Product implements Serializable {
 
