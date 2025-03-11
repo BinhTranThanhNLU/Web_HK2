@@ -29,6 +29,17 @@ public class Product implements Serializable {
         this.productImages = new ArrayList<>();
         this.productImages.add(new ProductImage(imageUrl)); // Giả sử ProductImage có constructor nhận imageUrl
     }
+    public Product(int idProduct, Category category, Discount discount, String title, double price, String description, boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.idProduct = idProduct;
+        this.category = category;
+        this.discount = discount;
+        this.title = title;
+        this.price = price;
+        this.description = description;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
 
     public Product(int idProduct, Category category, Discount discount, String title, double price, String description, boolean status) {
