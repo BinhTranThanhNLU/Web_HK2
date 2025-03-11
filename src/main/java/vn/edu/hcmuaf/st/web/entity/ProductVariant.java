@@ -1,7 +1,6 @@
 package vn.edu.hcmuaf.st.web.entity;
 
 
-
 import java.io.Serializable;
 
 public class ProductVariant implements Serializable {
@@ -12,7 +11,8 @@ public class ProductVariant implements Serializable {
     private Color color;
     private int stockQuantity;
 
-    public ProductVariant() {}
+    public ProductVariant() {
+    }
 
     public ProductVariant(int idvariant, Product product, Size size, Color color, int stockQuantity) {
         this.idvariant = idvariant;
@@ -61,5 +61,16 @@ public class ProductVariant implements Serializable {
 
     public void setStockQuantity(int stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductVariant{" +
+                "idvariant=" + idvariant +
+                ", product=" + product +
+                ", size=" + size +
+                ", color=" + color +
+                ", stockQuantity=" + stockQuantity +
+                '}';
     }
 }

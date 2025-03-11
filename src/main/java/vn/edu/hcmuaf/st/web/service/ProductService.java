@@ -2,8 +2,10 @@ package vn.edu.hcmuaf.st.web.service;
 
 import vn.edu.hcmuaf.st.web.dao.ProductDao;
 import vn.edu.hcmuaf.st.web.entity.Product;
+import vn.edu.hcmuaf.st.web.entity.ProductImage;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,5 +59,14 @@ public class ProductService {
         for (Product product : products) {
             System.out.println(product);
         }
+    }
+
+    public List<Product> getProductsByPage(int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        List<Product> products = productDao.getProducts(offset, pageSize);
+        return products;
+    }
+    public int getTotalProducts() {
+        return productDao.getNumberOfRecords();
     }
 }

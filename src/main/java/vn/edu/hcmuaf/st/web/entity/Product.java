@@ -1,8 +1,10 @@
 package vn.edu.hcmuaf.st.web.entity;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import vn.edu.hcmuaf.st.web.entity.ProductImage;
 
 public class Product implements Serializable {
 
@@ -17,7 +19,28 @@ public class Product implements Serializable {
     private LocalDateTime updatedAt;
     private List<ProductImage> productImages = new ArrayList<>();
 
-    public Product(int idProduct, String title, double price, String imageUrl) {}
+    public Product() {
+    }
+
+    public Product(int idProduct, String title, double price, String imageUrl) {
+        this.idProduct = idProduct;
+        this.title = title;
+        this.price = price;
+        this.productImages = new ArrayList<>();
+        this.productImages.add(new ProductImage(imageUrl)); // Giả sử ProductImage có constructor nhận imageUrl
+    }
+    public Product(int idProduct, Category category, Discount discount, String title, double price, String description, boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.idProduct = idProduct;
+        this.category = category;
+        this.discount = discount;
+        this.title = title;
+        this.price = price;
+        this.description = description;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
 
     public Product(int idProduct, Category category, Discount discount, String title, double price, String description, boolean status) {
         this.idProduct = idProduct;
