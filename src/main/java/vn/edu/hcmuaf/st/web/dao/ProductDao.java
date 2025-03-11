@@ -263,26 +263,84 @@ public class ProductDao {
     }
 
 
-    public List<Product> getProducts(int offset, int pageSize) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("""
-                SELECT 
-                    p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
-                    c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
-                    d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-                    pi.idImage, pi.imageUrl, pi.`order`
-                FROM products p
-                JOIN categories c ON p.idCategory = c.idCategory
-                LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-                LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
-                ORDER BY p.idProduct
-                LIMIT :pageSize OFFSET :offset
-            """)
-                        .bind("pageSize", pageSize)
-                        .bind("offset", offset)
-                        .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
-                            int productId = row.getColumn("idProduct", Integer.class);
-                            Product product = map.computeIfAbsent(productId, id -> new Product(
+//    public List<Product> getProducts(int offset, int pageSize) {
+//        return jdbi.withHandle(handle ->
+//                handle.createQuery("""
+//                SELECT
+//                    p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+//                    c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+//                    d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+//                    pi.idImage, pi.imageUrl, pi.`order`
+//                FROM products p
+//                JOIN categories c ON p.idCategory = c.idCategory
+//                LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+//                LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+//                ORDER BY p.idProduct
+//                LIMIT :pageSize OFFSET :offset
+//            """)
+//                        .bind("pageSize", pageSize)
+//                        .bind("offset", offset)
+//                        .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
+//                            int productId = row.getColumn("idProduct", Integer.class);
+//                            Product product = map.computeIfAbsent(productId, id -> new Product(
+//                                    id,
+//                                    new Category(
+//                                            row.getColumn("idCategory", Integer.class),
+//                                            row.getColumn("categoryType", String.class),
+//                                            row.getColumn("categoryName", String.class),
+//                                            row.getColumn("categoryDescription", String.class)
+//                                    ),
+//                                    row.getColumn("idDiscount", Integer.class) != null ? new Discount(
+//                                            row.getColumn("idDiscount", Integer.class),
+//                                            row.getColumn("discountAmount", Double.class),
+//                                            row.getColumn("startDate", LocalDateTime.class),
+//                                            row.getColumn("endDate", LocalDateTime.class)
+//                                    ) : null,
+//                                    row.getColumn("title", String.class),
+//                                    row.getColumn("price", Double.class),
+//                                    row.getColumn("description", String.class),
+//                                    row.getColumn("status", Boolean.class),
+//                                    row.getColumn("createAt", LocalDateTime.class),
+//                                    row.getColumn("updateAt", LocalDateTime.class)
+//                            ));
+//
+//
+//                            if (row.getColumn("idImage", Integer.class) != null) {
+//                                List<ProductImage> images = new ArrayList<>();
+//                                images.add(new ProductImage(
+//                                        row.getColumn("idImage", Integer.class),
+//                                        product,
+//                                        row.getColumn("imageUrl", String.class),
+//                                        row.getColumn("order", Integer.class)
+//                                ));
+//                                product.setProductImages(images);
+//                            }
+//                            return map;
+//                        }).values().stream().toList()
+//        );
+//    }
+public List<Product> getProducts(int offset, int pageSize) {
+    return jdbi.withHandle(handle ->
+            handle.createQuery("""
+            SELECT 
+                p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                pi.idImage, pi.imageUrl, pi.`order`
+            FROM products p
+            JOIN categories c ON p.idCategory = c.idCategory
+            LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+            LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+            ORDER BY p.idProduct
+            LIMIT :pageSize OFFSET :offset
+        """)
+                    .bind("pageSize", pageSize)
+                    .bind("offset", offset)
+                    .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
+                        int productId = row.getColumn("idProduct", Integer.class);
+                        Product product = map.computeIfAbsent(productId, id -> {
+                            // Sử dụng Product constructor đã có sẵn mà không tạo mới mỗi lần
+                            return new Product(
                                     id,
                                     new Category(
                                             row.getColumn("idCategory", Integer.class),
@@ -302,22 +360,42 @@ public class ProductDao {
                                     row.getColumn("status", Boolean.class),
                                     row.getColumn("createAt", LocalDateTime.class),
                                     row.getColumn("updateAt", LocalDateTime.class)
-                            ));
+                            );
+                        });
 
-
-                            if (row.getColumn("idImage", Integer.class) != null) {
-                                List<ProductImage> images = new ArrayList<>();
-                                images.add(new ProductImage(
-                                        row.getColumn("idImage", Integer.class),
-                                        product,
-                                        row.getColumn("imageUrl", String.class),
-                                        row.getColumn("order", Integer.class)
-                                ));
-                                product.setProductImages(images);
+                        // Cập nhật hình ảnh cho sản phẩm nếu có
+//                        if (row.getColumn("idImage", Integer.class) != null) {
+//                            List<ProductImage> images = product.getProductImages();
+//                            if (images == null) {
+//                                images = new ArrayList<>();
+//                            }
+//                            images.add(new ProductImage(
+//                                    row.getColumn("idImage", Integer.class),
+//                                    product,
+//                                    row.getColumn("imageUrl", String.class),
+//                                    row.getColumn("order", Integer.class)
+//                            ));
+//                            product.setProductImages(images);
+//                        }
+                        if (row.getColumn("idImage", Integer.class) != null) {
+                            List<ProductImage> images = product.getProductImages();
+                            if (images == null) {
+                                images = new ArrayList<>();
                             }
-                            return map;
-                        }).values().stream().toList()
-        );
-    }
+
+                            ProductImage productImage = new ProductImage();  // Tạo đối tượng ProductImage mới bằng constructor mặc định
+                            productImage.setIdImage(row.getColumn("idImage", Integer.class));
+                            productImage.setProduct(product);  // Gán đối tượng product
+                            productImage.setImageUrl(row.getColumn("imageUrl", String.class));
+                            productImage.setOrder(row.getColumn("order", Integer.class));
+
+                            images.add(productImage);  // Thêm hình ảnh vào danh sách
+                            product.setProductImages(images);  // Cập nhật danh sách hình ảnh cho sản phẩm
+                        }
+
+                        return map;
+                    }).values().stream().toList()
+    );
+}
 
 }
