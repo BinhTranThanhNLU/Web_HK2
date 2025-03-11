@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: hdanh
-  Date: 24/02/2025
-  Time: 8:44 SA
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="vn.edu.hcmuaf.st.web.entity.GoogleAccount" %>

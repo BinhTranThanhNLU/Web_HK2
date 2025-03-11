@@ -6,16 +6,14 @@ import java.io.Serializable;
 public class ProductImage implements Serializable {
 
     private int idImage;
-    private Product product;
     private String imageUrl;
     private int order;
 
     public ProductImage() {
     }
 
-    public ProductImage(int idImage, Product product, String imageUrl, int order) {
+    public ProductImage(int idImage, String imageUrl, int order) {
         this.idImage = idImage;
-        this.product = product;
         this.imageUrl = imageUrl;
         this.order = order;
     }
@@ -31,14 +29,6 @@ public class ProductImage implements Serializable {
 
     public void setIdImage(int idImage) {
         this.idImage = idImage;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public String getImageUrl() {

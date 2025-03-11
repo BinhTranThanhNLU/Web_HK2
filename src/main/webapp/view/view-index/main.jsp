@@ -15,10 +15,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Trang chủ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/card-product.css">
 </head>
 <body>
+
 <!-- ========================= SECTION MAIN ========================= -->
 <section class="section-intro padding-y-sm">
     <div class="container">
@@ -89,9 +91,9 @@
         </header>
 
         <div class="disount-products" id="disount-products">
-            <div class="row">
-                <c:forEach var="product" items="${products}" begin="1" end="8">
-                    <div class="col-md-3 gap-3 mb-5">
+            <div class="row" id="discount">
+                <c:forEach var="product" items="${productsTop8HasDisount}">
+                    <div class="product col-md-3 gap-3 mb-5">
                         <div class="product-card">
                             <div class="badge-custome">Hot</div>
 
@@ -108,8 +110,12 @@
                                 </h4>
                                 <div class="product-bottom-details">
                                     <div class="product-price">
-                                        <small class="ori-price"><fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/></small>
-                                        <p class="dis-price"><fmt:formatNumber value="200000" pattern="#,##0 đ"/></p>
+                                        <small class="ori-price" style="text-decoration: line-through;">
+                                            <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
+                                        </small>
+                                        <p class="dis-price">
+                                            <fmt:formatNumber value="${product.finalPrice}" pattern="#,##0 đ"/>
+                                        </p>
                                     </div>
                                     <div class="product-links">
                                         <a href="#"><i class="fa-solid fa-eye"></i></a>
@@ -124,7 +130,7 @@
         </div>
 
         <div class="load-more">
-            <button>Xem thêm</button>
+            <button class="btn-load" data-type="discount">Xem thêm</button>
         </div>
     </div>
 </section>
@@ -146,9 +152,9 @@
 
         <c:forEach var="category" items="${productsByCategory1}">
             <div class="products-category" id="${category.key}" style="display: ${category.key == 'ao-boy' ? 'flex' : 'none'};">
-                <div class="row">
-                    <c:forEach var="product" items="${category.value}" begin="0" end="7">
-                        <div class="col-md-3 gap-3 mb-5">
+                <div class="row" id="boy">
+                    <c:forEach var="product" items="${category.value}">
+                        <div class="product col-md-3 gap-3 mb-5">
                             <div class="product-card">
                                 <div class="badge-custome">Hot</div>
 
@@ -163,7 +169,7 @@
                                     <div class="product-bottom-details">
                                         <div class="product-price">
                                             <c:choose>
-                                                <c:when test="${product.hasDiscount}">
+                                                <c:when test="${product.discount != null && product.discount.discountAmount>0}">
                                                     <small class="ori-price" style="text-decoration: line-through;">
                                                         <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
                                                     </small>
@@ -172,7 +178,7 @@
                                                     </p>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <small class="ori-price">
+                                                    <small class="ori-price" style="color: #ff9800; font-size: 16px;">
                                                         <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
                                                     </small>
                                                 </c:otherwise>
@@ -193,7 +199,7 @@
         </c:forEach>
 
         <div class="load-more">
-            <button>Xem thêm</button>
+            <button class="btn-load" data-type="boy">Xem thêm</button>
         </div>
     </div>
 </section>
@@ -216,9 +222,9 @@
 
         <c:forEach var="category" items="${productsByCategory2}">
             <div class="products-category" id="${category.key}" style="display: ${category.key == 'ao-girl' ? 'flex' : 'none'};">
-                <div class="row">
-                    <c:forEach var="product" items="${category.value}" begin="0" end="7">
-                        <div class="col-md-3 gap-3 mb-5">
+                <div class="row" id="girl">
+                    <c:forEach var="product" items="${category.value}">
+                        <div class="product col-md-3 gap-3 mb-5">
                             <div class="product-card">
                                 <div class="badge-custome">Hot</div>
 
@@ -233,7 +239,7 @@
                                     <div class="product-bottom-details">
                                         <div class="product-price">
                                             <c:choose>
-                                                <c:when test="${product.hasDiscount}">
+                                                <c:when test="${product.discount != null && product.discount.discountAmount>0}">
                                                     <small class="ori-price" style="text-decoration: line-through;">
                                                         <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
                                                     </small>
@@ -248,7 +254,6 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
-
                                         <div class="product-links">
                                             <a href="#"><i class="fa-solid fa-eye"></i></a>
                                             <a href="#"><i class="fa fa-shopping-cart"></i></a>
@@ -263,11 +268,14 @@
         </c:forEach>
 
         <div class="load-more">
-            <button>Xem thêm</button>
+            <button class="btn-load" data-type="girl">Xem thêm</button>
         </div>
     </div>
 </section>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+
 </body>
 </html>
