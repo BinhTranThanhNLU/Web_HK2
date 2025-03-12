@@ -7,12 +7,8 @@ import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
 import vn.edu.hcmuaf.st.web.constant.Iconstant;
-import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
-
 import java.io.IOException;
-
-
-public class GoogleLogin {
+public class SocialLogin {
     public static String getToken(String code) throws ClientProtocolException, IOException {
         String response = Request.Post(Iconstant.GOOGLE_LINK_GET_TOKEN)
                 .bodyForm(
@@ -25,27 +21,18 @@ public class GoogleLogin {
                                 .build()
                 )
                 .execute().returnContent().asString();
-
         System.out.println("Google Token Response: " + response); // Debug
-
         JsonObject jobj = new Gson().fromJson(response, JsonObject.class);
-
         if (!jobj.has("access_token")) {
             System.out.println("Lỗi: Không tìm thấy access_token trong phản hồi.");
             return null;
         }
-
-
         String accessToken = jobj.get("access_token").getAsString();
         return accessToken;
     }
-
     public static GoogleAccount getUserInfo(final String accessToken) throws ClientProtocolException, IOException {
-
         String link = Iconstant.GOOGLE_LINK_GET_USER_INFO + accessToken;
-
         String response = Request.Get(link).execute().returnContent().asString();
-
         GoogleAccount googlePojo = new Gson().fromJson(response, GoogleAccount.class);
         System.out.println("GoogleAccount: " + googlePojo);
         return googlePojo;

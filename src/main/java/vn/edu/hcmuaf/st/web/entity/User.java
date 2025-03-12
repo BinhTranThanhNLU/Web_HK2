@@ -16,7 +16,6 @@ public class User {
     private String authProvider;
     private String socialId;
     private Date createAt;
-
     public int getIdUser() {
         return idUser;
     }

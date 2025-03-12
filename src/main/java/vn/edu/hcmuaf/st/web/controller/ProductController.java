@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet({"/all-product", "/product"})
@@ -102,7 +103,6 @@ public class ProductController extends HttpServlet {
         request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
     }
 
-
     private void commonSettings(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setCharacterEncoding("UTF-8");
@@ -112,4 +112,60 @@ public class ProductController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
     }
+
+    private void handlePagedProductsRange(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            // Kiểm tra tham số "page", nếu không có thì mặc định là 1
+            String pageParam = request.getParameter("page");
+            int page = 1;
+            int pageSize = 9;
+
+            // Lấy tham số "idCategory" từ request (từ 1 đến 4)
+            String idCategoryParam = request.getParameter("idCategory");
+            int idCategory = idCategoryParam != null ? Integer.parseInt(idCategoryParam) : 1;
+
+            // Nếu tham số "page" có trong request, parse và xử lý
+            if (pageParam != null) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                    if (page < 1) page = 1; // Đảm bảo không có giá trị âm hoặc 0
+                } catch (NumberFormatException e) {
+                    page = 1; // Nếu có lỗi, mặc định về trang 1
+                }
+            }
+
+            // Tính toán offset cho phân trang
+            int offset = (page - 1) * pageSize;
+
+            // Lấy danh sách sản phẩm theo idCategory và phân trang
+            List<Product> productList = productService.getProductsByCategoryRange(idCategory, offset, pageSize);
+
+            // Lấy tổng số sản phẩm theo idCategory
+            int totalProducts = productService.getTotalProductsByCategoryRange(idCategory);
+
+            // Tính toán số trang
+            int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
+            // Giới hạn giá trị của `page` để không vượt quá tổng số trang
+            if (page > totalPages) {
+                page = totalPages; // Nếu `page` lớn hơn số trang, chỉnh lại `page` là số trang cuối
+            }
+
+            // Gửi dữ liệu đến JSP
+            request.setAttribute("products", productList);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("idCategory", idCategory);
+
+        } catch (Exception e) {
+            request.setAttribute("error", "Lỗi khi lấy danh sách sản phẩm: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Forward đến JSP
+        request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
+    }
+
+
 }

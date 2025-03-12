@@ -1,12 +1,16 @@
 package vn.edu.hcmuaf.st.web.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
+import vn.edu.hcmuaf.st.web.controller.SocialLogin;
 import vn.edu.hcmuaf.st.web.dao.AccountRepository;
 
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
+import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
 
@@ -30,7 +34,6 @@ public class AccountService {
         }
         // Mã hóa mật khẩu bằng BCrypt
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
         // Tạo tài khoản mới (truyền các tham số cần thiết)
         return accountRepository.addUser(username, hashedPassword, fullname, email, phoneNumber);
     }
@@ -47,13 +50,11 @@ public class AccountService {
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication("danhv5879@gmail.com", "bvhofdvukcetvrdm");
             }
         });
-
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress("danhv5879@gmail.com"));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
@@ -66,7 +67,18 @@ public class AccountService {
     public boolean updatePassword(String email, String newPassword) {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         return accountRepository.updatePasswordByEmail(email, hashedPassword);
-
     }
+    // lấy tên người dùng sau khi đăng nhập thành công
+    public String getFullNameByUsername(String username) {
+        return accountRepository.getFullNameByUsername(username);
+    }
+
+    public void logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // Lấy session hiện tại (không tạo mới nếu không có)
+        if (session != null) {
+            session.invalidate(); // Hủy session
+        }
+    }
+
 }
 

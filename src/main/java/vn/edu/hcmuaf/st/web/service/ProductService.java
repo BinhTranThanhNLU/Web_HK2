@@ -53,6 +53,25 @@ public class ProductService {
         return productDao.getProductsByCategory(categoryId, 8, offset);
     }
 
+    public List<Product> getProductsByPage(int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        List<Product> products = productDao.getProducts(offset, pageSize);
+        return products;
+    }
+
+    public int getTotalProducts() {
+        return productDao.getNumberOfRecords();
+    }
+
+    public List<Product> getProductsByCategoryRange(int idCategory, int offset, int pageSize) {
+        return productDao.getProductsByCategoryRange(idCategory, offset, pageSize);
+    }
+
+    public int getTotalProductsByCategoryRange(int idCategory) {
+        return productDao.getTotalProductsByCategoryRange(idCategory);
+    }
+
+
     public static void main(String[] args) {
         ProductService productService = new ProductService();
         List<Product> products = productService.getTop8ProductsByCategory(1);
@@ -61,12 +80,5 @@ public class ProductService {
         }
     }
 
-    public List<Product> getProductsByPage(int page, int pageSize) {
-        int offset = (page - 1) * pageSize;
-        List<Product> products = productDao.getProducts(offset, pageSize);
-        return products;
-    }
-    public int getTotalProducts() {
-        return productDao.getNumberOfRecords();
-    }
+
 }

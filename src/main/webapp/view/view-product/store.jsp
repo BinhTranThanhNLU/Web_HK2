@@ -34,20 +34,18 @@
                         </header>
                         <div class="filter-content collapse show" id="collapse_1" style="">
                             <div class="card-body">
-
                                 <ul class="list-menu">
-                                    <li><a href="#">Bé Trai </a></li>
-                                    <li><a href="#">Quần </a></li>
-                                    <li><a href="#">Áo </a></li>
-                                    <li><a href="#">Đồ Bộ </a></li>
-                                    <li><a href="#">Giày,Dép </a></li>
+                                    <li><a href="/product?page=1&idCategory=1">Bé Trai</a></li>
+                                    <li><a href="#">--Quần </a></li>
+                                    <li><a href="#">--Áo </a></li>
+                                    <li><a href="#">--Đồ Bộ </a></li>
+                                    <li><a href="#">--Giày,Dép </a></li>
                                     <li><a href="#">Bé Gái</a></li>
-                                    <li><a href="#">Váy </a></li>
-                                    <li><a href="#">Áo </a></li>
-                                    <li><a href="#">Quần </a></li>
-                                    <li><a href="#">Đồ Bộ </a></li>
-                                    <li><a href="#">Giày,Dép </a></li>
-
+                                    <li><a href="#">--Váy </a></li>
+                                    <li><a href="#">--Áo </a></li>
+                                    <li><a href="#">--Quần </a></li>
+                                    <li><a href="#">--Đồ Bộ </a></li>
+                                    <li><a href="#">--Giày,Dép </a></li>
                                 </ul>
 
                             </div> <!-- card-body.// -->

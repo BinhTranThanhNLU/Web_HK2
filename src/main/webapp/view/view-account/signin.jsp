@@ -23,10 +23,10 @@
             <h4 class="card-title mb-4 text-center">Đăng Nhập</h4>
             <form action="${pageContext.request.contextPath}/sign" method="post">
                 <div class="form-group">
-                    <input name="username" type="text" class="form-control" placeholder="nhập vào tài khoản" required>
+                    <input name="username" type="text" class="form-control" placeholder="nhập vào tài khoản" d>
                 </div>
                 <div class="form-group">
-                    <input name="password" type="password" class="form-control" placeholder="Mật Khẩu" required>
+                    <input name="password" type="password" class="form-control" placeholder="Mật Khẩu" d>
                 </div>
                 <div class="form-group">
                     <a href="<%= request.getContextPath() %>/view/view-account/forgot-password.jsp" class="float-right">Quên Mật Khẩu?</a>
@@ -36,19 +36,30 @@
                 </div>
             </form>
             <!-- Nút đăng nhập bằng Google -->
-            <div class="form-group">
-                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/web/login&response_type=code&client_id=783371694466-v4tsjt4ch1ulqtbdinv02of0q3t4tpm8.apps.googleusercontent.com&approval_prompt=force"
-                   class="btn btn-danger btn-block">
-                    <i class="fa-brands fa-google"></i> Đăng nhập với Google
-                </a>
+
+            <div class="d-flex justify-content-between">
+                <!-- Nút đăng nhập bằng Google -->
+                <div class="form-group" style="width: 48%; margin-right: 10px;">
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/web/login&response_type=code&client_id=783371694466-v4tsjt4ch1ulqtbdinv02of0q3t4tpm8.apps.googleusercontent.com&approval_prompt=force"
+                       class="btn btn-danger btn-block" style="height: 33px; padding: 5px 10px;">
+                        <i class="fa-brands fa-google"></i> Google
+                    </a>
+                </div>
+
+                <!-- Nút đăng nhập bằng Facebook -->
+                <div class="form-group" style="width: 48%; margin-right: 0;">
+                    <a href="https://www.facebook.com/v17.0/dialog/oauth?client_id=YOUR_FACEBOOK_APP_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=email,public_profile"
+                       class="btn btn-primary btn-block" style="height: 33px; padding: 5px 10px;">
+                        <i class="fa-brands fa-facebook"></i> Facebook
+                    </a>
+                </div>
             </div>
 
-            <!-- Nút đăng nhập bằng Facebook -->
+            <!-- Hiển thị lỗi nếu có -->
             <div class="form-group">
-                <a href="https://www.facebook.com/v17.0/dialog/oauth?client_id=YOUR_FACEBOOK_APP_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=email,public_profile"
-                   class="btn btn-primary btn-block">
-                    <i class="fa-brands fa-facebook"></i> Đăng nhập với Facebook
-                </a>
+                <c:if test="${not empty error}">
+                    <p style="color: red; font-weight: bold;">${error}</p>
+                </c:if>
             </div>
         </div>
     </div>
