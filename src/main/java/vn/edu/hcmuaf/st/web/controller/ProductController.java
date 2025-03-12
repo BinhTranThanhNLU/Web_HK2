@@ -9,9 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-@WebServlet({"/all-product", "/product"})
+@WebServlet({"/all-product", "/product", "/boy-t-shirt"})
 public class ProductController extends HttpServlet {
 
     private ProductService productService;
@@ -32,7 +34,10 @@ public class ProductController extends HttpServlet {
         } else if (path.endsWith("/product")) {
             // Nếu là đường dẫn /product, xử lý phân trang
             handlePagedProducts(request, response);
+        } else if (path.endsWith("/boy-t-shirt")) {
+            handlePagedProductsRange(request, response);
         }
+
     }
 
     private void handleAllProducts(HttpServletRequest request, HttpServletResponse response)
@@ -56,6 +61,7 @@ public class ProductController extends HttpServlet {
         request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
     }
 
+    // phân trang tất cả sản phẩm
     private void handlePagedProducts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -103,7 +109,6 @@ public class ProductController extends HttpServlet {
         request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
     }
 
-
     private void commonSettings(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setCharacterEncoding("UTF-8");
@@ -112,5 +117,55 @@ public class ProductController extends HttpServlet {
         }
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+    }
+
+    // Phân Trang cho bé Trai
+    private void handlePagedProductsRange(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            // Lấy tham số "page" và kiểm tra giá trị hợp lệ
+            int page = Optional.ofNullable(request.getParameter("page"))
+                    .map(Integer::parseInt)
+                    .filter(p -> p > 0)
+                    .orElse(1); // Default to 1 if invalid or missing
+
+            int pageSize = 9;
+
+            // Lấy tham số "idCategory" và kiểm tra hợp lệ
+            int idCategory = Optional.ofNullable(request.getParameter("idCategory"))
+                    .map(Integer::parseInt)
+                    .filter(id -> id >= 1 && id <= 8)
+                    .orElse(1); // Default to category 1 if invalid or missing
+
+            // Tính toán offset cho phân trang
+            int offset = (page - 1) * pageSize;
+
+            // Lấy danh sách sản phẩm theo idCategory và phân trang
+            List<Product> productList = productService.getProductsByCategoryRange(idCategory, offset, pageSize);
+
+            // Lấy tổng số sản phẩm theo idCategory
+            int totalProducts = productService.getTotalProductsByCategoryRange(idCategory);
+
+            // Tính toán số trang
+            int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
+            // Giới hạn giá trị của `page` để không vượt quá tổng số trang
+            if (page > totalPages) {
+                page = totalPages; // Nếu `page` lớn hơn số trang, chỉnh lại `page` là số trang cuối
+            }
+
+            // Gửi dữ liệu đến JSP
+            request.setAttribute("products", productList);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("idCategory", idCategory);
+
+        } catch (Exception e) {
+            request.setAttribute("error", "Lỗi khi lấy danh sách sản phẩm: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Forward đến JSP
+        request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
     }
 }

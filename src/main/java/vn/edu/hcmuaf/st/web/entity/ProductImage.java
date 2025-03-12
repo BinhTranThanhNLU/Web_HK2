@@ -5,18 +5,12 @@ import java.io.Serializable;
 
 public class ProductImage implements Serializable {
 
-    private  Product product;
+
     private int idImage;
     private String imageUrl;
     private int order;
 
     public ProductImage() {
-    }
-    public ProductImage(int idImage, Product product, String imageUrl, int order) {
-        this.idImage = idImage;
-        this.product = product;
-        this.imageUrl = imageUrl;
-        this.order = order;
     }
 
     public ProductImage(int idImage, String imageUrl, int order) {
@@ -61,5 +55,8 @@ public class ProductImage implements Serializable {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", order=" + order +
                 '}';
+    }
+
+    public void setProduct(Product product) {
     }
 }

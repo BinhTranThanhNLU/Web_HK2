@@ -1,7 +1,7 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="vn.edu.hcmuaf.st.web.entity.GoogleAccount" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport"
@@ -60,23 +60,26 @@
                 <div class="d-flex justify-content-end mb-3 mb-lg-0">
                     <div class="widget-header">
                         <small class="title text-muted">
-                            ${not empty googleAccount ? googleAccount.name : "Khách!"}
+                            ${not empty googleAccount ? googleAccount.name : (not empty sessionScope.fullname ? sessionScope.fullname : "Khách!")}
                         </small>
                         <div>
                             <c:choose>
-                                <c:when test="${not empty googleAccount}">
+                                <c:when test="${not empty googleAccount or not empty sessionScope.fullname}">
                                     <a href="${pageContext.request.contextPath}/account">Xem Tài Khoản</a>
                                     <span class="dark-transp"> | </span>
                                     <a href="${pageContext.request.contextPath}/logout">Đăng Xuất</a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="${pageContext.request.contextPath}/view/view-account/signin.jsp">Đăng Nhập</a>
+                                    <a href="${pageContext.request.contextPath}/view/view-account/signin.jsp">Đăng
+                                        Nhập</a>
                                     <span class="dark-transp"> | </span>
-                                    <a href="${pageContext.request.contextPath}/view/view-account/register.jsp">Đăng Ký</a>
+                                    <a href="${pageContext.request.contextPath}/view/view-account/register.jsp">Đăng
+                                        Ký</a>
                                 </c:otherwise>
                             </c:choose>
                         </div>
                     </div>
+
                     <a href="/cart.html" class="widget-header pl-3 ml-3">
                         <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
                         <span class="badge badge-pill badge-danger notify">0</span>
@@ -115,11 +118,13 @@
                             <!-- Nội dung Navbar -->
                             <div class=" " id="navbarNav">
                                 <ul class="navbar-nav mx-auto">
-                                    <li class="nav-item dropdown"><a
-                                            class="nav-link text-dark" href="#"
+                                    <li class="nav-item dropdown">
+                                        <a
+                                            class="nav-link text-dark" href="${pageContext.request.contextPath}/home"
                                             role="button" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false" style="font-size: 20px;"> Trang Chủ </a></li>
-
+                                            aria-expanded="false" style="font-size: 20px;"> Trang Chủ
+                                    </a>
+                                    </li>
                                     <!-- Bé Trai -->
                                     <li class="nav-item dropdown"><a
                                             class="nav-link  dropdown-toggle text-dark" href="#"
@@ -127,12 +132,12 @@
                                             aria-haspopup="true" aria-expanded="false" style="font-size: 20px;"> Bé
                                         Trai </a>
                                         <div class="dropdown-menu" aria-labelledby="boyDropdown">
-                                            <a class="dropdown-item" href="#">Giày dép</a> <a
-                                                class="dropdown-item" href="#">Áo</a> <a
-                                                class="dropdown-item" href="#">Quần</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=3">Giày dép</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=1">Áo</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=2">Quần</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=4">Đồ Bộ</a>
                                         </div>
                                     </li>
-
                                     <!-- Bé Gái -->
                                     <li class="nav-item dropdown"><a
                                             class="nav-link dropdown-toggle text-dark" href="#"
@@ -140,9 +145,10 @@
                                             aria-haspopup="true" aria-expanded="false" style="font-size: 20px;"> Bé
                                         Gái </a>
                                         <div class="dropdown-menu" aria-labelledby="girlDropdown">
-                                            <a class="dropdown-item" href="#">Giày dép</a> <a
-                                                class="dropdown-item" href="#">Áo</a> <a
-                                                class="dropdown-item" href="#">Quần</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=5">Áo</a> <a
+                                                class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=6">Quần</a> <a
+                                                class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=7">Chân Váy</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=8">Đồ Bộ</a>
                                         </div>
                                     </li>
                                     <li class="nav-item dropdown"><a

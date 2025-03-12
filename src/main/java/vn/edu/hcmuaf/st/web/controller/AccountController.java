@@ -12,7 +12,7 @@ import vn.edu.hcmuaf.st.web.service.AccountService;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login", "/reset-password"})
+@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login", "/reset-password", "/logout"})
 public class AccountController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final AccountService accountService = new AccountService();
@@ -21,7 +21,6 @@ public class AccountController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         commonSettings(request, response);
-
         String action = request.getServletPath();
         switch (action) {
             case "/register":
@@ -42,10 +41,11 @@ public class AccountController extends HttpServlet {
             case "/reset-password":
                 request.getRequestDispatcher("/view/view-account/reset-password.jsp").forward(request, response);
                 break;
-
-            default:
-                request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
-                break;
+            case "/logout":
+                handleLogout(request, response);
+//            default:
+//                request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+//                break;
         }
     }
 
@@ -71,13 +71,16 @@ public class AccountController extends HttpServlet {
             case "/reset-password":
                 handleResetPassword(request, response);
                 break;
-
+            case "/logout":
+                handleLogout(request, response);
+                break;
             default:
                 response.sendRedirect("/sign");
                 break;
         }
     }
 
+    // UTF8
     private void commonSettings(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setCharacterEncoding("UTF-8");
@@ -88,8 +91,10 @@ public class AccountController extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
     }
 
+    // Đăng Nhập
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -101,14 +106,21 @@ public class AccountController extends HttpServlet {
 
         if (accountService.login(username, password)) {
             HttpSession session = request.getSession();
-            session.setAttribute("user", username);
+            session.setAttribute("username", username);
+
+            // Lấy fullname từ accountService (giả sử bạn có phương thức lấy fullname)
+            String fullname = accountService.getFullNameByUsername(username);
+            session.setAttribute("fullname", fullname);  // Thêm fullname vào session
+
             response.sendRedirect(request.getContextPath() + "/home");
         } else {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
         }
+
     }
 
+    // Đăng Ký
     private void handleRegister(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
@@ -142,6 +154,7 @@ public class AccountController extends HttpServlet {
         }
     }
 
+    // Quên MK
     private void handleForgotPassword(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String userEmail = request.getParameter("email");
@@ -153,14 +166,11 @@ public class AccountController extends HttpServlet {
         }
 
         int otpvalue = accountService.generateOTP();
-
         try {
             accountService.sendOTP(userEmail, otpvalue);
-
             request.setAttribute("message", "OTP đã được gửi tới email của bạn.");
             mySession.setAttribute("otp", otpvalue);
             mySession.setAttribute("email", userEmail);
-
             request.getRequestDispatcher("/view/view-account/enter-otp.jsp").forward(request, response);
 
         } catch (Exception e) {
@@ -187,14 +197,13 @@ public class AccountController extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
+    // Tạo Mk mới
     private void handleResetPassword(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         HttpSession session = request.getSession();
         String password = request.getParameter("password");
         String confPassword = request.getParameter("confPassword");
         String email = (String) session.getAttribute("email");
-
         RequestDispatcher dispatcher;
 
         // Kiểm tra các trường mật khẩu và xác nhận mật khẩu
@@ -219,6 +228,7 @@ public class AccountController extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
+    // Đăng nhập Bằng gg
     private void handleGoogleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             HttpSession session = request.getSession();
@@ -236,9 +246,8 @@ public class AccountController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=missing_code");
                 return;
             }
-
             // Xử lý đăng nhập Google
-            GoogleLogin gg = new GoogleLogin();
+            SocialLogin gg = new SocialLogin();
             String accessToken = gg.getToken(code);
             googleAccount = gg.getUserInfo(accessToken);
 
@@ -251,6 +260,21 @@ public class AccountController extends HttpServlet {
         } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=true");
         }
+    }
+
+    // Đăng Xuất Bằng Tk
+    private void handleLogout(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();  // Xóa session khi đăng xuất
+        }
+
+        // Đảm bảo response chưa bị committed trước khi gửi redirect
+        response.setStatus(HttpServletResponse.SC_OK);  // Đảm bảo không có lỗi status
+
+        // Sau khi logout, chuyển hướng về trang đăng nhập
+        response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp");
     }
 
 

@@ -35,7 +35,7 @@
 <section class="section-name padding-y-sm my-4">
     <div class="container">
         <header class="section-heading">
-            <a href="${pageContext.request.contextPath}/all-product"
+            <a href="${pageContext.request.contextPath}/product"
                class="btn btn-outline-primary float-right">Xem tất cả</a>
             <h3 class="section-title">Các Sản Phẩm Hot</h3>
         </header>
