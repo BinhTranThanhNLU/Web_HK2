@@ -11,8 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-@WebServlet({"/all-product", "/product"})
+@WebServlet({"/all-product", "/product", "/boy-t-shirt"})
 public class ProductController extends HttpServlet {
 
     private ProductService productService;
@@ -33,7 +34,10 @@ public class ProductController extends HttpServlet {
         } else if (path.endsWith("/product")) {
             // Nếu là đường dẫn /product, xử lý phân trang
             handlePagedProducts(request, response);
+        } else if (path.endsWith("/boy-t-shirt")) {
+            handlePagedProductsRange(request, response);
         }
+
     }
 
     private void handleAllProducts(HttpServletRequest request, HttpServletResponse response)
@@ -57,6 +61,7 @@ public class ProductController extends HttpServlet {
         request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
     }
 
+    // phân trang tất cả sản phẩm
     private void handlePagedProducts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -114,27 +119,23 @@ public class ProductController extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
     }
 
+    // Phân Trang cho bé Trai
     private void handlePagedProductsRange(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Kiểm tra tham số "page", nếu không có thì mặc định là 1
-            String pageParam = request.getParameter("page");
-            int page = 1;
+            // Lấy tham số "page" và kiểm tra giá trị hợp lệ
+            int page = Optional.ofNullable(request.getParameter("page"))
+                    .map(Integer::parseInt)
+                    .filter(p -> p > 0)
+                    .orElse(1); // Default to 1 if invalid or missing
+
             int pageSize = 9;
 
-            // Lấy tham số "idCategory" từ request (từ 1 đến 4)
-            String idCategoryParam = request.getParameter("idCategory");
-            int idCategory = idCategoryParam != null ? Integer.parseInt(idCategoryParam) : 1;
-
-            // Nếu tham số "page" có trong request, parse và xử lý
-            if (pageParam != null) {
-                try {
-                    page = Integer.parseInt(pageParam);
-                    if (page < 1) page = 1; // Đảm bảo không có giá trị âm hoặc 0
-                } catch (NumberFormatException e) {
-                    page = 1; // Nếu có lỗi, mặc định về trang 1
-                }
-            }
+            // Lấy tham số "idCategory" và kiểm tra hợp lệ
+            int idCategory = Optional.ofNullable(request.getParameter("idCategory"))
+                    .map(Integer::parseInt)
+                    .filter(id -> id >= 1 && id <= 8)
+                    .orElse(1); // Default to category 1 if invalid or missing
 
             // Tính toán offset cho phân trang
             int offset = (page - 1) * pageSize;
@@ -167,6 +168,4 @@ public class ProductController extends HttpServlet {
         // Forward đến JSP
         request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
     }
-
-
 }

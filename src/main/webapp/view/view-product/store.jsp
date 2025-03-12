@@ -18,7 +18,6 @@
     </div> <!-- container //  -->
 </section>
 <!-- ========================= SECTION INTRO END// ========================= -->
-
 <!-- ========================= SECTION CONTENT ========================= -->
 <section class="section-content padding-y">
     <div class="container">
@@ -35,19 +34,17 @@
                         <div class="filter-content collapse show" id="collapse_1" style="">
                             <div class="card-body">
                                 <ul class="list-menu">
-                                    <li><a href="/product?page=1&idCategory=1">Bé Trai</a></li>
-                                    <li><a href="#">--Quần </a></li>
-                                    <li><a href="#">--Áo </a></li>
-                                    <li><a href="#">--Đồ Bộ </a></li>
-                                    <li><a href="#">--Giày,Dép </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt">Bé Trai</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=1">--Áo</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=2">--Quần</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=3">--Giày,Dép</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=4">--Đồ Bộ</a></li>
                                     <li><a href="#">Bé Gái</a></li>
-                                    <li><a href="#">--Váy </a></li>
-                                    <li><a href="#">--Áo </a></li>
-                                    <li><a href="#">--Quần </a></li>
-                                    <li><a href="#">--Đồ Bộ </a></li>
-                                    <li><a href="#">--Giày,Dép </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=7">--Váy </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=5">--Áo </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=6">--Quần </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=8">--Đồ Bộ </a></li>
                                 </ul>
-
                             </div> <!-- card-body.// -->
                         </div>
                     </article> <!-- filter-group  .// -->
@@ -64,17 +61,14 @@
                                     <input type="checkbox">
                                     <span class="btn btn-light"> 2 Tuổi </span>
                                 </label>
-
                                 <label class="checkbox-btn">
                                     <input type="checkbox">
                                     <span class="btn btn-light"> 3 Tuổi </span>
                                 </label>
-
                                 <label class="checkbox-btn">
                                     <input type="checkbox">
                                     <span class="btn btn-light"> 4 Tuổi </span>
                                 </label>
-
                                 <label class="checkbox-btn">
                                     <input type="checkbox">
                                     <span class="btn btn-light">5 Tuổi </span>
@@ -91,7 +85,6 @@
                         </header>
                         <div class="filter-content collapse show" id="collapse_3" style="">
                             <div class="card-body">
-
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label>Nhỏ Nhất</label>
@@ -159,24 +152,23 @@
                     <ul class="pagination">
                         <c:if test="${currentPage > 1}">
                             <li class="page-item">
-                                <a class="page-link" href="?page=${currentPage - 1}">Lùi</a>
+                                <a class="page-link" href="?idCategory=${idCategory}&page=${currentPage - 1}">Lùi</a>
                             </li>
                         </c:if>
 
                         <c:forEach var="i" begin="1" end="${totalPages}">
                             <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                <a class="page-link" href="?page=${i}">${i}</a>
+                                <a class="page-link" href="?idCategory=${idCategory}&page=${i}">${i}</a>
                             </li>
                         </c:forEach>
 
                         <c:if test="${currentPage < totalPages}">
                             <li class="page-item">
-                                <a class="page-link" href="?page=${currentPage + 1}">Tiến</a>
+                                <a class="page-link" href="?idCategory=${idCategory}&page=${currentPage + 1}">Tiến</a>
                             </li>
                         </c:if>
                     </ul>
                 </nav>
-
             </main> <!-- col.// -->
         </div>
     </div> <!-- container .//  -->

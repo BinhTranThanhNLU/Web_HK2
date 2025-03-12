@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -71,9 +70,11 @@
                                     <a href="${pageContext.request.contextPath}/logout">Đăng Xuất</a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="${pageContext.request.contextPath}/view/view-account/signin.jsp">Đăng Nhập</a>
+                                    <a href="${pageContext.request.contextPath}/view/view-account/signin.jsp">Đăng
+                                        Nhập</a>
                                     <span class="dark-transp"> | </span>
-                                    <a href="${pageContext.request.contextPath}/view/view-account/register.jsp">Đăng Ký</a>
+                                    <a href="${pageContext.request.contextPath}/view/view-account/register.jsp">Đăng
+                                        Ký</a>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -117,11 +118,13 @@
                             <!-- Nội dung Navbar -->
                             <div class=" " id="navbarNav">
                                 <ul class="navbar-nav mx-auto">
-                                    <li class="nav-item dropdown"><a
-                                            class="nav-link text-dark" href="#"
+                                    <li class="nav-item dropdown">
+                                        <a
+                                            class="nav-link text-dark" href="${pageContext.request.contextPath}/home"
                                             role="button" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false" style="font-size: 20px;"> Trang Chủ </a></li>
-
+                                            aria-expanded="false" style="font-size: 20px;"> Trang Chủ
+                                    </a>
+                                    </li>
                                     <!-- Bé Trai -->
                                     <li class="nav-item dropdown"><a
                                             class="nav-link  dropdown-toggle text-dark" href="#"
@@ -129,12 +132,12 @@
                                             aria-haspopup="true" aria-expanded="false" style="font-size: 20px;"> Bé
                                         Trai </a>
                                         <div class="dropdown-menu" aria-labelledby="boyDropdown">
-                                            <a class="dropdown-item" href="#">Giày dép</a> <a
-                                                class="dropdown-item" href="#">Áo</a> <a
-                                                class="dropdown-item" href="#">Quần</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=3">Giày dép</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=1">Áo</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=2">Quần</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=4">Đồ Bộ</a>
                                         </div>
                                     </li>
-
                                     <!-- Bé Gái -->
                                     <li class="nav-item dropdown"><a
                                             class="nav-link dropdown-toggle text-dark" href="#"
@@ -142,9 +145,10 @@
                                             aria-haspopup="true" aria-expanded="false" style="font-size: 20px;"> Bé
                                         Gái </a>
                                         <div class="dropdown-menu" aria-labelledby="girlDropdown">
-                                            <a class="dropdown-item" href="#">Giày dép</a> <a
-                                                class="dropdown-item" href="#">Áo</a> <a
-                                                class="dropdown-item" href="#">Quần</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=5">Áo</a> <a
+                                                class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=6">Quần</a> <a
+                                                class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=7">Chân Váy</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=8">Đồ Bộ</a>
                                         </div>
                                     </li>
                                     <li class="nav-item dropdown"><a
