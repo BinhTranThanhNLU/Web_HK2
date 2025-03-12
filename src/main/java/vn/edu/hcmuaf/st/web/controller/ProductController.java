@@ -14,6 +14,7 @@ import java.util.List;
 
 @WebServlet({"/all-product", "/product"})
 public class ProductController extends HttpServlet {
+
     private ProductService productService;
 
     public void init() {
