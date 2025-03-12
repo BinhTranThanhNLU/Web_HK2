@@ -119,7 +119,13 @@
                                     </div>
                                     <div class="product-links">
                                         <a href="#"><i class="fa-solid fa-eye"></i></a>
-                                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                        <form action="/cart" method="post">
+                                            <input type="hidden" name="action" value="add"/>
+                                            <input type="hidden" name="idProduct" value="${product.idProduct}"/>
+                                            <button class="btn-cart" type="submit">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +193,13 @@
 
                                         <div class="product-links">
                                             <a href="#"><i class="fa-solid fa-eye"></i></a>
-                                            <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                            <form action="/cart" method="post">
+                                                <input type="hidden" name="action" value="add"/>
+                                                <input type="hidden" name="idProduct" value="${product.idProduct}"/>
+                                                <button class="btn-cart" type="submit">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -256,7 +268,13 @@
                                         </div>
                                         <div class="product-links">
                                             <a href="#"><i class="fa-solid fa-eye"></i></a>
-                                            <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                                            <form action="/cart" method="post">
+                                                <input type="hidden" name="action" value="add"/>
+                                                <input type="hidden" name="idProduct" value="${product.idProduct}"/>
+                                                <button class="btn-cart" type="submit">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

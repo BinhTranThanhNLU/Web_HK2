@@ -18,6 +18,7 @@ public class Product implements Serializable {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<ProductImage> productImages = new ArrayList<>();
+    private List<ProductVariant> productVariants = new ArrayList<>();
 
     public Product() {
     }
@@ -50,6 +51,10 @@ public class Product implements Serializable {
         this.price = price;
         this.description = description;
         this.status = status;
+    }
+
+    public void addVariant(ProductVariant productVariant) {
+        productVariants.add(productVariant);
     }
 
     public boolean hasDiscount() {
@@ -147,9 +152,17 @@ public class Product implements Serializable {
         this.productImages = productImages;
     }
 
+    public List<ProductVariant> getProductVariants() {
+        return productVariants;
+    }
+
+    public void setProductVariants(List<ProductVariant> productVariants) {
+        this.productVariants = productVariants;
+    }
+
     @Override
     public String toString() {
-        return "ProductRepository{" +
+        return "Product{" +
                 "idProduct=" + idProduct +
                 ", category=" + category +
                 ", discount=" + discount +
@@ -160,6 +173,7 @@ public class Product implements Serializable {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", productImages=" + productImages +
+                ", productVariants=" + productVariants +
                 '}';
     }
 }

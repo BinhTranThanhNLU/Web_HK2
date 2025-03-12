@@ -23,15 +23,4 @@ public class ProductVariantService {
         return productVariantDao.getById(idVariant);
     }
 
-    public boolean addProductVariant(ProductVariant variant) {
-        return productVariantDao.add(variant);
-    }
-
-    public boolean updateProductVariant(ProductVariant variant) {
-        return productVariantDao.update(variant);
-    }
-
-    public boolean deleteProductVariant(int idVariant) {
-        return productVariantDao.delete(idVariant);
-    }
 }

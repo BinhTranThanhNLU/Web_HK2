@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class ProductVariant implements Serializable {
 
     private int idvariant;
-    private Product product;
+    private int idProduct;
     private Size size;
     private Color color;
     private int stockQuantity;
@@ -14,9 +14,9 @@ public class ProductVariant implements Serializable {
     public ProductVariant() {
     }
 
-    public ProductVariant(int idvariant, Product product, Size size, Color color, int stockQuantity) {
+    public ProductVariant(int idvariant, int idProduct, Size size, Color color, int stockQuantity) {
         this.idvariant = idvariant;
-        this.product = product;
+        this.idProduct = idProduct;
         this.size = size;
         this.color = color;
         this.stockQuantity = stockQuantity;
@@ -31,12 +31,12 @@ public class ProductVariant implements Serializable {
         this.idvariant = idvariant;
     }
 
-    public Product getProduct() {
-        return product;
+    public int getIdProduct() {
+        return idProduct;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setIdProduct(int idProduct) {
+        this.idProduct = idProduct;
     }
 
     public Size getSize() {
@@ -67,7 +67,7 @@ public class ProductVariant implements Serializable {
     public String toString() {
         return "ProductVariant{" +
                 "idvariant=" + idvariant +
-                ", product=" + product +
+                ", idProduct=" + idProduct +
                 ", size=" + size +
                 ", color=" + color +
                 ", stockQuantity=" + stockQuantity +

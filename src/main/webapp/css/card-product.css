@@ -111,7 +111,7 @@ a
 
 .product-bottom-details div {
     float: left;
-    width: 50%;
+    width: 30%;
 }
 
 .product-price {
@@ -137,10 +137,14 @@ a
 
 .product-links {
     text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 10px;
 }
 
 .product-links a {
-    display: inline-block;
+    /*display: inline-block;*/
     margin-left: 10px;
     color: #bbb;
     transition: 0.3s;
@@ -150,3 +154,18 @@ a
 .product-links a:hover {
     color: #ff9800;
 }
+
+.product-links .btn-cart {
+    /*display: inline-block;*/
+    margin-left: 10px;
+    color: #bbb;
+    transition: 0.3s;
+    font-size: 22px;
+    border: none;
+    box-shadow: none;
+}
+
+.product-links .btn-cart:hover {
+    color: #ff9800;
+}
+

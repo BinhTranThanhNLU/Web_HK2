@@ -33,37 +33,6 @@ public class ProductVariantDao {
         );
     }
 
-    public boolean add(ProductVariant variant) {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate("INSERT INTO product_variants (idProduct, idSize, idColor, stockQuantity) " +
-                                "VALUES (:idProduct, :idSize, :idColor, :stockQuantity)")
-                        .bind("idProduct", variant.getProduct().getIdProduct())
-                        .bind("idSize", variant.getSize().getIdSize())
-                        .bind("idColor", variant.getColor().getIdColor())
-                        .bind("stockQuantity", variant.getStockQuantity())
-                        .execute() > 0
-        );
-    }
 
-    public boolean update(ProductVariant variant) {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate("UPDATE product_variants SET idProduct = :idProduct, idSize = :idSize, " +
-                                "idColor = :idColor, stockQuantity = :stockQuantity WHERE idVariant = :idVariant")
-                        .bind("idVariant", variant.getIdvariant())
-                        .bind("idProduct", variant.getProduct().getIdProduct())
-                        .bind("idSize", variant.getSize().getIdSize())
-                        .bind("idColor", variant.getColor().getIdColor())
-                        .bind("stockQuantity", variant.getStockQuantity())
-                        .execute() > 0
-        );
-    }
-
-    public boolean delete(int idVariant) {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate("DELETE FROM product_variants WHERE idVariant = :idVariant")
-                        .bind("idVariant", idVariant)
-                        .execute() > 0
-        );
-    }
 
 }

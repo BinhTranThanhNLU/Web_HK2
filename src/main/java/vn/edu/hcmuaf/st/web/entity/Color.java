@@ -16,6 +16,11 @@ public class Color implements Serializable {
         this.hexcode = hexcode;
     }
 
+    public Color(int idColor, String color) {
+        this.idColor = idColor;
+        this.color = color;
+    }
+
     //Get & Set
 
     public int getIdColor() {
