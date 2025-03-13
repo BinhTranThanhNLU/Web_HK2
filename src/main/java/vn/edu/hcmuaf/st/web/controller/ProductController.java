@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet({"/all-product", "/product", "/boy-t-shirt"})
+@WebServlet({"/all-product", "/product", "/fashion"})
 public class ProductController extends HttpServlet {
 
     private ProductService productService;
@@ -34,7 +34,7 @@ public class ProductController extends HttpServlet {
         } else if (path.endsWith("/product")) {
             // Nếu là đường dẫn /product, xử lý phân trang
             handlePagedProducts(request, response);
-        } else if (path.endsWith("/boy-t-shirt")) {
+        } else if (path.endsWith("/fashion")) {
             handlePagedProductsRange(request, response);
         }
 

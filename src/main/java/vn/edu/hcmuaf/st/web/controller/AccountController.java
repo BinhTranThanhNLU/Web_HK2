@@ -44,9 +44,6 @@ public class AccountController extends HttpServlet {
                 break;
             case "/logout":
                 handleLogout(request, response);
-//            default:
-//                request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
-//                break;
         }
     }
 
