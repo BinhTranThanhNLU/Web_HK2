@@ -4,6 +4,8 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.Query;
 import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
+import vn.edu.hcmuaf.st.web.entity.Address;
+import vn.edu.hcmuaf.st.web.entity.User;
 
 public class AccountRepository {
     private final Jdbi jdbi;
@@ -43,6 +45,8 @@ public class AccountRepository {
             return rowsInserted > 0;
         });
     }
+
+
     public boolean validateUser(String username, String password) {
         String query = "SELECT password FROM users WHERE username = ?";
 
@@ -68,6 +72,7 @@ public class AccountRepository {
             return rowsUpdated > 0;
         });
     }
+
     // lấy tên
     public String getFullNameByUsername(String username) {
         String query = "SELECT fullName FROM users WHERE username = ?";
@@ -81,4 +86,21 @@ public class AccountRepository {
             return fullName;  // Trả về giá trị fullName
         });
     }
+    public User getUserByUsername(String username) {
+        String query = "SELECT fullName, password, username, email,phoneNumber FROM users WHERE username = ?";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(query)
+                        .bind(0, username)
+                        .map((rs, ctx) -> new User(
+                                rs.getString("fullName"),
+                                rs.getString("password"),
+                                rs.getString("username"),
+                                rs.getString("email"),
+                                rs.getString("phoneNumber")
+                        )).findOne().orElse(null)
+        );
+    }
+    
 }
+

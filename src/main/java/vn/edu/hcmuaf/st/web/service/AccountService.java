@@ -9,6 +9,8 @@ import vn.edu.hcmuaf.st.web.dao.AccountRepository;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import vn.edu.hcmuaf.st.web.entity.Address;
+import vn.edu.hcmuaf.st.web.entity.User;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -68,6 +70,7 @@ public class AccountService {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         return accountRepository.updatePasswordByEmail(email, hashedPassword);
     }
+
     // lấy tên người dùng sau khi đăng nhập thành công
     public String getFullNameByUsername(String username) {
         return accountRepository.getFullNameByUsername(username);
@@ -80,5 +83,9 @@ public class AccountService {
         }
     }
 
+
+    public User getUserByUsername(String username) {
+        return accountRepository.getUserByUsername(username);
+    }
 }
 

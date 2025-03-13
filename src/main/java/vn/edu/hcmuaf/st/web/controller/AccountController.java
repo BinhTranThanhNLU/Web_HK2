@@ -7,12 +7,13 @@ import jakarta.servlet.http.*;
 
 
 import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
+import vn.edu.hcmuaf.st.web.entity.User;
 import vn.edu.hcmuaf.st.web.service.AccountService;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login", "/reset-password", "/logout"})
+@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login", "/reset-password", "/logout","/profile"})
 public class AccountController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final AccountService accountService = new AccountService();
@@ -74,6 +75,7 @@ public class AccountController extends HttpServlet {
             case "/logout":
                 handleLogout(request, response);
                 break;
+
             default:
                 response.sendRedirect("/sign");
                 break;
@@ -92,6 +94,34 @@ public class AccountController extends HttpServlet {
     }
 
     // Đăng Nhập
+//    private void handleLogin(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//
+//        String username = request.getParameter("username");
+//        String password = request.getParameter("password");
+//
+//        if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
+//            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
+//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+//            return;
+//        }
+//
+//        if (accountService.login(username, password)) {
+//            HttpSession session = request.getSession();
+//            session.setAttribute("username", username);
+//
+//            // Lấy fullname từ accountService (giả sử bạn có phương thức lấy fullname)
+//            String fullname = accountService.getFullNameByUsername(username);
+//            session.setAttribute("fullname", fullname);  // Thêm fullname vào session
+//
+//            response.sendRedirect(request.getContextPath() + "/home");
+//        } else {
+//            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
+//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+//        }
+//
+//    }
+// Đăng Nhập
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -106,19 +136,27 @@ public class AccountController extends HttpServlet {
 
         if (accountService.login(username, password)) {
             HttpSession session = request.getSession();
-            session.setAttribute("username", username);
 
-            // Lấy fullname từ accountService (giả sử bạn có phương thức lấy fullname)
-            String fullname = accountService.getFullNameByUsername(username);
-            session.setAttribute("fullname", fullname);  // Thêm fullname vào session
+            // Lấy toàn bộ thông tin user từ database
+            User user = accountService.getUserByUsername(username);
+
+            if (user != null) {
+                session.setAttribute("username", user.getUsername());
+                session.setAttribute("fullname", user.getFullName());
+                session.setAttribute("email", user.getEmail());
+                session.setAttribute("password", user.getPassword());
+                session.setAttribute("phoneNumber", user.getPhoneNumber());// Chú ý: Không nên lưu mật khẩu vào session!
+                session.setAttribute("birthDate", user.getBirthDate());
+                session.setAttribute("image", user.getImage());
+            }
 
             response.sendRedirect(request.getContextPath() + "/home");
         } else {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
         }
-
     }
+
 
     // Đăng Ký
     private void handleRegister(HttpServletRequest request, HttpServletResponse response)
@@ -276,6 +314,4 @@ public class AccountController extends HttpServlet {
         // Sau khi logout, chuyển hướng về trang đăng nhập
         response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp");
     }
-
-
 }
