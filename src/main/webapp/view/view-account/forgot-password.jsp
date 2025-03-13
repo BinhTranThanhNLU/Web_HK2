@@ -16,37 +16,81 @@
 </head>
 <body>
 <%@ include file="/view/view-index/header.jsp" %>
+<%--<section class="section-content padding-y">--%>
+<%--    <!-- ============================ COMPONENT FORGOT PASSWORD ================================= -->--%>
+<%--    <div class="card mx-auto" style="max-width:520px; margin-top:40px;">--%>
+<%--        <article class="card-body">--%>
+<%--            <header class="mb-4"><h4 class="card-title">Quên Mật Khẩu</h4></header>--%>
+<%--            <form action="${pageContext.request.contextPath}/forgot-password" method="post">--%>
+<%--                <div class="form-group">--%>
+<%--                    <label>Email của bạn</label>--%>
+<%--                    <input type="email" name="email" class="form-control" placeholder="Nhập email" required>--%>
+<%--                </div> <!-- form-group end.// -->--%>
+
+<%--                <div class="form-group">--%>
+<%--                    <button type="submit" class="btn btn-primary btn-block">Gửi Yêu Cầu</button>--%>
+<%--                </div> <!-- form-group// -->--%>
+
+<%--                &lt;%&ndash; Hiện thông báo lỗi &ndash;%&gt;--%>
+<%--                <c:if test="${not empty error}">--%>
+<%--                    <div class="error-message" style="color: red;">${error}</div>--%>
+<%--                </c:if>--%>
+
+<%--                &lt;%&ndash; Hiện thông báo thành công &ndash;%&gt;--%>
+<%--                <c:if test="${not empty success}">--%>
+<%--                    <div class="success-message" style="color: green;">${success}</div>--%>
+<%--                </c:if>--%>
+
+<%--            </form>--%>
+<%--        </article><!-- card-body.// -->--%>
+<%--    </div> <!-- card .// -->--%>
+<%--    <p class="text-center mt-4">Bạn nhớ mật khẩu? <a href="${pageContext.request.contextPath}/login">Đăng nhập</a></p>--%>
+<%--    <br><br>--%>
+<%--    <!-- ============================ COMPONENT FORGOT PASSWORD END ================================= -->--%>
+<%--</section>--%>
 <section class="section-content padding-y">
-    <!-- ============================ COMPONENT FORGOT PASSWORD ================================= -->
     <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
         <article class="card-body">
-            <header class="mb-4"><h4 class="card-title">Quên Mật Khẩu</h4></header>
+            <%
+                String loggedInEmail = (String) session.getAttribute("email"); // Lấy email từ session
+            %>
+
+            <!-- Nếu đã đăng nhập, đổi tiêu đề thành "Đổi Mật Khẩu" -->
+            <header class="mb-4">
+                <h4 class="card-title">
+                    <%= (loggedInEmail != null) ? "Đổi Mật Khẩu" : "Quên Mật Khẩu" %>
+                </h4>
+            </header>
+
             <form action="${pageContext.request.contextPath}/forgot-password" method="post">
                 <div class="form-group">
                     <label>Email của bạn</label>
-                    <input type="email" name="email" class="form-control" placeholder="Nhập email" required>
-                </div> <!-- form-group end.// -->
+                    <input type="email" name="email" class="form-control"
+                           value="<%= (loggedInEmail != null) ? loggedInEmail : "" %>"
+                           placeholder="Nhập email"
+                        <%= (loggedInEmail != null) ? "readonly" : "" %> required>
+                </div>
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block">Gửi Yêu Cầu</button>
-                </div> <!-- form-group// -->
+                </div>
 
-                <%-- Hiện thông báo lỗi --%>
+                <!-- Hiển thị thông báo lỗi hoặc thành công -->
                 <c:if test="${not empty error}">
                     <div class="error-message" style="color: red;">${error}</div>
                 </c:if>
-
-                <%-- Hiện thông báo thành công --%>
                 <c:if test="${not empty success}">
                     <div class="success-message" style="color: green;">${success}</div>
                 </c:if>
-
             </form>
-        </article><!-- card-body.// -->
-    </div> <!-- card .// -->
+        </article>
+    </div>
+
+    <% if (loggedInEmail == null) { %>
     <p class="text-center mt-4">Bạn nhớ mật khẩu? <a href="${pageContext.request.contextPath}/login">Đăng nhập</a></p>
+    <% } %>
+
     <br><br>
-    <!-- ============================ COMPONENT FORGOT PASSWORD END ================================= -->
 </section>
 
 <%@ include file="/view/view-index/footer.jsp" %>

@@ -23,7 +23,6 @@ public class User {
         this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
-
     }
 
     public int getIdUser() {
