@@ -138,4 +138,17 @@ public class User {
                 ", createAt=" + createAt +
                 '}';
     }
+
+    public void setAddress(String address) {
+        
+    }
+
+    public void setWard(String ward) {
+    }
+
+    public void setDistrict(String district) {
+    }
+
+    public void setProvince(String province) {
+    }
 }

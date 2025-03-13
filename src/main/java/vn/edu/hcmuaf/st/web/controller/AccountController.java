@@ -7,12 +7,13 @@ import jakarta.servlet.http.*;
 
 
 import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
+import vn.edu.hcmuaf.st.web.entity.User;
 import vn.edu.hcmuaf.st.web.service.AccountService;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login", "/reset-password", "/logout"})
+@WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login", "/reset-password", "/logout","/profile"})
 public class AccountController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final AccountService accountService = new AccountService();
@@ -74,6 +75,7 @@ public class AccountController extends HttpServlet {
             case "/logout":
                 handleLogout(request, response);
                 break;
+
             default:
                 response.sendRedirect("/sign");
                 break;
@@ -276,6 +278,4 @@ public class AccountController extends HttpServlet {
         // Sau khi logout, chuyển hướng về trang đăng nhập
         response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp");
     }
-
-
 }

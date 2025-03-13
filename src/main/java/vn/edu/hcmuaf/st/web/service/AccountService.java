@@ -9,6 +9,8 @@ import vn.edu.hcmuaf.st.web.dao.AccountRepository;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import vn.edu.hcmuaf.st.web.entity.Address;
+import vn.edu.hcmuaf.st.web.entity.User;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -79,6 +81,7 @@ public class AccountService {
             session.invalidate(); // Hủy session
         }
     }
+
 
 }
 
