@@ -65,7 +65,8 @@
                         <div>
                             <c:choose>
                                 <c:when test="${not empty googleAccount or not empty sessionScope.fullname}">
-                                    <a href="${pageContext.request.contextPath}/profile">Xem Tài Khoản</a>
+                                    <a href="${pageContext.request.contextPath}/view/view-account/profile.jsp">Xem Tài Khoản</a>
+<%--                                    <a href="${pageContext.request.contextPath}/profile">Xem Tài Khoản</a>--%>
                                     <span class="dark-transp"> | </span>
                                     <a href="${pageContext.request.contextPath}/logout">Đăng Xuất</a>
                                 </c:when>

@@ -16,6 +16,16 @@ public class User {
     private String authProvider;
     private String socialId;
     private Date createAt;
+
+    public User(String fullName, String password, String username, String email, String phoneNumber) {
+        this.fullName = fullName;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+
+    }
+
     public int getIdUser() {
         return idUser;
     }
@@ -140,7 +150,7 @@ public class User {
     }
 
     public void setAddress(String address) {
-        
+
     }
 
     public void setWard(String ward) {

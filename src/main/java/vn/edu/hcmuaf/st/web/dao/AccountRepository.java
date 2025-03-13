@@ -86,7 +86,21 @@ public class AccountRepository {
             return fullName;  // Trả về giá trị fullName
         });
     }
+    public User getUserByUsername(String username) {
+        String query = "SELECT fullName, password, username, email,phoneNumber FROM users WHERE username = ?";
 
-
+        return jdbi.withHandle(handle ->
+                handle.createQuery(query)
+                        .bind(0, username)
+                        .map((rs, ctx) -> new User(
+                                rs.getString("fullName"),
+                                rs.getString("password"),
+                                rs.getString("username"),
+                                rs.getString("email"),
+                                rs.getString("phoneNumber")
+                        )).findOne().orElse(null)
+        );
+    }
+    
 }
 

@@ -70,6 +70,7 @@ public class AccountService {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         return accountRepository.updatePasswordByEmail(email, hashedPassword);
     }
+
     // lấy tên người dùng sau khi đăng nhập thành công
     public String getFullNameByUsername(String username) {
         return accountRepository.getFullNameByUsername(username);
@@ -83,5 +84,8 @@ public class AccountService {
     }
 
 
+    public User getUserByUsername(String username) {
+        return accountRepository.getUserByUsername(username);
+    }
 }
 
