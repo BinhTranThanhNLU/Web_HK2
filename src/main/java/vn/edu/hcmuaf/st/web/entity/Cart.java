@@ -42,6 +42,47 @@ public class Cart implements Serializable {
         this.updatedAt = updatedAt;
     }
 
+    public void addItem(Product product) {
+        if (product == null || product.getProductVariants().isEmpty()) {
+            throw new IllegalArgumentException("Sản phẩm không hợp lệ.");
+        }
+
+        ProductVariant variant = product.getProductVariants().getFirst();
+        if (variant == null) {
+            throw new IllegalArgumentException("Sản phẩm không có biến thể hợp lệ.");
+        }
+
+        CartItem item = cartItems.get(variant.getIdvariant());
+
+        if (item == null) {
+            // Tạo mới CartItem nếu chưa có trong giỏ hàng
+            item = new CartItem(
+                    variant.getIdvariant(),
+                    product.getTitle(),
+                    variant.getSize(),
+                    variant.getColor(),
+                    product.getFinalPrice(),  // Giá từ product
+                    0, // Giá giảm chưa có
+                    1,
+                    product.getProductImages().isEmpty() ? "" : product.getProductImages().get(0).getImageUrl()
+            );
+            cartItems.put(variant.getIdvariant(), item);
+        } else {
+            item.setQuantity(item.getQuantity()+1);
+        }
+
+        // Cập nhật tổng giá trị giỏ hàng
+        updateTotalPrice();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+
+    private void updateTotalPrice() {
+        this.totalPrice = cartItems.values().stream()
+                .mapToDouble(item -> (item.getDiscountPrice() > 0 ? item.getDiscountPrice() : item.getPrice()) * item.getQuantity())
+                .sum();
+    }
+
     public int getIdUser() {
         return idUser;
     }

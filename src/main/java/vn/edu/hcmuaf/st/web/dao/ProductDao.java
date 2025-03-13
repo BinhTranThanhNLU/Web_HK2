@@ -78,14 +78,72 @@ public class ProductDao {
         );
     }
 
-    public Optional<Product> getById(int idProduct) {
+    public Product getById(int idProduct) {
         return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM products WHERE idProduct = :idProduct")
+                handle.createQuery("""
+                    SELECT
+                        p.idProduct, p.title, p.price, p.description, p.STATUS, p.createAt, p.updateAt,
+                        c.idCategory, c.categoryType, c.NAME AS categoryName, c.description AS categoryDescription,
+                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                        pi.idImage, pi.imageUrl, pi.`order`
+                    FROM products p
+                    JOIN categories c ON p.idCategory = c.idCategory
+                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+                    WHERE p.idProduct = :idProduct
+                    ORDER BY pi.`order`;
+                """)
                         .bind("idProduct", idProduct)
-                        .mapToBean(Product.class)
-                        .findOne()
+                        .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
+                            int productId = row.getColumn("idProduct", Integer.class);
+
+                            Product product = map.computeIfAbsent(productId, id -> {
+                                // Tạo đối tượng Category
+                                Category category = new Category(
+                                        row.getColumn("idCategory", Integer.class),
+                                        row.getColumn("categoryType", String.class),
+                                        row.getColumn("categoryName", String.class),
+                                        row.getColumn("categoryDescription", String.class)
+                                );
+
+                                // Tạo đối tượng Discount nếu có
+                                Discount discount = (row.getColumn("idDiscount", Integer.class) != null) ?
+                                        new Discount(
+                                                row.getColumn("idDiscount", Integer.class),
+                                                row.getColumn("discountAmount", Double.class),
+                                                row.getColumn("startDate", LocalDateTime.class),
+                                                row.getColumn("endDate", LocalDateTime.class)
+                                        ) : null;
+
+                                return new Product(
+                                        id,
+                                        category,
+                                        discount,
+                                        row.getColumn("title", String.class),
+                                        row.getColumn("price", Double.class),
+                                        row.getColumn("description", String.class),
+                                        row.getColumn("status", Boolean.class),
+                                        row.getColumn("createAt", LocalDateTime.class),
+                                        row.getColumn("updateAt", LocalDateTime.class)
+                                );
+                            });
+
+                            // Thêm ảnh sản phẩm nếu có
+                            Integer imageId = row.getColumn("idImage", Integer.class);
+                            if (imageId != null) {
+                                product.getProductImages().add(new ProductImage(
+                                        imageId,
+                                        row.getColumn("imageUrl", String.class),
+                                        row.getColumn("order", Integer.class)
+                                ));
+                            }
+
+                            return map;
+                        })
+                        .values().stream().findFirst().orElse(null)
         );
     }
+
 
     public boolean add(Product product) {
         return jdbi.withHandle(handle ->

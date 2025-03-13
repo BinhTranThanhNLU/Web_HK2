@@ -1,13 +1,9 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: hdanh
-  Date: 24/02/2025
-  Time: 8:45 SA
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ include file="/view/view-index/header.jsp" %>
-<%@ include file="/view/view-index/footer.jsp" %>
+
 <html>
 <section class="section-content padding-y bg">
     <div class="container">
@@ -20,115 +16,55 @@
                     <table class="table table-borderless table-shopping-cart">
                         <thead class="text-muted">
                         <tr class="small text-uppercase">
-                            <th scope="col">Product</th>
-                            <th scope="col" width="120">Quantity</th>
-                            <th scope="col" width="120">Price</th>
-                            <th scope="col" class="text-right" width="200"> </th>
+                            <th scope="col">Sản phẩm</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Giá</th>
+                            <th scope="col" class="text-right"></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <figure class="itemside align-items-center">
-                                    <div class="aside"><img src="./images/items/11.jpg" class="img-sm"></div>
-                                    <figcaption class="info">
-                                        <a href="#" class="title text-dark">Camera Canon EOS M50 Kit</a>
-                                        <p class="text-muted small">Matrix: 25 Mpx <br> Brand: Canon</p>
-                                    </figcaption>
-                                </figure>
-                            </td>
-                            <td>
-                                <!-- col.// -->
-                                <div class="col">
-                                    <div class="input-group input-spinner">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </button>
+                        <c:forEach var="item" items="${sessionScope.cart.cartItems.values()}">
+                            <tr>
+                                <td>
+                                    <figure class="itemside align-items-center">
+                                        <div class="aside">
+                                            <img src="${item.imageUrl}" class="img-sm">
                                         </div>
-                                        <input type="text" class="form-control"  value="1">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i> </button>
+                                        <figcaption class="info">
+                                            <a href="#" class="title text-dark">${item.productTitle}</a>
+<%--                                            <p class="text-muted small">Matrix: 25 Mpx <br> Brand: Canon</p>--%>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td>
+                                    <!-- col.// -->
+                                    <div class="col">
+                                        <div class="input-group input-spinner">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-light" type="button" id="button-plus"><i
+                                                        class="fa fa-minus"></i></button>
+                                            </div>
+                                            <input type="text" class="form-control" value="1">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-light" type="button" id="button-minus"><i
+                                                        class="fa fa-plus"></i></button>
+                                            </div>
                                         </div>
-                                    </div> <!-- input-group.// -->
-                                </div> <!-- col.// -->
-                            </td>
-                            <td>
-                                <div class="price-wrap">
-                                    <var class="price">$1156.00</var>
-                                    <small class="text-muted"> $315.20 each </small>
-                                </div> <!-- price-wrap .// -->
-                            </td>
-                            <td class="text-right">
-                                <a href="" class="btn btn-danger"> Remove</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <figure class="itemside align-items-center">
-                                    <div class="aside"><img src="./images/items/10.jpg" class="img-sm"></div>
-                                    <figcaption class="info">
-                                        <a href="#" class="title text-dark">ADATA Premier ONE microSDXC</a>
-                                        <p class="text-muted small">Size: 256 GB  <br> Brand: ADATA </p>
-                                    </figcaption>
-                                </figure>
-                            </td>
-                            <td>
-                                <!-- col.// -->
-                                <div class="col">
-                                    <div class="input-group input-spinner">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </button>
-                                        </div>
-                                        <input type="text" class="form-control"  value="1">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i> </button>
-                                        </div>
-                                    </div> <!-- input-group.// -->
-                                </div> <!-- col.// -->
-                            </td>
-                            <td>
-                                <div class="price-wrap">
-                                    <var class="price">$149.97</var>
-                                    <small  class="text-muted"> $75.00 each </small>
-                                </div> <!-- price-wrap .// -->
-                            </td>
-                            <td class="text-right">
-                                <a href="" class="btn btn-danger"> Remove</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <figure class="itemside align-items-center">
-                                    <div class="aside"><img src="./images/items/9.jpg" class="img-sm"></div>
-                                    <figcaption class="info">
-                                        <a href="#" class="title text-dark">Logitec headset for gaming</a>
-                                        <p class="small text-muted">Version: CUH-ZCT2E  <br> Brand: Sony</p>
-                                    </figcaption>
-                                </figure>
-                            </td>
-                            <td>
-                                <!-- col.// -->
-                                <div class="col">
-                                    <div class="input-group input-spinner">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </button>
-                                        </div>
-                                        <input type="text" class="form-control"  value="1">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i> </button>
-                                        </div>
-                                    </div> <!-- input-group.// -->
-                                </div> <!-- col.// -->
-                            </td>
-                            <td>
-                                <div class="price-wrap">
-                                    <var class="price">$98.00</var>
-                                    <small class="text-muted"> $578.00 each</small>
-                                </div> <!-- price-wrap .// -->
-                            </td>
-                            <td class="text-right">
-                                <a href="" class="btn btn-danger"> Remove</a>
-                            </td>
-                        </tr>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="price-wrap">
+                                        <var class="price">
+                                            <fmt:formatNumber value="${item.price}" pattern="#,##0 đ"/>
+                                        </var>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <a href="" class="btn btn-danger"> Xóa</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+
                         </tbody>
                     </table>
                 </div> <!-- card.// -->
@@ -139,32 +75,37 @@
                 <div class="card">
                     <div class="card-body">
                         <dl class="dlist-align">
-                            <dt>Total price:</dt>
-                            <dd class="text-right">$69.97</dd>
+                            <dt>Tồng tiền:</dt>
+                            <dd class="text-right">
+                                <fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/>
+                            </dd>
                         </dl>
                         <dl class="dlist-align">
-                            <dt>Tax:</dt>
+                            <dt>Giảm:</dt>
                             <dd class="text-right"> $10.00</dd>
                         </dl>
                         <dl class="dlist-align">
-                            <dt>Total:</dt>
-                            <dd class="text-right text-dark b"><strong>$59.97</strong></dd>
+                            <dt>Tổng:</dt>
+                            <dd class="text-right text-dark b">
+                                <strong><fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/></strong>
+                            </dd>
                         </dl>
                         <hr>
                         <p class="text-center mb-3">
                             <img src="./images/misc/payments.png" height="26">
                         </p>
-                        <a href="./place-order.html" class="btn btn-primary btn-block"> Checkout </a>
-                        <a href="./store.html" class="btn btn-light btn-block">Continue Shopping</a>
-                    </div> <!-- card-body.// -->
-                </div> <!-- card.// -->
+                        <a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>
+                        <a href="./store.html" class="btn btn-light btn-block">Tiếp tục mua hàng</a>
+                    </div>
+                </div>
 
-            </aside> <!-- col.// -->
+            </aside>
 
 
-        </div> <!-- row.// -->
+        </div>
         <!-- ============================ COMPONENT 1 END .// ================================= -->
 
-    </div> <!-- container .//  -->
+    </div>
 </section>
+<%@ include file="/view/view-index/footer.jsp" %>
 </html>

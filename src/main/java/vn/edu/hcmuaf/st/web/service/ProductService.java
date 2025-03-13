@@ -21,7 +21,7 @@ public class ProductService {
         return productDao.getAll();
     }
 
-    public Optional<Product> getProductById(int idProduct) {
+    public Product getProductById(int idProduct) {
         return productDao.getById(idProduct);
     }
 
