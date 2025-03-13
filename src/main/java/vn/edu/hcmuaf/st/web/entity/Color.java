@@ -46,4 +46,13 @@ public class Color implements Serializable {
     public void setHexcode(String hexcode) {
         this.hexcode = hexcode;
     }
+
+    @Override
+    public String toString() {
+        return "Color{" +
+                "idColor=" + idColor +
+                ", color='" + color + '\'' +
+                ", hexcode='" + hexcode + '\'' +
+                '}';
+    }
 }

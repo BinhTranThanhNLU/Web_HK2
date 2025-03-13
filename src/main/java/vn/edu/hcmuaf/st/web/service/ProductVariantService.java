@@ -15,12 +15,8 @@ public class ProductVariantService {
         this.productVariantDao = new ProductVariantDao();
     }
 
-    public List<ProductVariant> getAllProductVariants() {
-        return productVariantDao.getAll();
-    }
-
-    public Optional<ProductVariant> getProductVariantById(int idVariant) {
-        return productVariantDao.getById(idVariant);
+    public List<ProductVariant> getProductVariantsByIdProduct(int idProduct) {
+        return productVariantDao.getProductVariantsByIdProduct(idProduct);
     }
 
 }

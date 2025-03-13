@@ -80,7 +80,7 @@
                         </div>
                     </div>
 
-                    <a href="/cart.html" class="widget-header pl-3 ml-3">
+                    <a href="${pageContext.request.contextPath}/view/view-order/cart.jsp" class="widget-header pl-3 ml-3">
                         <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
                         <span class="badge badge-pill badge-danger notify">0</span>
                     </a>

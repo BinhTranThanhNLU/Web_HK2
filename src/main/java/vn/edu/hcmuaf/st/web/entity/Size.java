@@ -30,4 +30,12 @@ public class Size implements Serializable {
     public void setSize(String size) {
         this.size = size;
     }
+
+    @Override
+    public String toString() {
+        return "Size{" +
+                "idSize=" + idSize +
+                ", size='" + size + '\'' +
+                '}';
+    }
 }

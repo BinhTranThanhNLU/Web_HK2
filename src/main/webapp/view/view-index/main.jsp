@@ -119,7 +119,7 @@
                                     </div>
                                     <div class="product-links">
                                         <a href="#"><i class="fa-solid fa-eye"></i></a>
-                                        <form action="/cart" method="post">
+                                        <form action="${pageContext.request.contextPath}/cart" method="post">
                                             <input type="hidden" name="action" value="add"/>
                                             <input type="hidden" name="idProduct" value="${product.idProduct}"/>
                                             <button class="btn-cart" type="submit">
@@ -193,7 +193,7 @@
 
                                         <div class="product-links">
                                             <a href="#"><i class="fa-solid fa-eye"></i></a>
-                                            <form action="/cart" method="post">
+                                            <form action="${pageContext.request.contextPath}/cart" method="post">
                                                 <input type="hidden" name="action" value="add"/>
                                                 <input type="hidden" name="idProduct" value="${product.idProduct}"/>
                                                 <button class="btn-cart" type="submit">
@@ -268,7 +268,7 @@
                                         </div>
                                         <div class="product-links">
                                             <a href="#"><i class="fa-solid fa-eye"></i></a>
-                                            <form action="/cart" method="post">
+                                            <form action="${pageContext.request.contextPath}/cart" method="post">
                                                 <input type="hidden" name="action" value="add"/>
                                                 <input type="hidden" name="idProduct" value="${product.idProduct}"/>
                                                 <button class="btn-cart" type="submit">
