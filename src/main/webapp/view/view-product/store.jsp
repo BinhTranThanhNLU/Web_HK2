@@ -34,16 +34,16 @@
                         <div class="filter-content collapse show" id="collapse_1" style="">
                             <div class="card-body">
                                 <ul class="list-menu">
-                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt">Bé Trai</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=1">--Áo</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=2">--Quần</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=3">--Giày,Dép</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=4">--Đồ Bộ</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion">Bé Trai</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=1">--Áo</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=2">--Quần</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=3">--Giày,Dép</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=4">--Đồ Bộ</a></li>
                                     <li><a href="#">Bé Gái</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=7">--Váy </a></li>
-                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=5">--Áo </a></li>
-                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=6">--Quần </a></li>
-                                    <li><a href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=8">--Đồ Bộ </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=7">--Váy </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=5">--Áo </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=6">--Quần </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=8">--Đồ Bộ </a></li>
                                 </ul>
                             </div> <!-- card-body.// -->
                         </div>
