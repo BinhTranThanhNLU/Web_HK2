@@ -17,6 +17,8 @@
                         <thead class="text-muted">
                         <tr class="small text-uppercase">
                             <th scope="col">Sản phẩm</th>
+                            <th scope="col">Màu</th>
+                            <th scope="col">Kích thước</th>
                             <th scope="col">Số lượng</th>
                             <th scope="col">Giá</th>
                             <th scope="col" class="text-right"></th>
@@ -35,6 +37,16 @@
 <%--                                            <p class="text-muted small">Matrix: 25 Mpx <br> Brand: Canon</p>--%>
                                         </figcaption>
                                     </figure>
+                                </td>
+                                <td>
+                                    <div class="colors">
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="colors">
+
+                                    </div>
                                 </td>
                                 <td>
                                     <!-- col.// -->
@@ -97,7 +109,7 @@
                         <a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>
                         <form action="${pageContext.request.contextPath}/cart" method="post">
                             <input type="hidden" name="action" value="continue">
-                            <button type="submit" class="btn btn-light btn-block">Tiếp tục mua hàng</button>
+                            <button type="submit" class="btn btn-light btn-block mt-4">Tiếp tục mua hàng</button>
                         </form>
 <%--                        <a href="./store.html" class="btn btn-light btn-block">Tiếp tục mua hàng</a>--%>
                     </div>
