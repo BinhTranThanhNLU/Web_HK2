@@ -23,6 +23,10 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
 
+        // Lưu URL hiện tại vào session để tiêps tục mua hàng
+        String prevUrl = request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
+        request.getSession().setAttribute("prevUrl", prevUrl);
+
         // Lấy danh sách sản phẩm
         List<Product> products = productService.getAllProducts();
 

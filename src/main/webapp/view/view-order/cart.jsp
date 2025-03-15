@@ -82,7 +82,7 @@
                         </dl>
                         <dl class="dlist-align">
                             <dt>Giảm:</dt>
-                            <dd class="text-right"> $10.00</dd>
+                            <dd class="text-right"> 10000</dd>
                         </dl>
                         <dl class="dlist-align">
                             <dt>Tổng:</dt>
@@ -95,7 +95,11 @@
                             <img src="./images/misc/payments.png" height="26">
                         </p>
                         <a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>
-                        <a href="./store.html" class="btn btn-light btn-block">Tiếp tục mua hàng</a>
+                        <form action="${pageContext.request.contextPath}/cart" method="post">
+                            <input type="hidden" name="action" value="continue">
+                            <button type="submit" class="btn btn-light btn-block">Tiếp tục mua hàng</button>
+                        </form>
+<%--                        <a href="./store.html" class="btn btn-light btn-block">Tiếp tục mua hàng</a>--%>
                     </div>
                 </div>
 

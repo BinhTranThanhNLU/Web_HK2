@@ -29,7 +29,9 @@ public class CartController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         HttpSession session = req.getSession();
+
         Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null) {
             cart = new Cart();
@@ -37,15 +39,28 @@ public class CartController extends HttpServlet {
         }
 
         String action = req.getParameter("action");
-        if(action.equals("add")) {
-            int productId = Integer.parseInt(req.getParameter("idProduct"));
-            Product product = productService.getProductById(productId);
-            List<ProductVariant> variants = productVariantService.getProductVariantsByIdProduct(productId);
-            product.setProductVariants(variants);
 
-            cart.addItem(product);
+        switch (action) {
+            case "add":
+                int productId = Integer.parseInt(req.getParameter("idProduct"));
+                Product product = productService.getProductById(productId);
+                List<ProductVariant> variants = productVariantService.getProductVariantsByIdProduct(productId);
+                product.setProductVariants(variants);
+                cart.addItem(product);
+                resp.sendRedirect(req.getContextPath() + "/cart");
+                break;
+
+            case "continue":
+                String prevUrl = (String) session.getAttribute("prevUrl");
+                if (prevUrl == null) {
+                    prevUrl = req.getContextPath() + "/home";
+                }
+                resp.sendRedirect(prevUrl);
+                break;
+
+            default:
+                resp.sendRedirect(req.getContextPath() + "/cart");
+                break;
         }
-
-        resp.sendRedirect(req.getContextPath() + "/cart");
     }
 }
