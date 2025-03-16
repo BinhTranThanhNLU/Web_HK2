@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import vn.edu.hcmuaf.st.web.entity.Cart;
-import vn.edu.hcmuaf.st.web.entity.CartItem;
-import vn.edu.hcmuaf.st.web.entity.Product;
-import vn.edu.hcmuaf.st.web.entity.ProductVariant;
+import vn.edu.hcmuaf.st.web.entity.*;
 import vn.edu.hcmuaf.st.web.service.ProductService;
 import vn.edu.hcmuaf.st.web.service.ProductVariantService;
 
@@ -25,14 +22,34 @@ public class CartController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
+//        HttpSession session = req.getSession();
+//        Cart cart = (Cart) session.getAttribute("cart");
+//
+//        if (cart == null || cart.getCartItems() == null || cart.getCartItems().isEmpty()) {
+//            req.getRequestDispatcher("view/view-order/cart.jsp").forward(req, resp);
+//            return;
+//        }
+//
+//        if (cart != null) {
+//            for (CartItem cartItem : cart.getCartItems().values()) {
+//                Product product = productService.getProductByIdVariant(cartItem.getIdVariant());
+//
+//                if (product != null) {
+//                    List<ProductVariant> variants = productVariantService.getProductVariantsByIdProduct(product.getIdProduct());
+//                    product.setProductVariants(variants);
+//
+//                    List<Color> availableColors = product.getColors();
+//                    List<Size> availableSizes = product.getSizes();
+//
+//                    // Cập nhật lại CartItem
+//                    cartItem.setAvailableColors(availableColors);
+//                    cartItem.setAvailableSizes(availableSizes);
+//                }
+//            }
+//            session.setAttribute("cart", cart);
+//        }
 
-        if (cart != null) {
-            for(CartItem cartItem: cart.getCartItems().values()) {
-                Product product = productService.getProductById(cartItem.getIdVariant());
-            }
-        }
+        req.getRequestDispatcher("view/view-order/cart.jsp").forward(req, resp);
 
     }
 

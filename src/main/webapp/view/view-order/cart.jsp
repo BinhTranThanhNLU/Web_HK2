@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%@ include file="/view/view-index/header.jsp" %>
 
@@ -38,16 +39,36 @@
                                         </figcaption>
                                     </figure>
                                 </td>
+                                <!-- Dropdown chọn màu -->
                                 <td>
-                                    <div class="colors">
-
-                                    </div>
+                                    <select name="color" class="form-control form-select" style="width: fit-content">
+                                        <c:set var="uniqueColors" value="" />
+                                        <c:forEach var="color" items="${item.availableColors}">
+                                            <c:if test="${not fn:contains(uniqueColors, color.color)}">
+                                                <option value="${color.idColor}" ${color.idColor == item.color.idColor ? 'selected' : ''}>
+                                                        ${color.color}
+                                                </option>
+                                                <c:set var="uniqueColors" value="${uniqueColors},${color.color}" />
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
                                 </td>
+
+                                <!-- Dropdown chọn size -->
                                 <td>
-                                    <div class="colors">
-
-                                    </div>
+                                    <select name="size" class="form-control form-select w-0" style="width: fit-content">
+                                        <c:set var="uniqueSizes" value="" />
+                                        <c:forEach var="size" items="${item.availableSizes}">
+                                            <c:if test="${not fn:contains(uniqueSizes, size.size)}">
+                                                <option value="${size.idSize}" ${size.idSize == item.size.idSize ? 'selected' : ''}>
+                                                        ${size.size}
+                                                </option>
+                                                <c:set var="uniqueSizes" value="${uniqueSizes},${size.size}" />
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
                                 </td>
+
                                 <td>
                                     <!-- col.// -->
                                     <div class="col">

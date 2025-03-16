@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.st.web.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class CartItem implements Serializable {
 
@@ -12,6 +13,8 @@ public class CartItem implements Serializable {
     private double discountPrice;
     private int quantity;
     private String imageUrl;
+    private List<Color> availableColors; // Danh sách màu có sẵn
+    private List<Size> availableSizes;   // Danh sách size có sẵn
 
     public CartItem() {
     }
@@ -89,6 +92,22 @@ public class CartItem implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public List<Color> getAvailableColors() {
+        return availableColors;
+    }
+
+    public void setAvailableColors(List<Color> availableColors) {
+        this.availableColors = availableColors;
+    }
+
+    public List<Size> getAvailableSizes() {
+        return availableSizes;
+    }
+
+    public void setAvailableSizes(List<Size> availableSizes) {
+        this.availableSizes = availableSizes;
     }
 
     @Override
