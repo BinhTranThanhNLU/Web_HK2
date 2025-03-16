@@ -36,18 +36,50 @@
                                 <ul class="list-menu">
                                     <li><a href="${pageContext.request.contextPath}/fashion">Bé Trai</a></li>
                                     <li><a href="${pageContext.request.contextPath}/fashion?idCategory=1">--Áo</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=2">--Quần</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=3">--Giày,Dép</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=4">--Đồ Bộ</a></li>
-                                    <li><a href="#">Bé Gái</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=7">--Váy </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=2">--Quần</a>
+                                    </li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=3">--Giày,Dép</a>
+                                    </li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=4">--Đồ Bộ</a>
+                                    </li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=7">Bé Gái</a>
+                                    </li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=7">--Váy </a>
+                                    </li>
                                     <li><a href="${pageContext.request.contextPath}/fashion?idCategory=5">--Áo </a></li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=6">--Quần </a></li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=8">--Đồ Bộ </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=6">--Quần </a>
+                                    </li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=8">--Đồ Bộ </a>
+                                    </li>
                                 </ul>
                             </div> <!-- card-body.// -->
                         </div>
                     </article> <!-- filter-group  .// -->
+                    <article class="filter-group">
+                        <header class="card-header">
+                            <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
+                                <i class="icon-control fa fa-chevron-down"></i>
+                                <h6 class="title">Giảm Giá</h6>
+                            </a>
+                        </header>
+                        <div class="filter-content collapse show" id="" style="">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+
+                                        <!-- <input class="form-control" placeholder="$0" type="number"> -->
+                                        <select class="mr-2 form-control">
+                                            <option value="50">0->10%</option>
+                                            <option value="100">10->20%</option>
+                                            <option value="100">20->30%</option>
+                                        </select>
+                                    </div>
+
+                                </div> <!-- form-row.// -->
+                                <button class="btn btn-block btn-primary">Áp Dụng</button>
+                            </div><!-- card-body.// -->
+                        </div>
+                    </article> <!-- filter-group .// -->
                     <article class="filter-group">
                         <header class="card-header">
                             <a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" class="">
@@ -135,13 +167,31 @@
                                     <figcaption class="info-wrap">
                                         <div class="fix-height">
                                             <a href="#" class="title">${product.title}</a>
-                                            <div class="price-wrap mt-2">
-                                        <span class="price">
-                                            <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
-                                        </span>
+                                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                                <!-- Giá sản phẩm -->
+                                                <span class="price text-danger fw-bold">
+                        <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
+                    </span>
+                                                <!-- Giá gốc -->
+                                                <small class="ori-price text-muted text-decoration-line-through">
+                                                    <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
+                                                </small>
+
+                                                <!-- Nút xem chi tiết -->
+                                                <button class="btn btn-outline-secondary p-1 d-flex align-items-center" data-bs-toggle="tooltip" title="Xem chi tiết">
+                                                    <i class="fa-solid fa-eye fs-6"></i>
+                                                </button>
+
+                                                <!-- Form thêm vào giỏ hàng -->
+                                                <form action="${pageContext.request.contextPath}/cart" method="post" class="mb-0">
+                                                    <input type="hidden" name="action" value="add"/>
+                                                    <input type="hidden" name="idProduct" value="${product.idProduct}"/>
+                                                    <button class="btn btn-primary p-1 d-flex align-items-center" type="submit" data-bs-toggle="tooltip" title="Thêm vào giỏ hàng">
+                                                        <i class="fa fa-shopping-cart fs-6"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
-                                        <a href="#" class="btn btn-block btn-primary">Thêm Vào Giỏ</a>
                                     </figcaption>
                                 </figure>
                             </div>
