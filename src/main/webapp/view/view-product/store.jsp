@@ -66,7 +66,8 @@
                             <div class="card-body">
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-
+                                        <!-- <input class="form-control" placeholder="$0" type="number"> -->
+                                        <!-- <input class="form-control" placeholder="$0" type="number"> -->
                                         <!-- <input class="form-control" placeholder="$0" type="number"> -->
                                         <select class="mr-2 form-control">
                                             <option value="50">0->10%</option>
