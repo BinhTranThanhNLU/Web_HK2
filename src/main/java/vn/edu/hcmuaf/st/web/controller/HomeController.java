@@ -36,12 +36,10 @@ public class HomeController extends HttpServlet {
 
         //lấy danh sách sản phẩm có giảm giá
         List<Product> productsTop8HasDisount = getTop8ProductsHasDiscount(productService);
-
         request.setAttribute("products", products);
         request.setAttribute("productsByCategory1", productsByCategory1);
         request.setAttribute("productsByCategory2", productsByCategory2);
         request.setAttribute("productsTop8HasDisount", productsTop8HasDisount);
-
         request.getRequestDispatcher("/view/view-index/index.jsp").forward(request, response);
     }
 
