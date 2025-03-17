@@ -133,10 +133,10 @@
                                             aria-haspopup="true" aria-expanded="false" style="font-size: 20px;"> Bé
                                         Trai </a>
                                         <div class="dropdown-menu" aria-labelledby="boyDropdown">
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=3">Giày dép</a>
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=1">Áo</a>
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=2">Quần</a>
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=4">Đồ Bộ</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=3">Giày dép</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=1">Áo</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=2">Quần</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=4">Đồ Bộ</a>
                                         </div>
                                     </li>
                                     <!-- Bé Gái -->
@@ -146,10 +146,10 @@
                                             aria-haspopup="true" aria-expanded="false" style="font-size: 20px;"> Bé
                                         Gái </a>
                                         <div class="dropdown-menu" aria-labelledby="girlDropdown">
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=5">Áo</a> <a
-                                                class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=6">Quần</a> <a
-                                                class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=7">Chân Váy</a>
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/boy-t-shirt?idCategory=8">Đồ Bộ</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=5">Áo</a> <a
+                                                class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=6">Quần</a> <a
+                                                class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=7">Chân Váy</a>
+                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=8">Đồ Bộ</a>
                                         </div>
                                     </li>
                                     <li class="nav-item dropdown"><a
