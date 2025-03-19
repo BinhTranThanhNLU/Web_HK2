@@ -93,7 +93,11 @@
                                     </div>
                                 </td>
                                 <td class="text-right">
-                                    <a href="" class="btn btn-danger"> Xóa</a>
+                                    <form action="${pageContext.request.contextPath}/cart" method="post">
+                                        <input type="hidden" name="action" value="remove"/>
+                                        <input type="hidden" name="idVariant" value="${item.idVariant}"/>
+                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                    </form>
                                 </td>
                             </tr>
                         </c:forEach>

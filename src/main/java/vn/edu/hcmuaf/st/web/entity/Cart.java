@@ -89,6 +89,14 @@ public class Cart implements Serializable {
                 .sum();
     }
 
+    public void removeItem(int idVariant) {
+        if(cartItems.containsKey(idVariant)) {
+            cartItems.remove(idVariant);
+            updateTotalPrice();
+            this.updatedAt = LocalDateTime.now();
+        }
+    }
+
     public int getIdUser() {
         return idUser;
     }

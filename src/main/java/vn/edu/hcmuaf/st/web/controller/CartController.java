@@ -22,32 +22,6 @@ public class CartController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        HttpSession session = req.getSession();
-//        Cart cart = (Cart) session.getAttribute("cart");
-//
-//        if (cart == null || cart.getCartItems() == null || cart.getCartItems().isEmpty()) {
-//            req.getRequestDispatcher("view/view-order/cart.jsp").forward(req, resp);
-//            return;
-//        }
-//
-//        if (cart != null) {
-//            for (CartItem cartItem : cart.getCartItems().values()) {
-//                Product product = productService.getProductByIdVariant(cartItem.getIdVariant());
-//
-//                if (product != null) {
-//                    List<ProductVariant> variants = productVariantService.getProductVariantsByIdProduct(product.getIdProduct());
-//                    product.setProductVariants(variants);
-//
-//                    List<Color> availableColors = product.getColors();
-//                    List<Size> availableSizes = product.getSizes();
-//
-//                    // Cập nhật lại CartItem
-//                    cartItem.setAvailableColors(availableColors);
-//                    cartItem.setAvailableSizes(availableSizes);
-//                }
-//            }
-//            session.setAttribute("cart", cart);
-//        }
 
         req.getRequestDispatcher("view/view-order/cart.jsp").forward(req, resp);
 
@@ -82,6 +56,13 @@ public class CartController extends HttpServlet {
                     prevUrl = req.getContextPath() + "/home";
                 }
                 resp.sendRedirect(prevUrl);
+                break;
+
+            case "remove":
+                int idVariant = Integer.parseInt(req.getParameter("idVariant"));
+                cart.removeItem(idVariant);
+                session.setAttribute("cart", cart);
+                resp.sendRedirect(req.getContextPath() + "/cart");
                 break;
 
             default:
