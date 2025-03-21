@@ -48,7 +48,7 @@
 
                 <!-- Nút đăng nhập bằng Facebook -->
                 <div class="form-group" style="width: 48%; margin-right: 0;">
-                    <a href="https://www.facebook.com/v17.0/dialog/oauth?client_id=YOUR_FACEBOOK_APP_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=email,public_profile"
+                    <a href="https://www.facebook.com/v17.0/dialog/oauth?client_id=646739511162892&redirect_uri=http://localhost:8080/web/login-fb&response_type=code&scope=email,public_profile"
                        class="btn btn-primary btn-block" style="height: 33px; padding: 5px 10px;">
                         <i class="fa-brands fa-facebook"></i> Facebook
                     </a>
