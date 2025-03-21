@@ -1,27 +1,79 @@
 package vn.edu.hcmuaf.st.web.entity;
 
 public class GoogleAccount {
-    private String  id, email, name, first_name, given_name, family_name, picture;
-
+    private String id, email, fullName, image;  // Thay picture thành image
+    private int idRole;
+    private String username;
+    private String password;
+    private String phoneNumber;
     private boolean verified_email;
 
-    public GoogleAccount(String id, String email, String name, String first_name, String given_name, String family_name, String picture, boolean verified_email) {
+    public GoogleAccount(String id, String email, String fullName, String image, boolean verified_email, int idRole, String username,String password,String phoneNumber) {
         this.id = id;
         this.email = email;
-        this.name = name;
-        this.first_name = first_name;
-        this.given_name = given_name;
-        this.family_name = family_name;
-        this.picture = picture;
+        this.fullName = fullName;
+        this.image = image;  // Thay picture thành image
         this.verified_email = verified_email;
+        this.idRole = idRole;
+        this.username = username;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public int getIdRole() {
+        return idRole;
+    }
+
+    public void setIdRole(int idRole) {
+        this.idRole = idRole;
+    }
+
+    // Getter and Setter methods
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String toString() {
+        return "GoogleAccount{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", image='" + image + '\'' +
+                ", idRole=" + idRole +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", verified_email=" + verified_email +
+                '}';
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -32,44 +84,20 @@ public class GoogleAccount {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;  // Getter cho fullName
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;  // Setter cho fullName
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getImage() {
+        return image;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-
-    public String getGiven_name() {
-        return given_name;
-    }
-
-    public void setGiven_name(String given_name) {
-        this.given_name = given_name;
-    }
-
-    public String getFamily_name() {
-        return family_name;
-    }
-
-    public void setFamily_name(String family_name) {
-        this.family_name = family_name;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public boolean isVerified_email() {
@@ -80,17 +108,5 @@ public class GoogleAccount {
         this.verified_email = verified_email;
     }
 
-    @Override
-    public String toString() {
-        return "GoogleAccount{" +
-                "id='" + id + '\'' +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", first_name='" + first_name + '\'' +
-                ", given_name='" + given_name + '\'' +
-                ", family_name='" + family_name + '\'' +
-                ", picture='" + picture + '\'' +
-                ", verified_email=" + verified_email +
-                '}';
-    }
+
 }

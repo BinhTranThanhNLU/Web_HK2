@@ -10,6 +10,7 @@ import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import vn.edu.hcmuaf.st.web.entity.Address;
+import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
 import vn.edu.hcmuaf.st.web.entity.User;
 
 import java.io.IOException;
@@ -87,5 +88,19 @@ public class AccountService {
     public User getUserByUsername(String username) {
         return accountRepository.getUserByUsername(username);
     }
+
+    public GoogleAccount handleGoogleLogin(String code) throws Exception {
+        // Lấy thông tin tài khoản Google
+        SocialLogin gg = new SocialLogin();
+        String accessToken = gg.getToken(code);
+        GoogleAccount googleAccount = gg.getUserInfo(accessToken);
+
+        // Thêm mới hoặc cập nhật người dùng
+        accountRepository.insertOrUpdateUser(googleAccount);  // Thêm hoặc cập nhật người dùng trong CSDL
+
+        return googleAccount;
+    }
+
+
 }
 

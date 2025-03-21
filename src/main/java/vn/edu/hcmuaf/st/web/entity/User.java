@@ -17,7 +17,7 @@ public class User {
     private String socialId;
     private Date createAt;
 
-    public User(String fullName, String password, String username, String email, String phoneNumber) {
+    public User(String fullName, String password, String username, String email) {
         this.fullName = fullName;
         this.password = password;
         this.username = username;
@@ -146,18 +146,5 @@ public class User {
                 ", socialId='" + socialId + '\'' +
                 ", createAt=" + createAt +
                 '}';
-    }
-
-    public void setAddress(String address) {
-
-    }
-
-    public void setWard(String ward) {
-    }
-
-    public void setDistrict(String district) {
-    }
-
-    public void setProvince(String province) {
     }
 }

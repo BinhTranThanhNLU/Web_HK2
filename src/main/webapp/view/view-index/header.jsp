@@ -58,15 +58,37 @@
             </div> <!-- col.// -->
             <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
                 <div class="d-flex justify-content-end mb-3 mb-lg-0">
+                    <%--                    <div class="widget-header">--%>
+                    <%--                        <small class="title text-muted">--%>
+                    <%--                            ${not empty googleAccount ? googleAccount.name : (not empty sessionScope.fullname ? sessionScope.fullname : "Khách!")}--%>
+                    <%--                        </small>--%>
+                    <%--                        <div>--%>
+                    <%--                            <c:choose>--%>
+                    <%--                                <c:when test="${not empty googleAccount or not empty sessionScope.fullname}">--%>
+                    <%--                                    <a href="${pageContext.request.contextPath}/view/view-account/profile.jsp">Xem Tài Khoản</a>--%>
+                    <%--&lt;%&ndash;                                    <a href="${pageContext.request.contextPath}/profile">Xem Tài Khoản</a>&ndash;%&gt;--%>
+                    <%--                                    <span class="dark-transp"> | </span>--%>
+                    <%--                                    <a href="${pageContext.request.contextPath}/logout">Đăng Xuất</a>--%>
+                    <%--                                </c:when>--%>
+                    <%--                                <c:otherwise>--%>
+                    <%--                                    <a href="${pageContext.request.contextPath}/view/view-account/signin.jsp">Đăng--%>
+                    <%--                                        Nhập</a>--%>
+                    <%--                                    <span class="dark-transp"> | </span>--%>
+                    <%--                                    <a href="${pageContext.request.contextPath}/view/view-account/register.jsp">Đăng--%>
+                    <%--                                        Ký</a>--%>
+                    <%--                                </c:otherwise>--%>
+                    <%--                            </c:choose>--%>
+                    <%--                        </div>--%>
+                    <%--                    </div>--%>
                     <div class="widget-header">
                         <small class="title text-muted">
-                            ${not empty googleAccount ? googleAccount.name : (not empty sessionScope.fullname ? sessionScope.fullname : "Khách!")}
+                            ${not empty facebookName ? facebookName : (not empty googleAccount ? googleAccount.fullName : (not empty sessionScope.fullname ? sessionScope.fullname : "Khách!"))}
                         </small>
                         <div>
                             <c:choose>
-                                <c:when test="${not empty googleAccount or not empty sessionScope.fullname}">
-                                    <a href="${pageContext.request.contextPath}/view/view-account/profile.jsp">Xem Tài Khoản</a>
-<%--                                    <a href="${pageContext.request.contextPath}/profile">Xem Tài Khoản</a>--%>
+                                <c:when test="${not empty facebookName or not empty googleAccount or not empty sessionScope.fullname}">
+                                    <a href="${pageContext.request.contextPath}/view/view-account/profile.jsp">Xem Tài
+                                        Khoản</a>
                                     <span class="dark-transp"> | </span>
                                     <a href="${pageContext.request.contextPath}/logout">Đăng Xuất</a>
                                 </c:when>
@@ -81,7 +103,8 @@
                         </div>
                     </div>
 
-                    <a href="${pageContext.request.contextPath}/view/view-order/cart.jsp" class="widget-header pl-3 ml-3">
+                    <a href="${pageContext.request.contextPath}/view/view-order/cart.jsp"
+                       class="widget-header pl-3 ml-3">
                         <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
                         <span class="badge badge-pill badge-danger notify">0</span>
                     </a>
@@ -121,10 +144,11 @@
                                 <ul class="navbar-nav mx-auto">
                                     <li class="nav-item dropdown">
                                         <a
-                                            class="nav-link text-dark" href="${pageContext.request.contextPath}/home"
-                                            role="button" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false" style="font-size: 20px;"> Trang Chủ
-                                    </a>
+                                                class="nav-link text-dark"
+                                                href="${pageContext.request.contextPath}/home"
+                                                role="button" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" style="font-size: 20px;"> Trang Chủ
+                                        </a>
                                     </li>
                                     <!-- Bé Trai -->
                                     <li class="nav-item dropdown"><a
@@ -133,10 +157,15 @@
                                             aria-haspopup="true" aria-expanded="false" style="font-size: 20px;"> Bé
                                         Trai </a>
                                         <div class="dropdown-menu" aria-labelledby="boyDropdown">
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=3">Giày dép</a>
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=1">Áo</a>
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=2">Quần</a>
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=4">Đồ Bộ</a>
+                                            <a class="dropdown-item"
+                                               href="${pageContext.request.contextPath}/fashion?idCategory=3">Giày
+                                                dép</a>
+                                            <a class="dropdown-item"
+                                               href="${pageContext.request.contextPath}/fashion?idCategory=1">Áo</a>
+                                            <a class="dropdown-item"
+                                               href="${pageContext.request.contextPath}/fashion?idCategory=2">Quần</a>
+                                            <a class="dropdown-item"
+                                               href="${pageContext.request.contextPath}/fashion?idCategory=4">Đồ Bộ</a>
                                         </div>
                                     </li>
                                     <!-- Bé Gái -->
@@ -146,10 +175,16 @@
                                             aria-haspopup="true" aria-expanded="false" style="font-size: 20px;"> Bé
                                         Gái </a>
                                         <div class="dropdown-menu" aria-labelledby="girlDropdown">
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=5">Áo</a> <a
-                                                class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=6">Quần</a> <a
-                                                class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=7">Chân Váy</a>
-                                            <a class="dropdown-item" href="${pageContext.request.contextPath}/fashion?idCategory=8">Đồ Bộ</a>
+                                            <a class="dropdown-item"
+                                               href="${pageContext.request.contextPath}/fashion?idCategory=5">Áo</a> <a
+                                                class="dropdown-item"
+                                                href="${pageContext.request.contextPath}/fashion?idCategory=6">Quần</a>
+                                            <a
+                                                    class="dropdown-item"
+                                                    href="${pageContext.request.contextPath}/fashion?idCategory=7">Chân
+                                                Váy</a>
+                                            <a class="dropdown-item"
+                                               href="${pageContext.request.contextPath}/fashion?idCategory=8">Đồ Bộ</a>
                                         </div>
                                     </li>
                                     <li class="nav-item dropdown"><a
@@ -174,9 +209,7 @@
                                                 class="dropdown-item" href="#">Quần</a>
                                         </div>
                                     </li>
-
                                 </ul>
-
                             </div>
 
                         </div>
