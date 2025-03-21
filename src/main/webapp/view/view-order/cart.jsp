@@ -131,7 +131,10 @@
                         <p class="text-center mb-3">
                             <img src="./images/misc/payments.png" height="26">
                         </p>
-                        <a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>
+                        <form action="${pageContext.request.contextPath}/place-order" method="get">
+                            <button type="submit" class="btn btn-primary btn-block"> Thanh toán </button>
+                        </form>
+<%--                        <a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>--%>
                         <form action="${pageContext.request.contextPath}/cart" method="post">
                             <input type="hidden" name="action" value="continue">
                             <button type="submit" class="btn btn-light btn-block mt-4">Tiếp tục mua hàng</button>
