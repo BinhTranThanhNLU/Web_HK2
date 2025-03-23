@@ -7,7 +7,6 @@
 --%>
 
 <%@ include file="/view/view-index/header.jsp" %>
-<%@ include file="/view/view-index/footer.jsp" %>
 <html>
 <head>
     <title>Title</title>
@@ -306,3 +305,4 @@
 
 </body>
 </html>
+<%@ include file="/view/view-index/footer.jsp" %>
