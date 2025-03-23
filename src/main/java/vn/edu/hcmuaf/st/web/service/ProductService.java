@@ -25,6 +25,10 @@ public class ProductService {
         return productDao.getById(idProduct);
     }
 
+    public Product getProductByIdVariant(int idVariant) {
+        return productDao.getByIdVariant(idVariant);
+    }
+
     public boolean addProduct(Product product) {
         return productDao.add(product);
     }
@@ -99,10 +103,8 @@ public class ProductService {
 
     public static void main(String[] args) {
         ProductService productService = new ProductService();
-        List<Product> products = productService.getTop8ProductsByCategory(1);
-        for (Product product : products) {
-            System.out.println(product);
-        }
+        Product product = productService.getProductByIdVariant(1);
+        System.out.println(product);
     }
 
 

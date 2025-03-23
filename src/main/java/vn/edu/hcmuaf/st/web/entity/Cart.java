@@ -2,9 +2,7 @@ package vn.edu.hcmuaf.st.web.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Cart implements Serializable {
 
@@ -55,6 +53,10 @@ public class Cart implements Serializable {
         CartItem item = cartItems.get(variant.getIdvariant());
 
         if (item == null) {
+            // Lấy danh sách màu và size có sẵn của sản phẩm
+            List<Color> availableColors = (product.getColors() != null) ? product.getColors() : new ArrayList<>();
+            List<Size> availableSizes = (product.getSizes() != null) ? product.getSizes() : new ArrayList<>();
+
             // Tạo mới CartItem nếu chưa có trong giỏ hàng
             item = new CartItem(
                     variant.getIdvariant(),
@@ -66,6 +68,10 @@ public class Cart implements Serializable {
                     1,
                     product.getProductImages().isEmpty() ? "" : product.getProductImages().get(0).getImageUrl()
             );
+            // Gán danh sách màu và size có sẵn cho CartItem
+            item.setAvailableColors(availableColors);
+            item.setAvailableSizes(availableSizes);
+
             cartItems.put(variant.getIdvariant(), item);
         } else {
             item.setQuantity(item.getQuantity()+1);
@@ -81,6 +87,14 @@ public class Cart implements Serializable {
         this.totalPrice = cartItems.values().stream()
                 .mapToDouble(item -> (item.getDiscountPrice() > 0 ? item.getDiscountPrice() : item.getPrice()) * item.getQuantity())
                 .sum();
+    }
+
+    public void removeItem(int idVariant) {
+        if(cartItems.containsKey(idVariant)) {
+            cartItems.remove(idVariant);
+            updateTotalPrice();
+            this.updatedAt = LocalDateTime.now();
+        }
     }
 
     public int getIdUser() {

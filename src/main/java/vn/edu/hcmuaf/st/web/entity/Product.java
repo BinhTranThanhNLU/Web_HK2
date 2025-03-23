@@ -68,6 +68,22 @@ public class Product implements Serializable {
         return price;
     }
 
+    public List<Color> getColors() {
+        List<Color> colors = new ArrayList<>();
+        for(ProductVariant productVariant : productVariants) {
+            colors.add(productVariant.getColor());
+        }
+        return colors;
+    }
+
+    public List<Size> getSizes() {
+        List<Size> sizes = new ArrayList<>();
+        for(ProductVariant productVariant : productVariants) {
+            sizes.add(productVariant.getSize());
+        }
+        return sizes;
+    }
+
     //Get & Set
     public int getIdProduct() {
         return idProduct;

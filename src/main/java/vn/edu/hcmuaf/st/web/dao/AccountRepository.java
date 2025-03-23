@@ -4,7 +4,7 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.Query;
 import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
-import vn.edu.hcmuaf.st.web.entity.Address;
+import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
 import vn.edu.hcmuaf.st.web.entity.User;
 
 public class AccountRepository {
@@ -86,6 +86,7 @@ public class AccountRepository {
             return fullName;  // Trả về giá trị fullName
         });
     }
+
     public User getUserByUsername(String username) {
         String query = "SELECT fullName, password, username, email,phoneNumber FROM users WHERE username = ?";
 
@@ -96,11 +97,80 @@ public class AccountRepository {
                                 rs.getString("fullName"),
                                 rs.getString("password"),
                                 rs.getString("username"),
-                                rs.getString("email"),
-                                rs.getString("phoneNumber")
+                                rs.getString("email")
 
                         )).findOne().orElse(null)
         );
+    }
+
+    public GoogleAccount insertGoogleAccount(GoogleAccount googleAccount) {
+        String query = """
+                    INSERT INTO google_account (google_id, email, fullName, image, idRole, username, password)  -- Thêm username và password vào danh sách cột
+                    VALUES (:google_id, :email, :fullName, :image, :idRole, :username, :password)  -- Thêm username và password vào giá trị chèn
+                    ON DUPLICATE KEY UPDATE fullName = :fullName, image = :image, username = :username, password = :password -- Cập nhật fullName, image, username và password
+                """;
+
+        // Thực thi câu lệnh SQL
+        jdbi.useHandle(handle ->
+                handle.createUpdate(query)
+                        .bind("google_id", googleAccount.getId())  // Truyền google_id từ đối tượng GoogleAccount
+                        .bind("email", googleAccount.getEmail())  // Truyền email từ đối tượng GoogleAccount
+                        .bind("fullName", googleAccount.getFullName())  // Truyền fullName từ đối tượng GoogleAccount
+                        .bind("image", googleAccount.getImage())  // Truyền image từ đối tượng GoogleAccount
+                        .bind("idRole", 2)  // Đặt idRole mặc định là 2
+                        .bind("username", googleAccount.getUsername())  // Truyền username từ đối tượng GoogleAccount
+                        .bind("password", googleAccount.getPassword())  // Truyền password từ đối tượng GoogleAccount
+                        .execute()
+        );
+
+        return googleAccount;  // Trả về đối tượng GoogleAccount đã được chèn vào cơ sở dữ liệu
+    }
+
+    public User insertOrUpdateUser(GoogleAccount googleAccount) {
+        // Câu lệnh SQL để thêm mới hoặc cập nhật nếu đã tồn tại (dựa trên socialId hoặc email)
+        String query = """
+                    INSERT INTO users (username, password, fullName, email, idRole, image, socialId, phoneNumber)
+                    VALUES (:username, :password, :fullName, :email, :idRole, :image, :socialId, :phoneNumber)
+                    ON DUPLICATE KEY UPDATE 
+                        fullName = :fullName, 
+                        image = :image, 
+                        username = :username,
+                        password = :password,
+                        phoneNumber = :phoneNumber
+                """;
+
+        System.out.println("Executing query: " + query);  // In câu lệnh SQL
+        System.out.println("Parameters: ");
+        System.out.println("Username: " + googleAccount.getUsername());
+        System.out.println("Password: " + googleAccount.getPassword());
+        System.out.println("FullName: " + googleAccount.getFullName());
+        System.out.println("Email: " + googleAccount.getEmail());
+        System.out.println("IDRole: " + googleAccount.getIdRole());
+        System.out.println("Image: " + googleAccount.getImage());
+        System.out.println("SocialID: " + googleAccount.getId());
+
+        try {
+            // Thực hiện câu lệnh SQL để thêm mới hoặc cập nhật người dùng
+            jdbi.useHandle(handle ->
+                    handle.createUpdate(query)
+                            .bind("username", googleAccount.getUsername())
+                            .bind("password", googleAccount.getPassword())
+                            .bind("fullName", googleAccount.getFullName())
+                            .bind("email", googleAccount.getEmail())
+                            .bind("idRole", googleAccount.getIdRole())
+                            .bind("image", googleAccount.getImage())
+                            .bind("socialId", googleAccount.getId())  // Gán socialId từ Google
+                            .bind("phoneNumber", googleAccount.getPhoneNumber()) // Gán số điện thoại nếu có
+
+                            .execute()
+            );
+
+            // Trả về đối tượng User sau khi thực hiện insert hoặc update thành công
+            return new User(googleAccount.getFullName(), googleAccount.getPassword(), googleAccount.getUsername(), googleAccount.getEmail());
+        } catch (Exception e) {
+            e.printStackTrace();  // In ra lỗi nếu có
+            return null;  // Trả về null nếu có lỗi
+        }
     }
 
 

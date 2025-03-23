@@ -264,6 +264,8 @@ public class AccountController extends HttpServlet {
     }
 
     // Đăng nhập Bằng gg
+
+
     private void handleGoogleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             HttpSession session = request.getSession();
@@ -281,10 +283,9 @@ public class AccountController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=missing_code");
                 return;
             }
-            // Xử lý đăng nhập Google
-            SocialLogin gg = new SocialLogin();
-            String accessToken = gg.getToken(code);
-            googleAccount = gg.getUserInfo(accessToken);
+
+            // Gọi service để xử lý đăng nhập Google
+            googleAccount = accountService.handleGoogleLogin(code);
 
             // Lưu vào session
             session.setAttribute("googleAccount", googleAccount);
@@ -296,7 +297,6 @@ public class AccountController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=true");
         }
     }
-
     // Đăng Xuất Bằng Tk
     private void handleLogout(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
