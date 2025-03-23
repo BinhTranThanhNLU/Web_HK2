@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%@ include file="/view/view-index/header.jsp" %>
 
@@ -17,6 +18,8 @@
                         <thead class="text-muted">
                         <tr class="small text-uppercase">
                             <th scope="col">Sản phẩm</th>
+                            <th scope="col">Màu</th>
+                            <th scope="col">Kích thước</th>
                             <th scope="col">Số lượng</th>
                             <th scope="col">Giá</th>
                             <th scope="col" class="text-right"></th>
@@ -36,6 +39,36 @@
                                         </figcaption>
                                     </figure>
                                 </td>
+                                <!-- Dropdown chọn màu -->
+                                <td>
+                                    <select name="color" class="form-control form-select" style="width: fit-content">
+                                        <c:set var="uniqueColors" value="" />
+                                        <c:forEach var="color" items="${item.availableColors}">
+                                            <c:if test="${not fn:contains(uniqueColors, color.color)}">
+                                                <option value="${color.idColor}" ${color.idColor == item.color.idColor ? 'selected' : ''}>
+                                                        ${color.color}
+                                                </option>
+                                                <c:set var="uniqueColors" value="${uniqueColors},${color.color}" />
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+
+                                <!-- Dropdown chọn size -->
+                                <td>
+                                    <select name="size" class="form-control form-select w-0" style="width: fit-content">
+                                        <c:set var="uniqueSizes" value="" />
+                                        <c:forEach var="size" items="${item.availableSizes}">
+                                            <c:if test="${not fn:contains(uniqueSizes, size.size)}">
+                                                <option value="${size.idSize}" ${size.idSize == item.size.idSize ? 'selected' : ''}>
+                                                        ${size.size}
+                                                </option>
+                                                <c:set var="uniqueSizes" value="${uniqueSizes},${size.size}" />
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+
                                 <td>
                                     <!-- col.// -->
                                     <div class="col">
@@ -60,7 +93,11 @@
                                     </div>
                                 </td>
                                 <td class="text-right">
-                                    <a href="" class="btn btn-danger"> Xóa</a>
+                                    <form action="${pageContext.request.contextPath}/cart" method="post">
+                                        <input type="hidden" name="action" value="remove"/>
+                                        <input type="hidden" name="idVariant" value="${item.idVariant}"/>
+                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                    </form>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -94,10 +131,13 @@
                         <p class="text-center mb-3">
                             <img src="./images/misc/payments.png" height="26">
                         </p>
-                        <a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>
+                        <form action="${pageContext.request.contextPath}/place-order" method="get">
+                            <button type="submit" class="btn btn-primary btn-block"> Thanh toán </button>
+                        </form>
+<%--                        <a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>--%>
                         <form action="${pageContext.request.contextPath}/cart" method="post">
                             <input type="hidden" name="action" value="continue">
-                            <button type="submit" class="btn btn-light btn-block">Tiếp tục mua hàng</button>
+                            <button type="submit" class="btn btn-light btn-block mt-4">Tiếp tục mua hàng</button>
                         </form>
 <%--                        <a href="./store.html" class="btn btn-light btn-block">Tiếp tục mua hàng</a>--%>
                     </div>

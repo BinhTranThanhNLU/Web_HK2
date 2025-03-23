@@ -7,7 +7,7 @@
 --%>
 
 <%@ include file="/view/view-index/header.jsp" %>
-<%@ include file="/view/view-index/footer.jsp" %>
+
 
 <body>
 <div class="container" style="margin-top: 50px;">
@@ -119,5 +119,7 @@
     </div>
 </div>
 
+
+<%@ include file="/view/view-index/footer.jsp" %>
 </body>
 </html>

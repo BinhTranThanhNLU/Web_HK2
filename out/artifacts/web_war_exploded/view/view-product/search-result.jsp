@@ -7,6 +7,7 @@
 --%>
 
 <%@ include file="/view/view-index/header.jsp" %>
+<%@ include file="/view/view-index/footer.jsp" %>
 <html>
 <head>
     <title>Title</title>
@@ -302,6 +303,6 @@
     </div> <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
-<%@ include file="/view/view-index/footer.jsp" %>
+
 </body>
 </html>
