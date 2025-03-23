@@ -21,7 +21,8 @@
                 <aside class="col-md-6">
                     <article class="gallery-wrap">
                         <div class="img-big-wrap">
-                            <a href="#"><img src="./images/items/12.jpg"></a>
+                            <a href="#"><img src="${pageContext.request.contextPath}/images/${product.image}" alt="Product Image">
+                            </a>
                         </div> <!-- img-big-wrap.// -->
 
                     </article> <!-- gallery-wrap .end// -->
