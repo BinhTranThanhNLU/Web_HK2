@@ -18,41 +18,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/card-product.css">
-    <style>
-        .intro-banner-wrap {
-            position: relative;
-            width: 100%;
-            max-width: 800px; /* Giới hạn chiều rộng */
-            height: 300px; /* Điều chỉnh chiều cao theo nhu cầu */
-            overflow: hidden;
-            border-radius: 10px;
-        }
-
-        .intro-banner-wrap img {
-            width: 200%;
-            height: 100%;
-            object-fit: cover; /* Đảm bảo ảnh không bị méo */
-            position: absolute;
-            top: 0;
-            left: 100%;
-            transition: left 0.5s ease-in-out;
-        }
-
-        .intro-banner-wrap img.active {
-            left: 0; /* Hiển thị ảnh */
-        }
-
-
-    </style>
 </head>
 <body>
 
 <!-- ========================= SECTION MAIN ========================= -->
-    <section class="section-intro padding-y-sm">
+<section class="section-intro padding-y-sm">
     <div class="container">
         <div class="intro-banner-wrap">
-            <img src="images/banners/1.jpg" class="img-fluid rounded">
-            <img src="images/banners/1.jpg" class="img-fluid rounded">
             <img src="images/banners/1.jpg" class="img-fluid rounded">
         </div>
     </div>
@@ -84,7 +56,7 @@
                             <div class="product-details">
                                 <span class="product-catagory">${product.category.name}</span>
                                 <h4>
-                                    <a href="#">${product.title}</a>
+                                    <a href="${pageContext.request.contextPath}/view/view-product/product-detail.jsp">${product.title}</a>
                                 </h4>
                                 <div class="product-bottom-details">
                                     <div class="product-price">
@@ -321,25 +293,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const images = document.querySelectorAll(".intro-banner-wrap img");
-        let currentIndex = 0;
-        const totalImages = images.length;
 
-        // Đặt ảnh đầu tiên là hiển thị
-        images[0].classList.add("active");
-
-        function nextSlide() {
-            images[currentIndex].classList.remove("active"); // Ẩn ảnh hiện tại
-            currentIndex = (currentIndex + 1) % totalImages; // Chuyển sang ảnh tiếp theo
-            images[currentIndex].classList.add("active"); // Hiển thị ảnh mới
-        }
-
-        // Tự động chuyển ảnh mỗi 3 giây
-        setInterval(nextSlide, 3000);
-    });
-</script>
 
 </body>
 </html>

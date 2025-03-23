@@ -157,6 +157,6 @@
 
     </div> <!-- container .//  -->
 </section>
-<%@ include file="/view/view-index/footer.jsp" %>
 </body>
 </html>
+<%@ include file="/view/view-index/footer.jsp" %>

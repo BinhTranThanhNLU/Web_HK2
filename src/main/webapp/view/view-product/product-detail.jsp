@@ -7,7 +7,6 @@
 --%>
 
 <%@ include file="/view/view-index/header.jsp" %>
-<%@ include file="/view/view-index/footer.jsp" %>
 <html>
 <head>
     <title>Chi Tiết Sản Phẩm </title>
@@ -160,3 +159,4 @@
 </section>
 </body>
 </html>
+<%@ include file="/view/view-index/footer.jsp" %>
