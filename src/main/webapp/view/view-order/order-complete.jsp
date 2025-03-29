@@ -7,7 +7,7 @@
 --%>
 
 <%@ include file="/view/view-index/header.jsp" %>
-<%@ include file="/view/view-index/footer.jsp" %>
+
 
 <body>
 <div class="container" style="margin-top: 50px;">
@@ -20,6 +20,11 @@
 </div>
 
 <div class="container" style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
+
+    <div style="color: red">
+        ${requestScope.message}
+    </div>
+
     <div class="row invoice row-printable">
         <div class="col-md-12">
             <!-- col-lg-12 start here -->
@@ -119,5 +124,7 @@
     </div>
 </div>
 
+
+<%@ include file="/view/view-index/footer.jsp" %>
 </body>
 </html>

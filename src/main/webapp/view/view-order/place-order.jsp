@@ -1,16 +1,12 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: hdanh
-  Date: 24/02/2025
-  Time: 8:48 SA
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%@ include file="/view/view-index/header.jsp" %>
-<%@ include file="/view/view-index/footer.jsp" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Thanh toán</title>
 </head>
 <body>
 <section class="section-content padding-y bg">
@@ -24,65 +20,43 @@
 
                 <article class="card mb-4">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Review cart</h4>
+                        <h4 class="card-title mb-4">Giỏ hàng</h4>
                         <div class="row">
-                            <div class="col-md-6">
-                                <figure class="itemside  mb-4">
-                                    <div class="aside"><img src="./images/items/1.jpg" class="border img-sm"></div>
-                                    <figcaption class="info">
-                                        <p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-                                        <span class="text-muted">2x = $560 </span>
-                                    </figcaption>
-                                </figure>
-                            </div> <!-- col.// -->
-                            <div class="col-md-6">
-                                <figure class="itemside  mb-4">
-                                    <div class="aside"><img src="./images/items/2.jpg" class="border img-sm"></div>
-                                    <figcaption class="info">
-                                        <p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-                                        <span class="text-muted">2x = $560 </span>
-                                    </figcaption>
-                                </figure>
-                            </div> <!-- col.// -->
-                            <div class="col-md-6">
-                                <figure class="itemside mb-4">
-                                    <div class="aside"><img src="./images/items/3.jpg" class="border img-sm"></div>
-                                    <figcaption class="info">
-                                        <p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-                                        <span class="text-muted">2x = $560 </span>
-                                    </figcaption>
-                                </figure>
-                            </div> <!-- col.// -->
-                            <div class="col-md-6">
-                                <figure class="itemside  mb-4">
-                                    <div class="aside"><img src="./images/items/4.jpg" class="border img-sm"></div>
-                                    <figcaption class="info">
-                                        <p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-                                        <span class="text-muted">2x = $560 </span>
-                                    </figcaption>
-                                </figure>
-                            </div> <!-- col.// -->
-                        </div> <!-- row.// -->
-                    </div> <!-- card-body.// -->
-                </article> <!-- card.// -->
+
+                            <c:forEach var="item" items="${sessionScope.cart.cartItems.values()}">
+                                <div class="col-md-6">
+                                    <figure class="itemside mb-4">
+                                        <div class="aside"><img src="${item.imageUrl}" class="border img-sm"></div>
+                                        <figcaption class="info">
+                                            <p> ${item.productTitle} </p>
+                                            <span class="text-muted d-block"> Số lượng: ${item.quantity} </span>
+                                            <span class="text-muted d-block"> Giá: <fmt:formatNumber value="${item.price}" pattern="#,##0 đ"/> </span>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </c:forEach>
+
+                        </div>
+                    </div>
+                </article>
 
 
                 <article class="card mb-4">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Contact info</h4>
+                        <h4 class="card-title mb-4">Thông tin liên lạc</h4>
                         <form action="">
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label>Frst name</label>
-                                    <input type="text" placeholder="Type here" class="form-control">
+                                    <label> Họ </label>
+                                    <input type="text" placeholder="Nhập thông tin" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label>Last name</label>
-                                    <input type="text" placeholder="Type here" class="form-control">
+                                    <label> Tên </label>
+                                    <input type="text" placeholder="Nhập thông tin" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label>Phone</label>
-                                    <input type="text" value="+998" class="form-control">
+                                    <label>Số điện thoại</label>
+                                    <input type="text" placeholder="+98" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label>Email</label>
@@ -96,42 +70,25 @@
 
                 <article class="card mb-4">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Delivery info</h4>
+                        <h4 class="card-title mb-4">Thông tin giao hàng</h4>
                         <form action="">
 
 
                             <div class="row">
-                                <div class="form-group col-sm-6">
-                                    <label>Country*</label>
-                                    <select name="" class="form-control">
-                                        <option value="">India</option>
-                                        <option value="">United States</option>
-                                        <option value="">France</option>
-                                        <option value="">Italy</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label>State*</label>
-                                    <input type="text" placeholder="Type here" class="form-control">
-                                </div>
-                                <div class="form-group col-sm-8">
-                                    <label>Street*</label>
+                                <div class="form-group col-sm-12">
+                                    <label> Địa chỉ* </label>
                                     <input type="text" placeholder="Type here" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-4">
-                                    <label>Building</label>
+                                    <label> Phường/Xã* </label>
+                                    <input type="text" placeholder="Type here" class="form-control">
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label> Quận/Huyện* </label>
                                     <input type="text" placeholder="" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-4">
-                                    <label>House</label>
-                                    <input type="text" placeholder="Type here" class="form-control">
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <label>Postal code</label>
-                                    <input type="text" placeholder="" class="form-control">
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <label>Zip</label>
+                                    <label> Tỉnh/Thành phố* </label>
                                     <input type="text" placeholder="" class="form-control">
                                 </div>
                             </div> <!-- row.// -->
@@ -190,22 +147,28 @@
                 <div class="card">
                     <div class="card-body">
                         <dl class="dlist-align">
-                            <dt>Total price:</dt>
+                            <dt>Tổng tiền:</dt>
                             <dd class="text-right">$69.97</dd>
                         </dl>
                         <dl class="dlist-align">
-                            <dt>Tax:</dt>
+                            <dt>Giảm:</dt>
                             <dd class="text-right"> $10.00</dd>
                         </dl>
                         <dl class="dlist-align">
-                            <dt>Total:</dt>
-                            <dd class="text-right text-dark b"><strong>$59.97</strong></dd>
+                            <dt>Tổng:</dt>
+                            <dd class="text-right text-dark b">
+                                <strong><fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/></strong>
+                            </dd>
                         </dl>
                         <hr>
                         <p class="text-center mb-3">
                             <img src="./images/misc/payments.png" height="26">
                         </p>
-                        <a href="./place-order.html" class="btn btn-primary btn-block"> Place Order </a>
+                        <form action="${pageContext.request.contextPath}/vnpay-payment" method="post">
+                            <input type="hidden" name="totalPrice" value="${cart.totalPrice}">
+                            <button type="submit" class="btn btn-primary btn-block">Thanh toán VNPay</button>
+                        </form>
+                        <!--<a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>-->
 
                     </div> <!-- card-body.// -->
                 </div> <!-- card.// -->
@@ -216,5 +179,6 @@
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
 
+<%@ include file="/view/view-index/footer.jsp" %>
 </body>
 </html>
