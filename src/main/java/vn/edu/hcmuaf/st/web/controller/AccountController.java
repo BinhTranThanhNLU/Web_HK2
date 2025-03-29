@@ -18,6 +18,8 @@ public class AccountController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final AccountService accountService = new AccountService();
 
+
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,6 +38,14 @@ public class AccountController extends HttpServlet {
             case "/sign":
                 request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
                 break;
+//            case "/login":
+//                handleGoogleLogin(request, response);
+//                break;
+//            case "/reset-password":
+//                request.getRequestDispatcher("/view/view-account/reset-password.jsp").forward(request, response);
+//                break;
+//            case "/logout":
+//                handleLogout(request, response);
             case "/login":
                 handleGoogleLogin(request, response);
                 break;
