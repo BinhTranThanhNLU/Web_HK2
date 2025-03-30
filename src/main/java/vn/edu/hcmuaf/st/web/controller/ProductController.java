@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.st.web.controller;
 
+import com.google.gson.Gson;
 import vn.edu.hcmuaf.st.web.service.ProductService;
 import vn.edu.hcmuaf.st.web.entity.Product;
 import jakarta.servlet.ServletException;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet({"/all-product", "/product", "/fashion"})
+@WebServlet({"/all-product", "/product", "/fashion", "/all-boy-or-girl"})
 public class ProductController extends HttpServlet {
 
     private ProductService productService;
@@ -36,9 +37,64 @@ public class ProductController extends HttpServlet {
             handlePagedProducts(request, response);
         } else if (path.endsWith("/fashion")) {
             handlePagedProductsRange(request, response);
+        } else if (path.endsWith("/all-boy-or-girl")) {
+            handleAllBoyOrGirl(request, response);
+        }
+    }
+
+    private void handleAllBoyOrGirl(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            // Lấy tham số từ request
+            String boyOrGirlParam = request.getParameter("boy_or_girl");
+            int boy_or_girl = 1; // Mặc định là Nam
+
+            if (boyOrGirlParam != null) {
+                try {
+                    int parsedValue = Integer.parseInt(boyOrGirlParam);
+                    if (parsedValue == 1 || parsedValue == 2) {
+                        boy_or_girl = parsedValue; // Chỉ gán nếu hợp lệ
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Lỗi chuyển đổi boy_or_girl: " + e.getMessage());
+                }
+            }
+
+            int page = Optional.ofNullable(request.getParameter("page"))
+                    .map(Integer::parseInt)
+                    .filter(p -> p > 0)
+                    .orElse(1); // Mặc định trang 1
+
+            int pageSize = 9;
+            int offset = (page - 1) * pageSize;
+
+            // Gọi service lấy danh sách sản phẩm theo giới tính
+            List<Product> productList = productService.getProductsByBoyOrGirl(boy_or_girl, offset, pageSize);
+
+            // Lấy tổng số sản phẩm để tính tổng trang
+            int totalProducts = productService.getTotalProductsByBoyOrGirl(boy_or_girl);
+            int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
+            // Nếu page > totalPages, đặt về trang cuối
+            if (page > totalPages) {
+                page = totalPages;
+            }
+
+            // Gửi dữ liệu lên JSP
+            request.setAttribute("products", productList);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("boy_or_girl", boy_or_girl);
+
+        } catch (Exception e) {
+            request.setAttribute("error", "Lỗi khi lấy danh sách sản phẩm: " + e.getMessage());
+            e.printStackTrace();
         }
 
+        // Forward đến trang hiển thị sản phẩm (JSP)
+        request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
     }
+
 
     private void handleAllProducts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -120,6 +176,54 @@ public class ProductController extends HttpServlet {
     }
 
     // Phân Trang cho bé Trai
+//    private void handlePagedProductsRange(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        try {
+//            // Lấy tham số "page" và kiểm tra giá trị hợp lệ
+//            int page = Optional.ofNullable(request.getParameter("page"))
+//                    .map(Integer::parseInt)
+//                    .filter(p -> p > 0)
+//                    .orElse(1); // Default to 1 if invalid or missing
+//
+//            int pageSize = 9;
+//
+//            // Lấy tham số "idCategory" và kiểm tra hợp lệ
+//            int idCategory = Optional.ofNullable(request.getParameter("idCategory"))
+//                    .map(Integer::parseInt)
+//                    .filter(id -> id >= 1 && id <= 8)
+//                    .orElse(1); // Default to category 1 if invalid or missing
+//
+//            // Tính toán offset cho phân trang
+//            int offset = (page - 1) * pageSize;
+//
+//            // Lấy danh sách sản phẩm theo idCategory và phân trang
+//            List<Product> productList = productService.getProductsByCategoryRange(idCategory, offset, pageSize);
+//
+//            // Lấy tổng số sản phẩm theo idCategory
+//            int totalProducts = productService.getTotalProductsByCategoryRange(idCategory);
+//
+//            // Tính toán số trang
+//            int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+//
+//            // Giới hạn giá trị của `page` để không vượt quá tổng số trang
+//            if (page > totalPages) {
+//                page = totalPages; // Nếu `page` lớn hơn số trang, chỉnh lại `page` là số trang cuối
+//            }
+//
+//            // Gửi dữ liệu đến JSP
+//            request.setAttribute("products", productList);
+//            request.setAttribute("totalPages", totalPages);
+//            request.setAttribute("currentPage", page);
+//            request.setAttribute("idCategory", idCategory);
+//
+//        } catch (Exception e) {
+//            request.setAttribute("error", "Lỗi khi lấy danh sách sản phẩm: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//        // Forward đến JSP
+//        request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
+//    }
     private void handlePagedProductsRange(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -127,38 +231,45 @@ public class ProductController extends HttpServlet {
             int page = Optional.ofNullable(request.getParameter("page"))
                     .map(Integer::parseInt)
                     .filter(p -> p > 0)
-                    .orElse(1); // Default to 1 if invalid or missing
+                    .orElse(1); // Default là trang 1 nếu không có
 
             int pageSize = 9;
 
-            // Lấy tham số "idCategory" và kiểm tra hợp lệ
-            int idCategory = Optional.ofNullable(request.getParameter("idCategory"))
+            // Lấy "idCategory", cho phép "0" để lấy tất cả danh mục
+            Integer idCategory = Optional.ofNullable(request.getParameter("idCategory"))
                     .map(Integer::parseInt)
-                    .filter(id -> id >= 1 && id <= 8)
-                    .orElse(1); // Default to category 1 if invalid or missing
+                    .filter(id -> id == 0 || (id >= 1 && id <= 8)) // Cho phép idCategory = 0 để lấy tất cả sản phẩm
+                    .orElse(0); // Default là 0 để lấy tất cả danh mục
+
+            // Lấy "boy_or_girl" (1: Nam, 2: Nữ)
+            int boy_or_girl = Optional.ofNullable(request.getParameter("boy_or_girl"))
+                    .map(Integer::parseInt)
+                    .filter(bg -> bg == 1 || bg == 2)
+                    .orElse(1); // Default là 1 (Nam)
 
             // Tính toán offset cho phân trang
             int offset = (page - 1) * pageSize;
 
-            // Lấy danh sách sản phẩm theo idCategory và phân trang
-            List<Product> productList = productService.getProductsByCategoryRange(idCategory, offset, pageSize);
+            // Lấy danh sách sản phẩm (cho phép idCategory = 0 để lấy tất cả)
+            List<Product> productList = productService.getProductsByCategoryRange(idCategory, boy_or_girl, offset, pageSize);
 
-            // Lấy tổng số sản phẩm theo idCategory
-            int totalProducts = productService.getTotalProductsByCategoryRange(idCategory);
+            // Lấy tổng số sản phẩm
+            int totalProducts = productService.getTotalProductsByCategoryRange(idCategory, boy_or_girl);
 
-            // Tính toán số trang
+            // Tính số trang
             int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
-            // Giới hạn giá trị của `page` để không vượt quá tổng số trang
+            // Nếu `page` lớn hơn tổng số trang, đặt về trang cuối
             if (page > totalPages) {
-                page = totalPages; // Nếu `page` lớn hơn số trang, chỉnh lại `page` là số trang cuối
+                page = totalPages;
             }
 
-            // Gửi dữ liệu đến JSP
+            // Đưa dữ liệu lên JSP
             request.setAttribute("products", productList);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("currentPage", page);
             request.setAttribute("idCategory", idCategory);
+            request.setAttribute("boy_or_girl", boy_or_girl);
 
         } catch (Exception e) {
             request.setAttribute("error", "Lỗi khi lấy danh sách sản phẩm: " + e.getMessage());
@@ -168,4 +279,6 @@ public class ProductController extends HttpServlet {
         // Forward đến JSP
         request.getRequestDispatcher("/view/view-product/store.jsp").forward(request, response);
     }
+
+
 }

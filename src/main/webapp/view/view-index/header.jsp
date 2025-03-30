@@ -187,28 +187,28 @@
                                                href="${pageContext.request.contextPath}/fashion?idCategory=8">Đồ Bộ</a>
                                         </div>
                                     </li>
-                                    <li class="nav-item dropdown"><a
-                                            class="nav-link dropdown-toggle text-dark" href="#"
-                                            id="boyDropdown" role="button" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false" style="font-size: 20px;">
-                                        Giày </a>
-                                        <div class="dropdown-menu" aria-labelledby="boyDropdown">
-                                            <a class="dropdown-item" href="#">Giày dép</a> <a
-                                                class="dropdown-item" href="#">Áo</a> <a
-                                                class="dropdown-item" href="#">Quần</a>
-                                        </div>
-                                    </li>
-                                    <li class="nav-item dropdown"><a
-                                            class="nav-link dropdown-toggle text-dark" href="#"
-                                            role="button" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false" style="font-size: 20px;">
-                                        Dép </a>
-                                        <div class="dropdown-menu" aria-labelledby="boyDropdown">
-                                            <a class="dropdown-item" href="#">Giày dép</a> <a
-                                                class="dropdown-item" href="#">Áo</a> <a
-                                                class="dropdown-item" href="#">Quần</a>
-                                        </div>
-                                    </li>
+<%--                                    <li class="nav-item dropdown"><a--%>
+<%--                                            class="nav-link dropdown-toggle text-dark" href="#"--%>
+<%--                                            id="boyDropdown" role="button" data-toggle="dropdown"--%>
+<%--                                            aria-haspopup="true" aria-expanded="false" style="font-size: 20px;">--%>
+<%--                                        Giày </a>--%>
+<%--                                        <div class="dropdown-menu" aria-labelledby="boyDropdown">--%>
+<%--                                            <a class="dropdown-item" href="#">Giày dép</a> <a--%>
+<%--                                                class="dropdown-item" href="#">Áo</a> <a--%>
+<%--                                                class="dropdown-item" href="#">Quần</a>--%>
+<%--                                        </div>--%>
+<%--                                    </li>--%>
+<%--                                    <li class="nav-item dropdown"><a--%>
+<%--                                            class="nav-link dropdown-toggle text-dark" href="#"--%>
+<%--                                            role="button" data-toggle="dropdown"--%>
+<%--                                            aria-haspopup="true" aria-expanded="false" style="font-size: 20px;">--%>
+<%--                                        Dép </a>--%>
+<%--                                        <div class="dropdown-menu" aria-labelledby="boyDropdown">--%>
+<%--                                            <a class="dropdown-item" href="#">Giày dép</a> <a--%>
+<%--                                                class="dropdown-item" href="#">Áo</a> <a--%>
+<%--                                                class="dropdown-item" href="#">Quần</a>--%>
+<%--                                        </div>--%>
+<%--                                    </li>--%>
                                 </ul>
                             </div>
 
