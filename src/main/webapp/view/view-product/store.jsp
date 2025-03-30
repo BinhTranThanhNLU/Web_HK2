@@ -34,22 +34,22 @@
                         <div class="filter-content collapse show" id="collapse_1" style="">
                             <div class="card-body">
                                 <ul class="list-menu">
-                                    <li><a href="${pageContext.request.contextPath}/fashion">Bé Trai</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/all-boy-or-girl?boy_or_girl=1&page=1&pageSize=9">Bé Trai</a></li>
                                     <li><a href="${pageContext.request.contextPath}/fashion?idCategory=1">--Áo</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=2">--Quần</a>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=2&boy_or_girl=1">--Quần</a>
                                     </li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=3">--Giày,Dép</a>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=3&boy_or_girl=1">--Giày,Dép</a>
                                     </li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=4">--Đồ Bộ</a>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=4&boy_or_girl=1">--Đồ Bộ</a>
                                     </li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=7">Bé Gái</a>
+                                    <li><a href="${pageContext.request.contextPath}/all-boy-or-girl?boy_or_girl=2&page=1&pageSize=9">Bé Gái</a>
                                     </li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=7">--Váy </a>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=5&boy_or_girl=2">--Áo </a>
                                     </li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=5">--Áo </a></li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=6">--Quần </a>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=6&boy_or_girl=2">--Quần </a></li>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=7&boy_or_girl=2">--Váy </a>
                                     </li>
-                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=8">--Đồ Bộ </a>
+                                    <li><a href="${pageContext.request.contextPath}/fashion?idCategory=8&boy_or_girl=2">--Đồ Bộ </a>
                                     </li>
                                 </ul>
                             </div> <!-- card-body.// -->
@@ -167,7 +167,7 @@
                                     </div>
                                     <figcaption class="info-wrap">
                                         <div class="fix-height">
-                                            <a href="#" class="title">${product.title}</a>
+                                            <a href="#" style="font-size: 13px" class="title">${product.title}</a>
                                             <div class="d-flex align-items-center justify-content-between mb-3">
                                                 <!-- Giá sản phẩm -->
                                                 <span class="price text-danger fw-bold">
@@ -177,17 +177,19 @@
                                                 <small class="ori-price text-muted text-decoration-line-through">
                                                     <fmt:formatNumber value="${product.price}" pattern="#,##0 đ"/>
                                                 </small>
-
                                                 <!-- Nút xem chi tiết -->
-                                                <button class="btn btn-outline-secondary p-1 d-flex align-items-center" data-bs-toggle="tooltip" title="Xem chi tiết">
+                                                <button class="btn btn-outline-secondary p-1 d-flex align-items-center"
+                                                        data-bs-toggle="tooltip" title="Xem chi tiết">
                                                     <i class="fa-solid fa-eye fs-6"></i>
                                                 </button>
-
                                                 <!-- Form thêm vào giỏ hàng -->
-                                                <form action="${pageContext.request.contextPath}/cart" method="post" class="mb-0">
+                                                <form action="${pageContext.request.contextPath}/cart" method="post"
+                                                      class="mb-0">
                                                     <input type="hidden" name="action" value="add"/>
                                                     <input type="hidden" name="idProduct" value="${product.idProduct}"/>
-                                                    <button class="btn btn-primary p-1 d-flex align-items-center" type="submit" data-bs-toggle="tooltip" title="Thêm vào giỏ hàng">
+                                                    <button class="btn btn-primary p-1 d-flex align-items-center"
+                                                            type="submit" data-bs-toggle="tooltip"
+                                                            title="Thêm vào giỏ hàng">
                                                         <i class="fa fa-shopping-cart fs-6"></i>
                                                     </button>
                                                 </form>
@@ -203,22 +205,23 @@
                     <ul class="pagination">
                         <c:if test="${currentPage > 1}">
                             <li class="page-item">
-                                <a class="page-link" href="?idCategory=${idCategory}&page=${currentPage - 1}">Lùi</a>
+                                <a class="page-link" href="?boy_or_girl=${boy_or_girl}&page=${currentPage - 1}">Lùi</a>
                             </li>
                         </c:if>
 
                         <c:forEach var="i" begin="1" end="${totalPages}">
                             <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                <a class="page-link" href="?idCategory=${idCategory}&page=${i}">${i}</a>
+                                <a class="page-link" href="?boy_or_girl=${boy_or_girl}&page=${i}">${i}</a>
                             </li>
                         </c:forEach>
 
                         <c:if test="${currentPage < totalPages}">
                             <li class="page-item">
-                                <a class="page-link" href="?idCategory=${idCategory}&page=${currentPage + 1}">Tiến</a>
+                                <a class="page-link" href="?boy_or_girl=${boy_or_girl}&page=${currentPage + 1}">Tiến</a>
                             </li>
                         </c:if>
                     </ul>
+
                 </nav>
             </main> <!-- col.// -->
         </div>
