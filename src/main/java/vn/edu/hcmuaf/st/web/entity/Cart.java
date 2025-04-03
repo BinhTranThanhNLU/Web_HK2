@@ -83,7 +83,7 @@ public class Cart implements Serializable {
     }
 
 
-    private void updateTotalPrice() {
+    public void updateTotalPrice() {
         this.totalPrice = cartItems.values().stream()
                 .mapToDouble(item -> (item.getDiscountPrice() > 0 ? item.getDiscountPrice() : item.getPrice()) * item.getQuantity())
                 .sum();

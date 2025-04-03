@@ -35,6 +35,7 @@
                                         </div>
                                         <figcaption class="info">
                                             <a href="#" class="title text-dark">${item.productTitle}</a>
+                                            <p>${item.idVariant}</p>
 <%--                                            <p class="text-muted small">Matrix: 25 Mpx <br> Brand: Canon</p>--%>
                                         </figcaption>
                                     </figure>
@@ -74,12 +75,12 @@
                                     <div class="col">
                                         <div class="input-group input-spinner">
                                             <div class="input-group-prepend">
-                                                <button class="btn btn-light" type="button" id="button-plus"><i
+                                                <button class="btn btn-light btn-update-quantity" type="button" id="button-minus"><i
                                                         class="fa fa-minus"></i></button>
                                             </div>
-                                            <input type="text" class="form-control" value="1">
+                                            <input type="text" class="form-control input-qty" value="${item.quantity}" data-idvariant="${item.idVariant}">
                                             <div class="input-group-append">
-                                                <button class="btn btn-light" type="button" id="button-minus"><i
+                                                <button class="btn btn-light btn-update-quantity" type="button" id="button-plus"><i
                                                         class="fa fa-plus"></i></button>
                                             </div>
                                         </div>
@@ -114,7 +115,7 @@
                         <dl class="dlist-align">
                             <dt>Tồng tiền:</dt>
                             <dd class="text-right">
-                                <fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/>
+                                <span id="total-price"><fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/></span>
                             </dd>
                         </dl>
                         <dl class="dlist-align">
@@ -151,5 +152,49 @@
 
     </div>
 </section>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".btn-update-quantity");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                const input = document.querySelector(".input-qty");
+                let idVariant = input.getAttribute("data-idvariant");
+                let quantity = parseInt(input.value);
+
+                if (!idVariant || isNaN(parseInt(idVariant))) {
+                    console.error("Lỗi: idVariant không hợp lệ!", idVariant);
+                    return;
+                }
+
+                if (this.id === "button-plus") {
+                    quantity++;
+                } else if (this.id === "button-minus" && quantity > 1) {
+                    quantity--;
+                }
+
+                input.value = quantity;
+
+                console.log(`Sending: idVariant=${idVariant}, quantity=${quantity}`);
+
+                fetch("cart", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `action=updateQuantity&idVariant=${idVariant}&quantity=${quantity}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.totalPrice) {
+                            document.getElementById("total-price").innerText = data.totalPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
+                        } else {
+                            alert("Lỗi cập nhật giỏ hàng!");
+                        }
+                    })
+                    .catch(error => console.error("Lỗi:", error));
+            });
+        });
+    });
+</script>
+
 <%@ include file="/view/view-index/footer.jsp" %>
 </html>
