@@ -8,7 +8,7 @@ public class GoogleAccount {
     private String phoneNumber;
     private boolean verified_email;
 
-    public GoogleAccount(String id, String email, String fullName, String image, boolean verified_email, int idRole, String username,String password,String phoneNumber) {
+    public GoogleAccount(String id, String email, String fullName, String image, boolean verified_email, int idRole, String username,String password) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;

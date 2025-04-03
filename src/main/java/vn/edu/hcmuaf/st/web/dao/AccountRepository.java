@@ -27,10 +27,6 @@ public class AccountRepository {
     public boolean addUser(String username, String password, String fullname, String email, String phoneNumber) {
         String query = "INSERT INTO users (idRole, username, password, fullName, email, phoneNumber, active, birthDate) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-        // Chúng ta không cần mã hóa mật khẩu nữa vì đã làm ở phương thức register
-        // String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
         return jdbi.withHandle(handle -> {
             int rowsInserted = handle.createUpdate(query)
                     .bind(0, 2) // idRole = 2 (người dùng mặc định)

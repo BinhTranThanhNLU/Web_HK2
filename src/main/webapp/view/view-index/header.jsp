@@ -176,15 +176,15 @@
                                         Gái </a>
                                         <div class="dropdown-menu" aria-labelledby="girlDropdown">
                                             <a class="dropdown-item"
-                                               href="${pageContext.request.contextPath}/fashion?idCategory=5">Áo</a> <a
+                                               href="${pageContext.request.contextPath}/fashion?idCategory=5&boy_or_girl=2">Áo</a> <a
                                                 class="dropdown-item"
-                                                href="${pageContext.request.contextPath}/fashion?idCategory=6">Quần</a>
+                                                href="${pageContext.request.contextPath}/fashion?idCategory=6&boy_or_girl=2">Quần</a>
                                             <a
                                                     class="dropdown-item"
-                                                    href="${pageContext.request.contextPath}/fashion?idCategory=7">Chân
+                                                    href="${pageContext.request.contextPath}/fashion?idCategory=7&boy_or_girl=2">Chân
                                                 Váy</a>
                                             <a class="dropdown-item"
-                                               href="${pageContext.request.contextPath}/fashion?idCategory=8">Đồ Bộ</a>
+                                               href="${pageContext.request.contextPath}/fashion?idCategory=8&boy_or_girl=2">Đồ Bộ</a>
                                         </div>
                                     </li>
 <%--                                    <li class="nav-item dropdown"><a--%>
