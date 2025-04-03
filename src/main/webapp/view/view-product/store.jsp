@@ -180,58 +180,6 @@
                         <span class="mr-md-auto">32 Sản Phẩm </span>
                     </div>
                 </header>
-                <%--                <div class="row">--%>
-                <%--                    <c:forEach var="product" items="${products}" varStatus="status">--%>
-                <%--                        <c:if test="${status.index < 151}">--%>
-                <%--                            <div class="col-md-4 mb-4">--%>
-                <%--                                <figure class="card card-product-grid">--%>
-                <%--                                    <div class="img-wrap">--%>
-                <%--                                        <c:set var="imageUrl"--%>
-                <%--                                               value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}" />--%>
-                <%--                                        <img src="${imageUrl}" alt="${product.title}">--%>
-                <%--                                    </div>--%>
-                <%--                                    <figcaption class="info-wrap">--%>
-                <%--                                        <div class="fix-height">--%>
-                <%--                                            <a href="#" style="font-size: 13px" class="title">${product.title}</a>--%>
-                <%--                                            <div--%>
-                <%--                                                    class="d-flex align-items-center justify-content-between mb-3">--%>
-                <%--                                                <!-- Giá sản phẩm -->--%>
-                <%--                                                <span class="price text-danger fw-bold"> <fmt:formatNumber--%>
-                <%--                                                        value="${product.price}" pattern="#,##0 đ" />--%>
-                <%--													</span>--%>
-                <%--                                                <!-- Giá gốc -->--%>
-                <%--                                                <small--%>
-                <%--                                                        class="ori-price text-muted text-decoration-line-through">--%>
-                <%--                                                    <fmt:formatNumber value="${product.price}"--%>
-                <%--                                                                      pattern="#,##0 đ" />--%>
-                <%--                                                </small>--%>
-                <%--                                                <!-- Nút xem chi tiết -->--%>
-                <%--                                                <button--%>
-                <%--                                                        class="btn btn-outline-secondary p-1 d-flex align-items-center"--%>
-                <%--                                                        data-bs-toggle="tooltip" title="Xem chi tiết">--%>
-                <%--                                                    <i class="fa-solid fa-eye fs-6"></i>--%>
-                <%--                                                </button>--%>
-                <%--                                                <!-- Form thêm vào giỏ hàng -->--%>
-                <%--                                                <form action="${pageContext.request.contextPath}/cart"--%>
-                <%--                                                      method="post" class="mb-0">--%>
-                <%--                                                    <input type="hidden" name="action" value="add" /> <input--%>
-                <%--                                                        type="hidden" name="idProduct"--%>
-                <%--                                                        value="${product.idProduct}" />--%>
-                <%--                                                    <button--%>
-                <%--                                                            class="btn btn-primary p-1 d-flex align-items-center"--%>
-                <%--                                                            type="submit" data-bs-toggle="tooltip"--%>
-                <%--                                                            title="Thêm vào giỏ hàng">--%>
-                <%--                                                        <i class="fa fa-shopping-cart fs-6"></i>--%>
-                <%--                                                    </button>--%>
-                <%--                                                </form>--%>
-                <%--                                            </div>--%>
-                <%--                                        </div>--%>
-                <%--                                    </figcaption>--%>
-                <%--                                </figure>--%>
-                <%--                            </div>--%>
-                <%--                        </c:if>--%>
-                <%--                    </c:forEach>--%>
-                <%--                </div>--%>
                 <div class="row">
                     <c:forEach var="product" items="${products}" varStatus="status">
                         <c:if test="${status.index < 151}">

@@ -55,4 +55,6 @@ public class Color implements Serializable {
                 ", hexcode='" + hexcode + '\'' +
                 '}';
     }
+
+
 }
