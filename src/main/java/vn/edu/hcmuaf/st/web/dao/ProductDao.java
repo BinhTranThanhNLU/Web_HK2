@@ -207,7 +207,6 @@ public class ProductDao {
         );
     }
 
-
     public boolean add(Product product) {
         return jdbi.withHandle(handle ->
                 handle.createUpdate("INSERT INTO products (idCategory, idDiscount, title, price, description, status, createAt) VALUES (:idCategory, :idDiscount, :title, :price, :description, :status, NOW())")
