@@ -54,11 +54,6 @@ public class ProductService {
         return productDao.getProductsByCategory(categoryId, 8, offset);
     }
 
-    //    public List<Product> getProductsByPage(int page, int pageSize) {
-//        int offset = (page - 1) * pageSize;
-//        List<Product> products = productDao.getProducts(offset, pageSize);
-//        return products;
-//    }
     public List<Product> getProductsByPage(int page, int pageSize) {
         int totalProducts = getTotalProducts();
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);

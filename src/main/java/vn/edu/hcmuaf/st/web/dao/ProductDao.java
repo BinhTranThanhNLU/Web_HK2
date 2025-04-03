@@ -19,6 +19,7 @@ public class ProductDao {
         this.jdbi = JDBIConnect.get();
     }
 
+    // lấy tât cả có trong bảng product
     public List<Product> getAll() {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
@@ -74,6 +75,7 @@ public class ProductDao {
         );
     }
 
+    // lấy theo id
     public Product getById(int idProduct) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
@@ -442,20 +444,20 @@ public class ProductDao {
     public List<Product> getProductsByCategoryRange(Integer idCategory, int boy_or_girl, int offset, int pageSize) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
-            SELECT 
-                p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
-                c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
-                d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-                pi.idImage, pi.imageUrl, pi.`order`
-            FROM products p
-            JOIN categories c ON p.idCategory = c.idCategory
-            LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-            LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
-            WHERE p.boy_or_girl = :boy_or_girl
-            AND (:idCategory = 0 OR p.idCategory = :idCategory) -- Không sử dụng NULL
-            ORDER BY p.createAt DESC
-            LIMIT :pageSize OFFSET :offset
-        """)
+                                    SELECT 
+                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM products p
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+                                    WHERE p.boy_or_girl = :boy_or_girl
+                                    AND (:idCategory = 0 OR p.idCategory = :idCategory) -- Không sử dụng NULL
+                                    ORDER BY p.createAt DESC
+                                    LIMIT :pageSize OFFSET :offset
+                                """)
                         .bind("boy_or_girl", boy_or_girl)
                         .bind("idCategory", idCategory)  // Không bind NULL
                         .bind("pageSize", pageSize)
@@ -506,22 +508,23 @@ public class ProductDao {
                         .toList()
         );
     }
+
     public List<Product> getProductsByBoyOrGirl(int boy_or_girl, int offset, int pageSize) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
-                SELECT 
-                    p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
-                    c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
-                    d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-                    pi.idImage, pi.imageUrl, pi.`order`
-                FROM products p
-                JOIN categories c ON p.idCategory = c.idCategory
-                LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-                LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
-                WHERE p.boy_or_girl = :boy_or_girl  -- CHẮC CHẮN LỌC THEO boy_or_girl
-                ORDER BY p.createAt DESC
-                LIMIT :pageSize OFFSET :offset
-            """)
+                                    SELECT 
+                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM products p
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+                                    WHERE p.boy_or_girl = :boy_or_girl  -- CHẮC CHẮN LỌC THEO boy_or_girl
+                                    ORDER BY p.createAt DESC
+                                    LIMIT :pageSize OFFSET :offset
+                                """)
                         .bind("boy_or_girl", boy_or_girl)  // Đảm bảo bind đúng giá trị
                         .bind("pageSize", pageSize)
                         .bind("offset", offset)
@@ -573,13 +576,12 @@ public class ProductDao {
         );
     }
 
-
     public int getTotalProductsByBoyOrGirl(int boy_or_girl) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
-        SELECT COUNT(*) FROM products 
-        WHERE boy_or_girl = :boy_or_girl
-    """)
+                                    SELECT COUNT(*) FROM products 
+                                    WHERE boy_or_girl = :boy_or_girl
+                                """)
                         .bind("boy_or_girl", boy_or_girl)
                         .mapTo(Integer.class)
                         .one()
@@ -600,22 +602,68 @@ public class ProductDao {
         );
     }
 
+    // Lấy giá của sản phẩm sau khi giảm giá
+    public List<Product> getProductsWithDiscount() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("""
+                            SELECT 
+                                p.idProduct,
+                                p.title,
+                                p.price,
+                                p.description,
+                                p.status,
+                                p.boy_or_girl,
+                                d.idDiscount,
+                                COALESCE(d.discountAmount, 0) AS discountAmount,
+                                d.startDate,
+                                d.endDate,
+                                IF(d.idDiscount IS NOT NULL AND (d.endDate IS NULL OR d.endDate >= CURRENT_TIMESTAMP),
+                                   p.price - ((COALESCE(d.discountAmount, 0) / 100) * p.price), 
+                                   p.price) AS price_after_discount
+                            FROM 
+                                products p
+                            LEFT JOIN 
+                                discount d ON p.idDiscount = d.idDiscount 
+                                AND (d.startDate IS NULL OR d.startDate <= CURRENT_TIMESTAMP);
+                            """)
+                        .map((rs, ctx) -> {
+                            Product product = new Product();
+                            product.setIdProduct(rs.getInt("idProduct"));
+                            product.setTitle(rs.getString("title"));
+                            product.setPrice(rs.getDouble("price"));
+                            product.setDescription(rs.getString("description"));
+                            product.setStatus(rs.getBoolean("status"));
+                            product.setBoy_or_girl(rs.getInt("boy_or_girl"));
+                            // Gán discount nếu có
+                            int idDiscount = rs.getInt("idDiscount");
+                            if (!rs.wasNull()) {
+                                Discount discount = new Discount();
+                                discount.setIdDiscount(idDiscount);
+                                discount.setDiscountAmount(rs.getDouble("discountAmount"));
+                                discount.setStartDate(rs.getObject("startDate", LocalDateTime.class));
+                                discount.setEndDate(rs.getObject("endDate", LocalDateTime.class));
+                                product.setDiscount(discount);
+                            }
 
-//    public static void main(String[] args) {
-//        ProductService productService = new ProductService();
-//
-//        // Test lấy sản phẩm cho idCategory = 1 (Ví dụ: Đồ bé trai)
-//        int idCategory = 1; // Bạn có thể thay đổi idCategory cho các trường hợp khác
-//        int pageSize = 10;  // Số lượng sản phẩm mỗi trang
-//        int offset = 0;     // Offset bắt đầu từ trang đầu tiên
-//
-//        // Gọi phương thức để lấy sản phẩm
-//        List<Product> productList = productService.getProductsByCategoryRange(idCategory, offset, pageSize);
-//
-//        // In ra kết quả để kiểm tra
-//        System.out.println("Sản phẩm lấy được:");
-//        for (Product product : productList) {
-//            System.out.println(product);  // In thông tin sản phẩm (có thể in thêm chi tiết tùy vào lớp Product)
-//        }
-//    }
+                            return product;
+                        })
+                        .list()
+        );
+    }
+
+
+
+    public static void main(String[] args) {
+        // Tạo DAO
+        ProductDao productDao = new ProductDao();
+
+        // Lấy danh sách sản phẩm có tính giảm giá
+        List<Product> products = productDao.getAll();
+
+        // In danh sách sản phẩm ra console
+        products.forEach(System.out::println);
+    }
+
+
+
 }

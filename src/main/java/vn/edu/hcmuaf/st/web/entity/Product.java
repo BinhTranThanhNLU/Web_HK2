@@ -21,6 +21,10 @@ public class Product implements Serializable {
     private List<ProductVariant> productVariants = new ArrayList<>();
     private int boy_or_girl;
 
+    public Product(int idProduct, String title, double price, double discountAmount, double priceAfterDiscount) {
+
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -202,5 +206,7 @@ public class Product implements Serializable {
     public void setProductVariants(List<ProductVariant> productVariants) {
         this.productVariants = productVariants;
     }
+
+
 
 }
