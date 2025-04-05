@@ -64,6 +64,13 @@ public class AccountController extends HttpServlet {
                 handleForgotPassword(request, response);
                 break;
             case "/enter-otp":
+//            case "/sign":
+//                handleLogin(request, response);
+//                break;
+//            case "/forgot-password":
+//                handleForgotPassword(request, response);
+//                break;
+//            case "/enter-otp":
                 handleOtpValidation(request, response);
                 break;
             case "/reset-password":

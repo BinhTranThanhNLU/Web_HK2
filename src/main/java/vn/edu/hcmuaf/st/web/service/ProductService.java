@@ -2,12 +2,9 @@ package vn.edu.hcmuaf.st.web.service;
 
 import vn.edu.hcmuaf.st.web.dao.ProductDao;
 import vn.edu.hcmuaf.st.web.entity.Product;
-import vn.edu.hcmuaf.st.web.entity.ProductImage;
 
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ProductService {
 
@@ -56,12 +53,6 @@ public class ProductService {
     public List<Product> getNextTop8ProductsByCategory(int categoryId, int offset) {
         return productDao.getProductsByCategory(categoryId, 8, offset);
     }
-
-    //    public List<Product> getProductsByPage(int page, int pageSize) {
-//        int offset = (page - 1) * pageSize;
-//        List<Product> products = productDao.getProducts(offset, pageSize);
-//        return products;
-//    }
     public List<Product> getProductsByPage(int page, int pageSize) {
         int totalProducts = getTotalProducts();
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
@@ -80,24 +71,61 @@ public class ProductService {
     }
 
     // Phương thức lấy sản phẩm theo idCategory từ 1 đến 4 (đồ bé trai)
-    public List<Product> getProductsByCategoryRange(int idCategory, int offset, int pageSize) {
-        // Kiểm tra idCategory hợp lệ (từ 1 đến 4)
-        if (idCategory >= 1 && idCategory <= 8) {
-            return productDao.getProductsByCategoryRange(idCategory, offset, pageSize);
-        } else {
-            // Thay vì trả về danh sách rỗng, có thể throw exception hoặc trả về thông báo lỗi
-            throw new IllegalArgumentException("Invalid category id. Category must be between 1 and 4.");
+    public List<Product> getProductsByCategoryRange(int idCategory, int boy_or_girl, int offset, int pageSize) {
+        // Kiểm tra boy_or_girl hợp lệ (chỉ nhận 1 hoặc 2)
+        if (boy_or_girl != 1 && boy_or_girl != 2) {
+            throw new IllegalArgumentException("Invalid boy_or_girl value. Must be 1 or 2.");
         }
+
+        // Kiểm tra idCategory hợp lệ (từ 1 đến 8 hoặc 0 để lấy tất cả danh mục)
+        if (idCategory != 0 && (idCategory < 1 || idCategory > 8)) {
+            throw new IllegalArgumentException("Invalid category id. Category must be between 1 and 8, or 0 for all categories.");
+        }
+
+        // Gọi DAO để lấy danh sách sản phẩm (chấp nhận idCategory = 0)
+        return productDao.getProductsByCategoryRange(idCategory, boy_or_girl, offset, pageSize);
     }
 
+
+
     // Phương thức lấy tổng số sản phẩm theo idCategory từ 1 đến 4
-    public int getTotalProductsByCategoryRange(int idCategory) {
-        if (idCategory >= 1 && idCategory <= 8) {
-            return productDao.getTotalProductsByCategoryRange(idCategory);
-        } else {
-            // Thay vì trả về 0, có thể throw exception hoặc xử lý khác như trả về thông báo lỗi
-            throw new IllegalArgumentException("Invalid category id. Category must be between 1 and 8.");
+    public int getTotalProductsByCategoryRange(int idCategory, int boy_or_girl) {
+        // Kiểm tra giá trị hợp lệ của boy_or_girl
+        if (boy_or_girl != 1 && boy_or_girl != 2) {
+            throw new IllegalArgumentException("Invalid boy_or_girl value. Must be 1 or 2.");
         }
+
+        // Nếu idCategory = 0, lấy tổng sản phẩm không phân biệt danh mục
+        if (idCategory == 0) {
+            return productDao.getTotalProductsByCategoryRange(0, boy_or_girl);
+        }
+
+        // Kiểm tra idCategory hợp lệ (1 đến 8)
+        if (idCategory < 1 || idCategory > 8) {
+            throw new IllegalArgumentException("Invalid category id. Category must be between 1 and 8, or 0 for all categories.");
+        }
+
+        return productDao.getTotalProductsByCategoryRange(idCategory, boy_or_girl);
+    }
+
+    public List<Product> getProductsByBoyOrGirl(int boy_or_girl, int offset, int pageSize) {
+        // Kiểm tra boy_or_girl hợp lệ (chỉ nhận 1 hoặc 2)
+        if (boy_or_girl != 1 && boy_or_girl != 2) {
+            throw new IllegalArgumentException("Invalid boy_or_girl value. Must be 1 or 2.");
+        }
+
+        // Gọi DAO để lấy danh sách sản phẩm theo boy_or_girl (không cần idCategory)
+        return productDao.getProductsByBoyOrGirl(boy_or_girl, offset, pageSize);
+    }
+
+    public int getTotalProductsByBoyOrGirl(int boy_or_girl) {
+        // Kiểm tra giá trị hợp lệ của boy_or_girl
+        if (boy_or_girl != 1 && boy_or_girl != 2) {
+            throw new IllegalArgumentException("Invalid boy_or_girl value. Must be 1 or 2.");
+        }
+
+        // Gọi DAO để lấy tổng số sản phẩm (không cần category)
+        return productDao.getTotalProductsByBoyOrGirl(boy_or_girl);
     }
 
 

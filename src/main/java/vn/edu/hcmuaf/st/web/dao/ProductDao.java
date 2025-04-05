@@ -1,19 +1,12 @@
 package vn.edu.hcmuaf.st.web.dao;
 
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.mapper.reflect.BeanMapper;
-import org.jdbi.v3.core.result.RowView;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
-import vn.edu.hcmuaf.st.web.entity.Category;
-import vn.edu.hcmuaf.st.web.entity.Discount;
-import vn.edu.hcmuaf.st.web.entity.Product;
-import vn.edu.hcmuaf.st.web.entity.ProductImage;
-import vn.edu.hcmuaf.st.web.service.ProductService;
+import vn.edu.hcmuaf.st.web.entity.*;
 
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ProductDao {
 
@@ -23,6 +16,7 @@ public class ProductDao {
         this.jdbi = JDBIConnect.get();
     }
 
+    // lấy tât cả có trong bảng product
     public List<Product> getAll() {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
@@ -78,21 +72,22 @@ public class ProductDao {
         );
     }
 
+    // lấy theo id
     public Product getById(int idProduct) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
-                    SELECT
-                        p.idProduct, p.title, p.price, p.description, p.STATUS, p.createAt, p.updateAt,
-                        c.idCategory, c.categoryType, c.NAME AS categoryName, c.description AS categoryDescription,
-                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-                        pi.idImage, pi.imageUrl, pi.`order`
-                    FROM products p
-                    JOIN categories c ON p.idCategory = c.idCategory
-                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
-                    WHERE p.idProduct = :idProduct
-                    ORDER BY pi.`order`;
-                """)
+                                    SELECT
+                                        p.idProduct, p.title, p.price, p.description, p.STATUS, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.NAME AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM products p
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+                                    WHERE p.idProduct = :idProduct
+                                    ORDER BY pi.`order`;
+                                """)
                         .bind("idProduct", idProduct)
                         .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
                             int productId = row.getColumn("idProduct", Integer.class);
@@ -147,19 +142,19 @@ public class ProductDao {
     public Product getByIdVariant(int idVariant) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
-                    SELECT
-                        p.idProduct, p.title, p.price, p.description, p.STATUS, p.createAt, p.updateAt,
-                        c.idCategory, c.categoryType, c.NAME AS categoryName, c.description AS categoryDescription,
-                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-                        pi.idImage, pi.imageUrl, pi.`order`
-                    FROM product_variants pv
-                    JOIN products p ON pv.idProduct = p.idProduct
-                    JOIN categories c ON p.idCategory = c.idCategory
-                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
-                    WHERE pv.idVariant = :idVariant
-                    ORDER BY pi.`order`;
-                """)
+                                    SELECT
+                                        p.idProduct, p.title, p.price, p.description, p.STATUS, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.NAME AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM product_variants pv
+                                    JOIN products p ON pv.idProduct = p.idProduct
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct
+                                    WHERE pv.idVariant = :idVariant
+                                    ORDER BY pi.`order`;
+                                """)
                         .bind("idVariant", idVariant)
                         .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
                             int productId = row.getColumn("idProduct", Integer.class);
@@ -210,7 +205,6 @@ public class ProductDao {
                         .values().stream().findFirst().orElse(null)
         );
     }
-
 
     public boolean add(Product product) {
         return jdbi.withHandle(handle ->
@@ -383,8 +377,6 @@ public class ProductDao {
         );
     }
 
-
-
     public List<Product> getProducts(int offset, int pageSize) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
@@ -446,32 +438,30 @@ public class ProductDao {
         );
     }
 
-// Hàm lấy sản phẩm theo idCategory, phân trang
-public List<Product> getProductsByCategoryRange(int idCategory, int offset, int pageSize) {
-    return jdbi.withHandle(handle ->
-            handle.createQuery("""
-                SELECT 
-                    p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
-                    c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
-                    d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-                    pi.idImage, pi.imageUrl, pi.`order`
-                FROM products p
-                JOIN categories c ON p.idCategory = c.idCategory
-                LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-                LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
-                WHERE p.idCategory = :idCategory
-                ORDER BY p.createAt DESC
-                LIMIT :pageSize OFFSET :offset
-            """)
-                    .bind("idCategory", idCategory)
-                    .bind("pageSize", pageSize)
-                    .bind("offset", offset)
-                    .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
-                        int productId = row.getColumn("idProduct", Integer.class);
-                        // Tìm sản phẩm theo id, nếu không có thì tạo mới
-                        Product product = map.computeIfAbsent(productId, id -> {
-                            // Tạo mới đối tượng Product với dữ liệu từ query
-                            return new Product(
+    public List<Product> getProductsByCategoryRange(Integer idCategory, int boy_or_girl, int offset, int pageSize) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("""
+                                    SELECT 
+                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM products p
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+                                    WHERE p.boy_or_girl = :boy_or_girl
+                                    AND (:idCategory = 0 OR p.idCategory = :idCategory) -- Không sử dụng NULL
+                                    ORDER BY p.createAt DESC
+                                    LIMIT :pageSize OFFSET :offset
+                                """)
+                        .bind("boy_or_girl", boy_or_girl)
+                        .bind("idCategory", idCategory)  // Không bind NULL
+                        .bind("pageSize", pageSize)
+                        .bind("offset", offset)
+                        .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
+                            int productId = row.getColumn("idProduct", Integer.class);
+                            Product product = map.computeIfAbsent(productId, id -> new Product(
                                     id,
                                     new Category(
                                             row.getColumn("idCategory", Integer.class),
@@ -491,63 +481,380 @@ public List<Product> getProductsByCategoryRange(int idCategory, int offset, int 
                                     row.getColumn("status", Boolean.class),
                                     row.getColumn("createAt", LocalDateTime.class),
                                     row.getColumn("updateAt", LocalDateTime.class)
-                            );
-                        });
+                            ));
 
-                        // Nếu có hình ảnh, thêm vào danh sách hình ảnh của sản phẩm
-                        if (row.getColumn("idImage", Integer.class) != null) {
-                            List<ProductImage> images = product.getProductImages();
-                            if (images == null) {
-                                images = new ArrayList<>();
+                            if (row.getColumn("idImage", Integer.class) != null) {
+                                List<ProductImage> images = product.getProductImages();
+                                if (images == null) {
+                                    images = new ArrayList<>();
+                                }
+                                ProductImage productImage = new ProductImage();
+                                productImage.setIdImage(row.getColumn("idImage", Integer.class));
+                                productImage.setProduct(product);
+                                productImage.setImageUrl(row.getColumn("imageUrl", String.class));
+                                productImage.setOrder(row.getColumn("order", Integer.class));
+
+                                images.add(productImage);
+                                product.setProductImages(images);
                             }
-                            // Tạo mới ProductImage từ dữ liệu trong row
-                            ProductImage productImage = new ProductImage();
-                            productImage.setIdImage(row.getColumn("idImage", Integer.class));
-                            productImage.setProduct(product);  // Gán đối tượng product cho hình ảnh
-                            productImage.setImageUrl(row.getColumn("imageUrl", String.class));
-                            productImage.setOrder(row.getColumn("order", Integer.class));
 
-                            // Thêm hình ảnh vào danh sách
-                            images.add(productImage);
-                            product.setProductImages(images);  // Cập nhật lại danh sách hình ảnh của sản phẩm
-                        }
+                            return map;
+                        })
+                        .values()
+                        .stream()
+                        .toList()
+        );
+    }
 
-                        return map;  // Trả về bản đồ các sản phẩm
-                    })
-                    .values()  // Lấy tất cả các sản phẩm từ map
-                    .stream()  // Chuyển thành stream
-                    .toList()  // Chuyển stream thành danh sách
-    );
-}
-
-    // Hàm lấy tổng số sản phẩm theo idCategory
-    public int getTotalProductsByCategoryRange(int idCategory) {
+    public List<Product> getProductsByBoyOrGirl(int boy_or_girl, int offset, int pageSize) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
-                    SELECT COUNT(*) 
-                    FROM products p
-                    WHERE p.idCategory = :idCategory
-            """)
+                                    SELECT 
+                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM products p
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+                                    WHERE p.boy_or_girl = :boy_or_girl  -- CHẮC CHẮN LỌC THEO boy_or_girl
+                                    ORDER BY p.createAt DESC
+                                    LIMIT :pageSize OFFSET :offset
+                                """)
+                        .bind("boy_or_girl", boy_or_girl)  // Đảm bảo bind đúng giá trị
+                        .bind("pageSize", pageSize)
+                        .bind("offset", offset)
+                        .reduceRows(new LinkedHashMap<Integer, Product>(), (map, row) -> {
+                            int productId = row.getColumn("idProduct", Integer.class);
+                            Product product = map.computeIfAbsent(productId, id -> new Product(
+                                    id,
+                                    new Category(
+                                            row.getColumn("idCategory", Integer.class),
+                                            row.getColumn("categoryType", String.class),
+                                            row.getColumn("categoryName", String.class),
+                                            row.getColumn("categoryDescription", String.class)
+                                    ),
+                                    row.getColumn("idDiscount", Integer.class) != null ? new Discount(
+                                            row.getColumn("idDiscount", Integer.class),
+                                            row.getColumn("discountAmount", Double.class),
+                                            row.getColumn("startDate", LocalDateTime.class),
+                                            row.getColumn("endDate", LocalDateTime.class)
+                                    ) : null,
+                                    row.getColumn("title", String.class),
+                                    row.getColumn("price", Double.class),
+                                    row.getColumn("description", String.class),
+                                    row.getColumn("status", Boolean.class),
+                                    row.getColumn("createAt", LocalDateTime.class),
+                                    row.getColumn("updateAt", LocalDateTime.class)
+                            ));
+
+                            // Xử lý danh sách hình ảnh
+                            if (row.getColumn("idImage", Integer.class) != null) {
+                                List<ProductImage> images = product.getProductImages();
+                                if (images == null) {
+                                    images = new ArrayList<>();
+                                }
+                                ProductImage productImage = new ProductImage();
+                                productImage.setIdImage(row.getColumn("idImage", Integer.class));
+                                productImage.setProduct(product);
+                                productImage.setImageUrl(row.getColumn("imageUrl", String.class));
+                                productImage.setOrder(row.getColumn("order", Integer.class));
+
+                                images.add(productImage);
+                                product.setProductImages(images);
+                            }
+
+                            return map;
+                        })
+                        .values()
+                        .stream()
+                        .toList()
+        );
+    }
+
+    public int getTotalProductsByBoyOrGirl(int boy_or_girl) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("""
+                                    SELECT COUNT(*) FROM products 
+                                    WHERE boy_or_girl = :boy_or_girl
+                                """)
+                        .bind("boy_or_girl", boy_or_girl)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    // Hàm lấy tổng số sản phẩm theo idCategory
+    public int getTotalProductsByCategoryRange(int idCategory, int boy_or_girl) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("""
+                                        SELECT COUNT(*) 
+                                        FROM products p
+                                        WHERE p.idCategory = :idCategory
+                                """)
                         .bind("idCategory", idCategory)
                         .mapTo(int.class)
                         .first()
         );
     }
-    public static void main(String[] args) {
-        ProductService productService = new ProductService();
 
-        // Test lấy sản phẩm cho idCategory = 1 (Ví dụ: Đồ bé trai)
-        int idCategory = 1; // Bạn có thể thay đổi idCategory cho các trường hợp khác
-        int pageSize = 10;  // Số lượng sản phẩm mỗi trang
-        int offset = 0;     // Offset bắt đầu từ trang đầu tiên
 
-        // Gọi phương thức để lấy sản phẩm
-        List<Product> productList = productService.getProductsByCategoryRange(idCategory, offset, pageSize);
+    public List<Product> getAllProducts() {
+        return jdbi.withHandle(handle -> {
+            return handle.createQuery("""
+                SELECT 
+                    p.idProduct,
+                    p.idCategory,
+                    p.idDiscount,
+                    p.title AS productTitle,
+                    p.price,
+                    p.description AS productDescription,
+                    p.status AS productStatus,
+                    p.createAt,
+                    p.updateAt,
+                    c.categoryType,
+                    c.name AS categoryName,
+                    c.description AS categoryDescription,
+                    d.discountAmount,
+                    d.startDate AS discountStartDate,
+                    d.endDate AS discountEndDate,
+                    s.size AS size,
+                    s.idSize AS idSize,
+                    cl.color AS color,
+                    cl.hexCode AS colorHexCode,
+                    pv.idVariant,  
+                    pv.idProduct AS variantIdProduct,  -- Đảm bảo chỉ có 1 idProduct từ bảng product_variants
+                    cl.idColor,
+                    pv.stockQuantity,
+                    pi.idImage,
+                    pi.imageUrl AS productImageUrl,
+                    pi.order AS imageOrder
+                FROM 
+                    products p
+                LEFT JOIN 
+                    categories c ON p.idCategory = c.idCategory
+                LEFT JOIN 
+                    discount d ON p.idDiscount = d.idDiscount
+                LEFT JOIN 
+                    product_variants pv ON p.idProduct = pv.idProduct
+                LEFT JOIN 
+                    sizes s ON pv.idSize = s.idSize
+                LEFT JOIN 
+                    colors cl ON pv.idColor = cl.idColor
+                LEFT JOIN 
+                    product_images pi ON p.idProduct = pi.idProduct;
+            """)
+                    .map((rs, ctx) -> {
+                        Product product = new Product();
+                        product.setIdProduct(rs.getInt("idProduct"));
 
-        // In ra kết quả để kiểm tra
-        System.out.println("Sản phẩm lấy được:");
-        for (Product product : productList) {
-            System.out.println(product);  // In thông tin sản phẩm (có thể in thêm chi tiết tùy vào lớp Product)
-        }
+                        // Ánh xạ Category
+                        Category category = new Category();
+                        category.setIdCategory(rs.getInt("idCategory"));
+                        category.setCategoryType(rs.getString("categoryType"));
+                        category.setName(rs.getString("categoryName"));
+                        category.setDescription(rs.getString("categoryDescription"));
+                        product.setCategory(category);
+
+                        // Ánh xạ Discount
+                        Discount discount = new Discount();
+                        discount.setIdDiscount(rs.getInt("idDiscount"));
+                        discount.setDiscountAmount(rs.getDouble("discountAmount"));
+                        discount.setStartDate(rs.getTimestamp("discountStartDate").toLocalDateTime());
+                        if (rs.getTimestamp("discountEndDate") != null) {
+                            discount.setEndDate(rs.getTimestamp("discountEndDate").toLocalDateTime());
+                        }
+                        product.setDiscount(discount);
+
+                        // Các trường khác của Product
+                        product.setTitle(rs.getString("productTitle"));
+                        product.setPrice(rs.getDouble("price"));
+                        product.setDescription(rs.getString("productDescription"));
+                        product.setStatus(rs.getBoolean("productStatus"));
+                        product.setCreatedAt(rs.getTimestamp("createAt").toLocalDateTime());
+                        product.setUpdatedAt(rs.getTimestamp("updateAt").toLocalDateTime());
+
+                        // Ánh xạ Product Variant (Size, Color, Stock Quantity)
+                        ProductVariant variant = new ProductVariant();
+                        variant.setIdvariant(rs.getInt("idVariant")); // Ánh xạ idVariant
+                        variant.setIdProduct(rs.getInt("variantIdProduct")); // Ánh xạ idProduct từ bảng product_variants
+
+                        if (rs.getString("size") != null) {
+                            Size size = new Size();
+                            size.setSize(rs.getString("size"));
+                            size.setIdSize(rs.getInt("idSize"));
+                            variant.setSize(size);
+                        }
+                        if (rs.getString("color") != null) {
+                            Color color = new Color();
+                            color.setColor(rs.getString("color"));
+                            color.setHexcode(rs.getString("colorHexCode"));
+                            color.setIdColor(rs.getInt("idColor"));
+                            variant.setColor(color);
+                        }
+                        variant.setStockQuantity(rs.getInt("stockQuantity"));
+
+                        // Thêm variant vào danh sách
+                        if (product.getProductVariants() == null) {
+                            product.setProductVariants(new ArrayList<>());
+                        }
+                        product.getProductVariants().add(variant);
+
+                        // Ánh xạ Product Image
+                        ProductImage image = new ProductImage();
+                        image.setIdImage(rs.getInt("idImage"));
+                        image.setImageUrl(rs.getString("productImageUrl"));
+                        image.setOrder(rs.getInt("imageOrder"));
+
+                        // Thêm image vào danh sách
+                        if (product.getProductImages() == null) {
+                            product.setProductImages(new ArrayList<>());
+                        }
+                        product.getProductImages().add(image);
+
+                        return product;
+                    })
+                    .list(); // Trả về danh sách sản phẩm
+        });
     }
+    public List<Product> getProductsByBoyOrGirlA(int boy_or_girl, int offset, int pageSize) {
+        // Kiểm tra boy_or_girl hợp lệ (chỉ nhận 1 hoặc 2)
+        if (boy_or_girl != 1 && boy_or_girl != 2) {
+            throw new IllegalArgumentException("Invalid boy_or_girl value. Must be 1 or 2.");
+        }
+
+        // Truy vấn sản phẩm theo boy_or_girl và idSize từ 1 đến 6
+        return jdbi.withHandle(handle -> {
+            return handle.createQuery("""
+                SELECT 
+                    p.idProduct,
+                    p.idCategory,
+                    p.idDiscount,
+                    p.title AS productTitle,
+                    p.price,
+                    p.description AS productDescription,
+                    p.status AS productStatus,
+                    p.createAt,
+                    p.updateAt,
+                    c.categoryType,
+                    c.name AS categoryName,
+                    c.description AS categoryDescription,
+                    d.discountAmount,
+                    d.startDate AS discountStartDate,
+                    d.endDate AS discountEndDate,
+                    s.size AS size,
+                    cl.color AS color,
+                    cl.hexCode AS colorHexCode,
+                    pv.idVariant,  
+                    pv.idProduct AS variantIdProduct,
+                    cl.idColor,    
+                    pv.stockQuantity,
+                    pi.idImage,
+                    pi.imageUrl AS productImageUrl,
+                    pi.order AS imageOrder
+                FROM 
+                    products p
+                LEFT JOIN 
+                    categories c ON p.idCategory = c.idCategory
+                LEFT JOIN 
+                    discount d ON p.idDiscount = d.idDiscount
+                LEFT JOIN 
+                    product_variants pv ON p.idProduct = pv.idProduct
+                LEFT JOIN 
+                    sizes s ON pv.idSize = s.idSize
+                LEFT JOIN 
+                    colors cl ON pv.idColor = cl.idColor
+                LEFT JOIN 
+                    product_images pi ON p.idProduct = pi.idProduct
+                WHERE 
+                    pv.idSize BETWEEN 1 AND 6
+                    AND p.gender = :boy_or_girl
+                ORDER BY 
+                    p.idProduct
+                LIMIT :pageSize OFFSET :offset;
+            """)
+                    .bind("boy_or_girl", boy_or_girl)
+                    .bind("offset", offset)
+                    .bind("pageSize", pageSize)
+                    .map((rs, ctx) -> {
+                        Product product = new Product();
+                        product.setIdProduct(rs.getInt("idProduct"));
+
+                        // Ánh xạ Category
+                        Category category = new Category();
+                        category.setIdCategory(rs.getInt("idCategory"));
+                        category.setCategoryType(rs.getString("categoryType"));
+                        category.setName(rs.getString("categoryName"));
+                        category.setDescription(rs.getString("categoryDescription"));
+                        product.setCategory(category);
+
+                        // Ánh xạ Discount
+                        Discount discount = new Discount();
+                        discount.setIdDiscount(rs.getInt("idDiscount"));
+                        discount.setDiscountAmount(rs.getDouble("discountAmount"));
+                        discount.setStartDate(rs.getTimestamp("discountStartDate").toLocalDateTime());
+                        if (rs.getTimestamp("discountEndDate") != null) {
+                            discount.setEndDate(rs.getTimestamp("discountEndDate").toLocalDateTime());
+                        }
+                        product.setDiscount(discount);
+
+                        // Các trường khác của Product
+                        product.setTitle(rs.getString("productTitle"));
+                        product.setPrice(rs.getDouble("price"));
+                        product.setDescription(rs.getString("productDescription"));
+                        product.setStatus(rs.getBoolean("productStatus"));
+                        product.setCreatedAt(rs.getTimestamp("createAt").toLocalDateTime());
+                        product.setUpdatedAt(rs.getTimestamp("updateAt").toLocalDateTime());
+
+                        // Ánh xạ Product Variant (Size, Color, Stock Quantity)
+                        ProductVariant variant = new ProductVariant();
+                        variant.setIdvariant(rs.getInt("idVariant"));
+                        variant.setIdProduct(rs.getInt("variantIdProduct"));
+
+                        if (rs.getString("size") != null) {
+                            Size size = new Size();
+                            size.setSize(rs.getString("size"));
+                            variant.setSize(size);
+                        }
+                        if (rs.getString("color") != null) {
+                            Color color = new Color();
+                            color.setColor(rs.getString("color"));
+                            color.setHexcode(rs.getString("colorHexCode"));
+                            variant.setColor(color);
+                        }
+                        variant.setStockQuantity(rs.getInt("stockQuantity"));
+
+                        if (product.getProductVariants() == null) {
+                            product.setProductVariants(new ArrayList<>());
+                        }
+                        product.getProductVariants().add(variant);
+
+                        // Ánh xạ Product Image
+                        ProductImage image = new ProductImage();
+                        image.setIdImage(rs.getInt("idImage"));
+                        image.setImageUrl(rs.getString("productImageUrl"));
+                        image.setOrder(rs.getInt("imageOrder"));
+
+                        if (product.getProductImages() == null) {
+                            product.setProductImages(new ArrayList<>());
+                        }
+                        product.getProductImages().add(image);
+
+                        return product;
+                    })
+                    .list();
+        });
+    }
+
+    public static void main(String[] args) {
+        ProductDao productDao = new ProductDao();
+        List<Product> products = productDao.getAllProducts();
+
+        // In các sản phẩm ra console
+        products.forEach(product -> {
+            System.out.println(product);
+        });
+    }
+
 }

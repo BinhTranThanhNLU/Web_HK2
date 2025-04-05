@@ -100,7 +100,5 @@ public class AccountService {
 
         return googleAccount;
     }
-
-
 }
 

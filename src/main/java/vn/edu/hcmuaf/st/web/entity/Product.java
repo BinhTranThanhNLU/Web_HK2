@@ -19,6 +19,37 @@ public class Product implements Serializable {
     private LocalDateTime updatedAt;
     private List<ProductImage> productImages = new ArrayList<>();
     private List<ProductVariant> productVariants = new ArrayList<>();
+    private int boy_or_girl;
+
+    public Product(int idProduct, String title, double price, double discountAmount, double priceAfterDiscount) {
+
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "idProduct=" + idProduct +
+                ", category=" + category +
+                ", discount=" + discount +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", productImages=" + productImages +
+                ", productVariants=" + productVariants +
+                ", boy_or_girl=" + boy_or_girl +
+                '}';
+    }
+
+    public int getBoy_or_girl() {
+        return boy_or_girl;
+    }
+
+    public void setBoy_or_girl(int boy_or_girl) {
+        this.boy_or_girl = boy_or_girl;
+    }
 
     public Product() {
     }
@@ -176,20 +207,6 @@ public class Product implements Serializable {
         this.productVariants = productVariants;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "idProduct=" + idProduct +
-                ", category=" + category +
-                ", discount=" + discount +
-                ", title='" + title + '\'' +
-                ", price=" + price +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", productImages=" + productImages +
-                ", productVariants=" + productVariants +
-                '}';
-    }
+
+
 }
