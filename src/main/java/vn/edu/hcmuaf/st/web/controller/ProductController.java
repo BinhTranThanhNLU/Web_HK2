@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet({"/all-product", "/product", "/fashion", "/all-boy-or-girl","fashion-size"})
+@WebServlet({"/all-product", "/product", "/fashion", "/all-boy-or-girl"})
 public class ProductController extends HttpServlet {
 
     private ProductService productService;

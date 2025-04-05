@@ -718,65 +718,65 @@ public class ProductDao {
                     .list(); // Trả về danh sách sản phẩm
         });
     }
-    public List<Product> getProductsByBoyOrGirlA(int boy_or_girl, int offset, int pageSize) {
-        // Kiểm tra boy_or_girl hợp lệ (chỉ nhận 1 hoặc 2)
-        if (boy_or_girl != 1 && boy_or_girl != 2) {
-            throw new IllegalArgumentException("Invalid boy_or_girl value. Must be 1 or 2.");
-        }
 
-        // Truy vấn sản phẩm theo boy_or_girl và idSize từ 1 đến 6
+    public List<Product> getAllProductsA(Integer idSize, int offset, int pageSize) {
         return jdbi.withHandle(handle -> {
-            return handle.createQuery("""
-                SELECT 
-                    p.idProduct,
-                    p.idCategory,
-                    p.idDiscount,
-                    p.title AS productTitle,
-                    p.price,
-                    p.description AS productDescription,
-                    p.status AS productStatus,
-                    p.createAt,
-                    p.updateAt,
-                    c.categoryType,
-                    c.name AS categoryName,
-                    c.description AS categoryDescription,
-                    d.discountAmount,
-                    d.startDate AS discountStartDate,
-                    d.endDate AS discountEndDate,
-                    s.size AS size,
-                    cl.color AS color,
-                    cl.hexCode AS colorHexCode,
-                    pv.idVariant,  
-                    pv.idProduct AS variantIdProduct,
-                    cl.idColor,    
-                    pv.stockQuantity,
-                    pi.idImage,
-                    pi.imageUrl AS productImageUrl,
-                    pi.order AS imageOrder
-                FROM 
-                    products p
-                LEFT JOIN 
-                    categories c ON p.idCategory = c.idCategory
-                LEFT JOIN 
-                    discount d ON p.idDiscount = d.idDiscount
-                LEFT JOIN 
-                    product_variants pv ON p.idProduct = pv.idProduct
-                LEFT JOIN 
-                    sizes s ON pv.idSize = s.idSize
-                LEFT JOIN 
-                    colors cl ON pv.idColor = cl.idColor
-                LEFT JOIN 
-                    product_images pi ON p.idProduct = pi.idProduct
-                WHERE 
-                    pv.idSize BETWEEN 1 AND 6
-                    AND p.gender = :boy_or_girl
-                ORDER BY 
-                    p.idProduct
-                LIMIT :pageSize OFFSET :offset;
-            """)
-                    .bind("boy_or_girl", boy_or_girl)
-                    .bind("offset", offset)
-                    .bind("pageSize", pageSize)
+            StringBuilder queryBuilder = new StringBuilder("""
+            SELECT 
+                p.idProduct,
+                p.idCategory,
+                p.idDiscount,
+                p.title AS productTitle,
+                p.price,
+                p.description AS productDescription,
+                p.status AS productStatus,
+                p.createAt,
+                p.updateAt,
+                c.categoryType,
+                c.name AS categoryName,
+                c.description AS categoryDescription,
+                d.discountAmount,
+                d.startDate AS discountStartDate,
+                d.endDate AS discountEndDate,
+                s.size AS size,
+                s.idSize AS idSize,
+                cl.color AS color,
+                cl.hexCode AS colorHexCode,
+                pv.idVariant,  
+                pv.idProduct AS variantIdProduct,
+                cl.idColor,
+                pv.stockQuantity,
+                pi.idImage,
+                pi.imageUrl AS productImageUrl,
+                pi.order AS imageOrder
+            FROM 
+                products p
+            LEFT JOIN 
+                categories c ON p.idCategory = c.idCategory
+            LEFT JOIN 
+                discount d ON p.idDiscount = d.idDiscount
+            LEFT JOIN 
+                product_variants pv ON p.idProduct = pv.idProduct
+            LEFT JOIN 
+                sizes s ON pv.idSize = s.idSize
+            LEFT JOIN 
+                colors cl ON pv.idColor = cl.idColor
+            LEFT JOIN 
+                product_images pi ON p.idProduct = pi.idProduct
+        """);
+
+            // Nếu idSize được cung cấp, thêm điều kiện lọc vào câu truy vấn
+            if (idSize != null && idSize > 0) {
+                queryBuilder.append(" WHERE s.idSize = :idSize");
+            }
+
+            // Thêm phân trang vào câu truy vấn SQL
+            queryBuilder.append(" LIMIT :pageSize OFFSET :offset");
+
+            return handle.createQuery(queryBuilder.toString())
+                    .bind("idSize", idSize)  // Gán giá trị cho idSize nếu có
+                    .bind("offset", offset)   // Gán giá trị cho offset
+                    .bind("pageSize", pageSize)  // Gán giá trị cho pageSize
                     .map((rs, ctx) -> {
                         Product product = new Product();
                         product.setIdProduct(rs.getInt("idProduct"));
@@ -815,16 +815,19 @@ public class ProductDao {
                         if (rs.getString("size") != null) {
                             Size size = new Size();
                             size.setSize(rs.getString("size"));
+                            size.setIdSize(rs.getInt("idSize"));
                             variant.setSize(size);
                         }
                         if (rs.getString("color") != null) {
                             Color color = new Color();
                             color.setColor(rs.getString("color"));
                             color.setHexcode(rs.getString("colorHexCode"));
+                            color.setIdColor(rs.getInt("idColor"));
                             variant.setColor(color);
                         }
                         variant.setStockQuantity(rs.getInt("stockQuantity"));
 
+                        // Thêm variant vào danh sách
                         if (product.getProductVariants() == null) {
                             product.setProductVariants(new ArrayList<>());
                         }
@@ -836,6 +839,7 @@ public class ProductDao {
                         image.setImageUrl(rs.getString("productImageUrl"));
                         image.setOrder(rs.getInt("imageOrder"));
 
+                        // Thêm image vào danh sách
                         if (product.getProductImages() == null) {
                             product.setProductImages(new ArrayList<>());
                         }
@@ -843,14 +847,16 @@ public class ProductDao {
 
                         return product;
                     })
-                    .list();
+                    .list(); // Trả về danh sách sản phẩm
         });
     }
+    // lọc sản phẩm theo % giảm giá
+
+
 
     public static void main(String[] args) {
         ProductDao productDao = new ProductDao();
         List<Product> products = productDao.getAllProducts();
-
         // In các sản phẩm ra console
         products.forEach(product -> {
             System.out.println(product);
