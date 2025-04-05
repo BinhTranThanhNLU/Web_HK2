@@ -65,16 +65,15 @@ public class CartController extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/cart");
                 break;
 
+
             case "updateQuantity":
                 try {
                     String idVariantStr = req.getParameter("idVariant");
                     String quantityStr = req.getParameter("quantity");
 
-                    System.out.println("Received idVariant: " + idVariantStr);
-                    System.out.println("Received quantity: " + quantityStr);
-
-                    if (idVariantStr == null || idVariantStr.isEmpty() || quantityStr == null || quantityStr.isEmpty()) {
+                    if (idVariantStr == null || quantityStr == null || idVariantStr.isEmpty() || quantityStr.isEmpty()) {
                         resp.setContentType("application/json");
+                        resp.setCharacterEncoding("UTF-8");
                         resp.getWriter().write("{\"error\": \"Invalid input\"}");
                         return;
                     }
@@ -82,20 +81,20 @@ public class CartController extends HttpServlet {
                     int idVariantUpdate = Integer.parseInt(idVariantStr);
                     int newQuantity = Integer.parseInt(quantityStr);
 
-                    if (newQuantity > 0 && cart.getCartItems().containsKey(idVariantUpdate)) {
-                        cart.getCartItems().get(idVariantUpdate).setQuantity(newQuantity);
-                        cart.updateTotalPrice();
-                    }
-
+                    cart.addQuantity(idVariantUpdate, newQuantity);
                     session.setAttribute("cart", cart);
 
-                    // Trả về tổng tiền mới dưới dạng JSON
                     resp.setContentType("application/json");
+                    resp.setCharacterEncoding("UTF-8");
                     resp.getWriter().write("{\"totalPrice\": \"" + cart.getTotalPrice() + "\"}");
                 } catch (NumberFormatException e) {
+                    resp.setContentType("text/plain");
+                    resp.setCharacterEncoding("UTF-8");
                     resp.getWriter().write("ERROR: Invalid number format");
                 }
                 break;
+
+
 
             default:
                 resp.sendRedirect(req.getContextPath() + "/cart");
