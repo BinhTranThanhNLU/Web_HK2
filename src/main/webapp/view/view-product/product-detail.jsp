@@ -21,12 +21,8 @@
                 <aside class="col-md-6">
                     <article class="gallery-wrap">
                         <div class="img-big-wrap">
-                            <c:set var="imageUrl"
-                                   value="${not empty product.productImages ? product.productImages[0].imageUrl : 'default.jpg'}"/>
-
-                            <div class="product-tumb">
-                                <img src="${imageUrl}" alt="${product.title}">
-                            </div>
+                            <a href="#"><img src="${pageContext.request.contextPath}/images/${product.image}" alt="Product Image">
+                            </a>
                         </div> <!-- img-big-wrap.// -->
 
                     </article> <!-- gallery-wrap .end// -->
