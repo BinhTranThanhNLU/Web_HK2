@@ -847,6 +847,11 @@ public class ProductDao {
         });
     }
 
+    public List<Product> getProductsByID(String id) {
+
+        return List.of();
+    }
+
     public static void main(String[] args) {
         ProductDao productDao = new ProductDao();
         List<Product> products = productDao.getAllProducts();
