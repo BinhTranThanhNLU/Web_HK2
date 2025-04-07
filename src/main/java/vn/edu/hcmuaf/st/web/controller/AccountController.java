@@ -154,6 +154,7 @@ public class AccountController extends HttpServlet {
                 session.setAttribute("image", user.getImage());
             }
 
+            session.setAttribute("user", user);
             response.sendRedirect(request.getContextPath() + "/home");
         } else {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");

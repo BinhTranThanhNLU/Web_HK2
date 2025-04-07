@@ -93,8 +93,7 @@ public class CartController extends HttpServlet {
                     resp.getWriter().write("ERROR: Invalid number format");
                 }
                 break;
-
-
+                
 
             default:
                 resp.sendRedirect(req.getContextPath() + "/cart");

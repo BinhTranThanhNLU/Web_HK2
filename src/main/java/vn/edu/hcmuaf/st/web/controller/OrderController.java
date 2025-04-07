@@ -16,6 +16,13 @@ public class OrderController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
+
+        // Kiểm tra nếu người dùng chưa đăng nhập
+        if (session.getAttribute("user") == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
         Cart cart = (Cart) session.getAttribute("cart");
 
         if (cart == null || cart.getCartItems().isEmpty()) {
