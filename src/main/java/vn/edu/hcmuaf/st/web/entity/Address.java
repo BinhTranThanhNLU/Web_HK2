@@ -1,6 +1,8 @@
 package vn.edu.hcmuaf.st.web.entity;
 
-public class Address
+import java.io.Serializable;
+
+public class Address implements Serializable
 {
     private int idAddress;
     private User idUser;
@@ -8,7 +10,20 @@ public class Address
     private String ward;
     private String district;
     private String province;
-    private int isDefault;
+    private boolean isDefault;
+
+    public Address() {
+    }
+
+    public Address(boolean isDefault, String province, String district, String ward, String address, User idUser, int idAddress) {
+        this.isDefault = isDefault;
+        this.province = province;
+        this.district = district;
+        this.ward = ward;
+        this.address = address;
+        this.idUser = idUser;
+        this.idAddress = idAddress;
+    }
 
     public int getIdAddress() {
         return idAddress;
@@ -58,12 +73,12 @@ public class Address
         this.province = province;
     }
 
-    public int getIsDefault() {
+    public boolean isDefault() {
         return isDefault;
     }
 
-    public void setIsDefault(int isDefault) {
-        this.isDefault = isDefault;
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
     }
 
     @Override

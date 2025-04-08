@@ -13,17 +13,17 @@ public class OrderDao {
         this.jdbi = JDBIConnect.get();
     }
 
-    //lấy ra id của order mới được thêm vào, viết tạm thời chưa dùng được
     public int insertOrder(Order order) {
-        String sql = "INSERT INTO orders (idUser, idAddress, idCoupon, totalPrice) " +
-                "VALUES (:idUser, :idAddress, :idCoupon, :totalPrice)";
+        String sql = "INSERT INTO orders (idUser, idAddress, idCoupon, totalPrice, status) " +
+                "VALUES (:idUser, :idAddress, :idCoupon, :totalPrice, :status)";
 
         return jdbi.withHandle(handle -> {
             Update update = handle.createUpdate(sql)
-                    .bind("idUser", order.getIdUser())
-                    .bind("idAddress", order.getIdAddress())
-                    .bind("idCoupon", order.getIdCoupon() != null ? order.getIdCoupon() : null)
-                    .bind("totalPrice", order.getTotalPrice());
+                    .bind("idUser", order.getUser().getIdUser())
+                    .bind("idAddress", order.getAddress().getIdAddress())
+                    .bind("idCoupon", order.getIdCoupon())
+                    .bind("totalPrice", order.getTotalPrice())
+                    .bind("status", order.getStatus());
 
             int orderId = update.executeAndReturnGeneratedKeys("idOrder")
                     .mapTo(Integer.class)
@@ -33,6 +33,7 @@ public class OrderDao {
             return orderId;
         });
     }
+
 
 
 }

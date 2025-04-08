@@ -17,6 +17,8 @@ public class User {
     private String socialId;
     private Date createAt;
 
+    public User() {}
+
     public User(String fullName, String password, String username, String email) {
         this.fullName = fullName;
         this.password = password;
