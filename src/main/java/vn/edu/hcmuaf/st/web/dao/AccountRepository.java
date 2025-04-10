@@ -84,20 +84,24 @@ public class AccountRepository {
     }
 
     public User getUserByUsername(String username) {
-        String query = "SELECT fullName, password, username, email,phoneNumber FROM users WHERE username = ?";
+        String query = "SELECT idUser, fullName, password, username, email, phoneNumber FROM users WHERE username = ?";
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(query)
                         .bind(0, username)
-                        .map((rs, ctx) -> new User(
-                                rs.getString("fullName"),
-                                rs.getString("password"),
-                                rs.getString("username"),
-                                rs.getString("email")
-
-                        )).findOne().orElse(null)
+                        .map((rs, ctx) -> {
+                            User user = new User();
+                            user.setIdUser(rs.getInt("idUser"));
+                            user.setFullName(rs.getString("fullName"));
+                            user.setPassword(rs.getString("password"));
+                            user.setUsername(rs.getString("username"));
+                            user.setEmail(rs.getString("email"));
+                            user.setPhoneNumber(rs.getString("phoneNumber"));
+                            return user;
+                        }).findOne().orElse(null)
         );
     }
+
 
     public GoogleAccount insertGoogleAccount(GoogleAccount googleAccount) {
         String query = """

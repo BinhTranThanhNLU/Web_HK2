@@ -164,11 +164,23 @@
                         <p class="text-center mb-3">
                             <img src="./images/misc/payments.png" height="26">
                         </p>
-                        <form action="${pageContext.request.contextPath}/vnpay-payment" method="post">
-                            <input type="hidden" name="totalPrice" value="${cart.totalPrice}">
-                            <button type="submit" class="btn btn-primary btn-block">Thanh toán VNPay</button>
+                        <form action="${pageContext.request.contextPath}/place-order" method="post" id="submitForm">
+                            <!-- 1.form thông tin người dùng -->
+                            <input type="hidden" name="firstName">
+                            <input type="hidden" name="lastName">
+                            <input type="hidden" name="phone">
+                            <input type="hidden" name="email">
+
+                            <!-- 2.form thông tin giao hàng -->
+                            <input type="hidden" name="address">
+                            <input type="hidden" name="ward">
+                            <input type="hidden" name="district">
+                            <input type="hidden" name="province">
+
+                            <!-- 3.form payment method -->
+
+                            <button type="submit" class="btn btn-primary btn-block">Thanh toán</button>
                         </form>
-                        <!--<a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>-->
 
                     </div> <!-- card-body.// -->
                 </div> <!-- card.// -->
@@ -180,5 +192,20 @@
 <!-- ========================= SECTION CONTENT END// ========================= -->
 
 <%@ include file="/view/view-index/footer.jsp" %>
+
+<script>
+    document.getElementById("submitForm").addEventListener("submit", function(e) {
+        const fields = ["firstName", "lastName", "phone", "email", "address", "ward", "district", "province"];
+
+        fields.forEach(field => {
+            const sourceInput = document.querySelector(`[name="${field}"]`);
+            const hiddenInput = document.querySelector(`#submitForm [name="${field}"]`);
+            if (sourceInput && hiddenInput) {
+                hiddenInput.value = sourceInput.value;
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

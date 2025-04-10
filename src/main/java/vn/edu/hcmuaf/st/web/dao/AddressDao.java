@@ -19,7 +19,7 @@ public class AddressDao {
 
         return jdbi.withHandle(handle -> {
             Update update = handle.createUpdate(sql)
-                    .bind("idUser", address.getIdUser().getIdUser())
+                    .bind("idUser", address.getUser().getIdUser())
                     .bind("address", address.getAddress())
                     .bind("ward", address.getWard())
                     .bind("district", address.getDistrict())

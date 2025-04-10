@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Address implements Serializable
 {
     private int idAddress;
-    private User idUser;
+    private User user;
     private String address;
     private String ward;
     private String district;
@@ -15,13 +15,13 @@ public class Address implements Serializable
     public Address() {
     }
 
-    public Address(boolean isDefault, String province, String district, String ward, String address, User idUser, int idAddress) {
+    public Address(boolean isDefault, String province, String district, String ward, String address, User user, int idAddress) {
         this.isDefault = isDefault;
         this.province = province;
         this.district = district;
         this.ward = ward;
         this.address = address;
-        this.idUser = idUser;
+        this.user = user;
         this.idAddress = idAddress;
     }
 
@@ -33,12 +33,12 @@ public class Address implements Serializable
         this.idAddress = idAddress;
     }
 
-    public User getIdUser() {
-        return idUser;
+    public User getUser() {
+        return user;
     }
 
-    public void setIdUser(User idUser) {
-        this.idUser = idUser;
+    public void setUser(User idUser) {
+        this.user = idUser;
     }
 
     public String getAddress() {
@@ -85,7 +85,7 @@ public class Address implements Serializable
     public String toString() {
         return "Address{" +
                 "idAddress=" + idAddress +
-                ", idUser=" + idUser +
+                ", user=" + user +
                 ", address='" + address + '\'' +
                 ", ward='" + ward + '\'' +
                 ", district='" + district + '\'' +

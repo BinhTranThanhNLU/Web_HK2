@@ -155,6 +155,10 @@ public class AccountController extends HttpServlet {
             }
 
             session.setAttribute("user", user);
+
+            //check
+            System.out.println(">> Logged in user ID = " + user.getIdUser());
+
             response.sendRedirect(request.getContextPath() + "/home");
         } else {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
