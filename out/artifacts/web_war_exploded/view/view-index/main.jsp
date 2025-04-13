@@ -56,7 +56,7 @@
                             <div class="product-details">
                                 <span class="product-catagory">${product.category.name}</span>
                                 <h4>
-                                    <a href="${pageContext.request.contextPath}/view/view-product/product-detail.jsp">${product.title}</a>
+                                    <a href="${pageContext.request.contextPath}/detail?pid=${product.idProduct}">${product.title}</a>
                                 </h4>
                                 <div class="product-bottom-details">
                                     <div class="product-price">
@@ -106,7 +106,7 @@
                             <div class="product-details">
                                 <span class="product-catagory">${product.category.name}</span>
                                 <h4>
-                                    <a href="#">${product.title}</a>
+                                    <a href="${pageContext.request.contextPath}/detail?pid=${product.idProduct}">${product.title}</a>
                                 </h4>
                                 <div class="product-bottom-details">
                                     <div class="product-price">
@@ -171,7 +171,9 @@
                                 </div>
                                 <div class="product-details">
                                     <span class="product-catagory">${product.category.name}</span>
-                                    <h4><a href="#">${product.title}</a></h4>
+                                    <h4>
+                                        <a href="${pageContext.request.contextPath}/detail?pid=${product.idProduct}">${product.title}</a>
+                                    </h4>
                                     <div class="product-bottom-details">
                                         <div class="product-price">
                                             <c:choose>
@@ -247,7 +249,9 @@
                                 </div>
                                 <div class="product-details">
                                     <span class="product-catagory">${product.category.name}</span>
-                                    <h4><a href="#">${product.title}</a></h4>
+                                    <h4>
+                                        <a href="${pageContext.request.contextPath}/detail?pid=${product.idProduct}">${product.title}</a>
+                                    </h4>
                                     <div class="product-bottom-details">
                                         <div class="product-price">
                                             <c:choose>

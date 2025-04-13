@@ -133,6 +133,7 @@
                         <p class="text-center mb-3">
                             <img src="./images/misc/payments.png" height="26">
                         </p>
+
                         <form action="${pageContext.request.contextPath}/place-order" method="get">
                             <button type="submit" class="btn btn-primary btn-block"> Thanh toán </button>
                         </form>
@@ -153,39 +154,6 @@
 
     </div>
 </section>
-<%--<script>--%>
-<%--    document.querySelectorAll('.btn-update-quantity').forEach(button => {--%>
-<%--        button.addEventListener('click', function () {--%>
-<%--            const input = this.closest('.input-spinner').querySelector('.input-qty');--%>
-<%--            let quantity = parseInt(input.value);--%>
-<%--            const action = this.dataset.action;--%>
-<%--            const idVariant = input.dataset.idVariant;--%>
-
-<%--            if (action === 'plus') quantity++;--%>
-<%--            if (action === 'minus' && quantity > 1) quantity--;--%>
-
-<%--            input.value = quantity;--%>
-
-<%--            console.log(`Sending idVariant=${idVariant} and quantity=${quantity} `)--%>
-
-<%--            // Gửi AJAX cập nhật--%>
-<%--            fetch('/web/cart?action=updateQuantity', {--%>
-<%--                method: 'POST',--%>
-<%--                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },--%>
-<%--                body: `idVariant=${idVariant}&quantity=${quantity}`--%>
-<%--            })--%>
-<%--                .then(res => res.json())--%>
-<%--                .then(data => {--%>
-<%--                    if (data.totalPrice) {--%>
-<%--                        // Định dạng tiền tệ VNĐ (tạm thời không dùng JSTL)--%>
-<%--                        const formatted = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.totalPrice);--%>
-<%--                        document.getElementById('total-price').textContent = formatted;--%>
-<%--                    }--%>
-<%--                });--%>
-
-<%--        });--%>
-<%--    });--%>
-<%--</script>--%>
 
 <script>
     document.querySelectorAll('.btn-update-quantity').forEach(button => {
@@ -195,10 +163,6 @@
             const hiddenIdVariant = spinner.querySelector('.idVariant-qty');
             const hiddenQuantity = spinner.querySelector('.qty-qty');
 
-            console.log(hiddenIdVariant);  // Kiểm tra phần tử chứa idVariant
-            console.log(hiddenIdVariant.value);  // Kiểm tra giá trị của idVariant
-
-
             let quantity = parseInt(inputQty.value);
             const action = this.dataset.action;
             const idVariant = hiddenIdVariant.value;
@@ -206,14 +170,8 @@
             if (action === 'plus') quantity++;
             if (action === 'minus' && quantity > 1) quantity--;
 
-            console.log("new quantity " + quantity)
-            console.log("new idVatiant " + idVariant)
-
             inputQty.value = quantity;
             hiddenQuantity.value = quantity; // Đồng bộ luôn hidden quantity
-
-            console.log(`Sending idVariant=${idVariant} and quantity=${quantity}`);
-            console.log(quantity + ", " + idVariant);
 
             fetch('/web/cart?action=updateQuantity', {
                 method: 'POST',

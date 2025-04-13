@@ -1,17 +1,15 @@
 package vn.edu.hcmuaf.st.web.entity;
 
-import vn.edu.hcmuaf.st.web.constant.OrderStatus;
-
 import java.time.LocalDateTime;
 
 public class Order {
 
     private int idOrder;
-    private int idUser;
-    private int idAddress;
+    private User user;
+    private Address address;
     private Integer idCoupon;
     private double totalPrice;
-    private OrderStatus status;
+    private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -19,10 +17,10 @@ public class Order {
 
     }
 
-    public Order(int idOrder, int idUser, int idAddress, double totalPrice, OrderStatus status) {
+    public Order(int idOrder, User user, Address address, double totalPrice, String status) {
         this.idOrder = idOrder;
-        this.idUser = idUser;
-        this.idAddress = idAddress;
+        this.user = user;
+        this.address = address;
         this.totalPrice = totalPrice;
         this.status = status;
     }
@@ -35,20 +33,20 @@ public class Order {
         this.idOrder = idOrder;
     }
 
-    public int getIdUser() {
-        return idUser;
+    public User getUser() {
+        return user;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getIdAddress() {
-        return idAddress;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setIdAddress(int idAddress) {
-        this.idAddress = idAddress;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public Integer getIdCoupon() {
@@ -67,11 +65,11 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public OrderStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -95,8 +93,8 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "idOrder=" + idOrder +
-                ", idUser=" + idUser +
-                ", idAddress=" + idAddress +
+                ", user=" + user +
+                ", address=" + address +
                 ", idCoupon=" + idCoupon +
                 ", totalPrice=" + totalPrice +
                 ", status=" + status +

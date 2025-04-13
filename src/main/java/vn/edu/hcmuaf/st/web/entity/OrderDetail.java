@@ -3,7 +3,7 @@ package vn.edu.hcmuaf.st.web.entity;
 public class OrderDetail {
 
     private int idDetail;
-    private int idOrder;
+    private Order order;
     private int idVariant;
     private int quantity;
     private double price;
@@ -12,13 +12,13 @@ public class OrderDetail {
     public OrderDetail() {
     }
 
-    public OrderDetail(int idDetail, double discountPrice, double price, int quantity, int idVariant, int idOrder) {
+    public OrderDetail(int idDetail, double discountPrice, double price, int quantity, int idVariant, Order order) {
         this.idDetail = idDetail;
         this.discountPrice = discountPrice;
         this.price = price;
         this.quantity = quantity;
         this.idVariant = idVariant;
-        this.idOrder = idOrder;
+        this.order = order;
     }
 
     public int getIdDetail() {
@@ -29,12 +29,12 @@ public class OrderDetail {
         this.idDetail = idDetail;
     }
 
-    public int getIdOrder() {
-        return idOrder;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setIdOrder(int idOrder) {
-        this.idOrder = idOrder;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public int getIdVariant() {
@@ -73,7 +73,7 @@ public class OrderDetail {
     public String toString() {
         return "OrderDetail{" +
                 "idDetail=" + idDetail +
-                ", idOrder=" + idOrder +
+                ", order=" + order +
                 ", idVariant=" + idVariant +
                 ", quantity=" + quantity +
                 ", price=" + price +
