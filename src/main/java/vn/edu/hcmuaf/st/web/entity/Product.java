@@ -20,6 +20,9 @@ public class Product implements Serializable {
     private List<ProductImage> productImages = new ArrayList<>();
     private List<ProductVariant> productVariants = new ArrayList<>();
     private int boy_or_girl;
+    //
+
+
 
     public Product(int idProduct, String title, double price, double discountAmount, double priceAfterDiscount) {
 
@@ -96,6 +99,7 @@ public class Product implements Serializable {
         }
         return sizes;
     }
+
 
     //Get & Set
     public int getIdProduct() {
@@ -206,5 +210,18 @@ public class Product implements Serializable {
                 ", productVariants=" + productVariants +
                 ", boy_or_girl=" + boy_or_girl +
                 '}';
+    }
+
+
+
+
+    public List<ProductVariant> filterBySize(Size size) {
+        List<ProductVariant> filteredVariants = new ArrayList<>();
+        for (ProductVariant variant : productVariants) {
+            if (variant.getSize() != null && variant.getSize().equals(size)) {
+                filteredVariants.add(variant);
+            }
+        }
+        return filteredVariants;
     }
 }

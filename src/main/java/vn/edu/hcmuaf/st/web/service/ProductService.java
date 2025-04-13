@@ -88,8 +88,6 @@ public class ProductService {
         return productDao.getProductsByCategoryRange(idCategory, boy_or_girl, offset, pageSize);
     }
 
-
-
     // Phương thức lấy tổng số sản phẩm theo idCategory từ 1 đến 4
     public int getTotalProductsByCategoryRange(int idCategory, int boy_or_girl) {
         // Kiểm tra giá trị hợp lệ của boy_or_girl

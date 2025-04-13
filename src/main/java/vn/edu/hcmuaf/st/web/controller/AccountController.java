@@ -90,34 +90,6 @@ public class AccountController extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
     }
 
-    // Đăng Nhập
-//    private void handleLogin(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//
-//        String username = request.getParameter("username");
-//        String password = request.getParameter("password");
-//
-//        if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-//            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
-//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
-//            return;
-//        }
-//
-//        if (accountService.login(username, password)) {
-//            HttpSession session = request.getSession();
-//            session.setAttribute("username", username);
-//
-//            // Lấy fullname từ accountService (giả sử bạn có phương thức lấy fullname)
-//            String fullname = accountService.getFullNameByUsername(username);
-//            session.setAttribute("fullname", fullname);  // Thêm fullname vào session
-//
-//            response.sendRedirect(request.getContextPath() + "/home");
-//        } else {
-//            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
-//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
-//        }
-//
-//    }
 // Đăng Nhập
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

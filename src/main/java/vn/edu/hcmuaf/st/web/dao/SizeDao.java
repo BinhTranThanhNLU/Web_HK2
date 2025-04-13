@@ -58,4 +58,17 @@ public class SizeDao {
         );
     }
 
+
+    public static void main(String[] args) {
+        // Khởi tạo đối tượng SizeDao để gọi phương thức getAll()
+        SizeDao sizeDao = new SizeDao();
+
+        // Lấy tất cả các kích thước từ cơ sở dữ liệu
+        List<Size> sizes = sizeDao.getAll();
+
+        // In kết quả ra console
+        for (Size size : sizes) {
+            System.out.println("ID: " + size.getIdSize() + ", Size: " + size.getSize());
+        }
+    }
 }

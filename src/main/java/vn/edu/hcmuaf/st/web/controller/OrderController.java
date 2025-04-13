@@ -12,7 +12,6 @@ import java.io.IOException;
 
 @WebServlet(name = "orderController", urlPatterns = "/place-order")
 public class OrderController extends HttpServlet {
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -22,7 +21,6 @@ public class OrderController extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/cart");
             return;
         }
-
         req.setAttribute("cart", cart);
         req.getRequestDispatcher("view/view-order/place-order.jsp").forward(req, resp);
     }
