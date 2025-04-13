@@ -1,6 +1,4 @@
 package vn.edu.hcmuaf.st.web.controller;
-
-import com.google.gson.Gson;
 import vn.edu.hcmuaf.st.web.service.ProductService;
 import vn.edu.hcmuaf.st.web.entity.Product;
 import jakarta.servlet.ServletException;
@@ -8,21 +6,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-@WebServlet({"/all-product", "/product", "/fashion", "/all-boy-or-girl","/fashion-size"})
+@WebServlet({"/all-product", "/product", "/fashion", "/all-boy-or-girl"})
 public class ProductController extends HttpServlet {
-
     private ProductService productService;
-
     public void init() {
         productService = new ProductService();
     }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         commonSettings(request, response);

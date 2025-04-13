@@ -53,6 +53,8 @@ public class ProductService {
     public List<Product> getNextTop8ProductsByCategory(int categoryId, int offset) {
         return productDao.getProductsByCategory(categoryId, 8, offset);
     }
+
+
     public List<Product> getProductsByPage(int page, int pageSize) {
         int totalProducts = getTotalProducts();
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
@@ -85,8 +87,6 @@ public class ProductService {
         // Gọi DAO để lấy danh sách sản phẩm (chấp nhận idCategory = 0)
         return productDao.getProductsByCategoryRange(idCategory, boy_or_girl, offset, pageSize);
     }
-
-
 
     // Phương thức lấy tổng số sản phẩm theo idCategory từ 1 đến 4
     public int getTotalProductsByCategoryRange(int idCategory, int boy_or_girl) {
