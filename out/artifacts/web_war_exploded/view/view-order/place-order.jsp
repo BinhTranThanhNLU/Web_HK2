@@ -48,19 +48,19 @@
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label> Họ </label>
-                                    <input type="text" placeholder="Nhập thông tin" class="form-control">
+                                    <input type="text" name="firstName" placeholder="Nhập thông tin" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label> Tên </label>
-                                    <input type="text" placeholder="Nhập thông tin" class="form-control">
+                                    <input type="text" name="lastName" placeholder="Nhập thông tin" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label>Số điện thoại</label>
-                                    <input type="text" placeholder="+98" class="form-control">
+                                    <input type="text" name="phone" placeholder="+98" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label>Email</label>
-                                    <input type="email" placeholder="example@gmail.com" class="form-control">
+                                    <input type="email" name="email" placeholder="example@gmail.com" class="form-control">
                                 </div>
                             </div> <!-- row.// -->
                         </form>
@@ -77,19 +77,19 @@
                             <div class="row">
                                 <div class="form-group col-sm-12">
                                     <label> Địa chỉ* </label>
-                                    <input type="text" placeholder="Type here" class="form-control">
+                                    <input type="text" name="address" placeholder="Type here" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <label> Phường/Xã* </label>
-                                    <input type="text" placeholder="Type here" class="form-control">
+                                    <input type="text" name="ward" placeholder="Type here" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <label> Quận/Huyện* </label>
-                                    <input type="text" placeholder="" class="form-control">
+                                    <input type="text" name="district" placeholder="" class="form-control">
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <label> Tỉnh/Thành phố* </label>
-                                    <input type="text" placeholder="" class="form-control">
+                                    <input type="text" name="province" placeholder="" class="form-control">
                                 </div>
                             </div> <!-- row.// -->
                         </form>
@@ -164,11 +164,23 @@
                         <p class="text-center mb-3">
                             <img src="./images/misc/payments.png" height="26">
                         </p>
-                        <form action="${pageContext.request.contextPath}/vnpay-payment" method="post">
-                            <input type="hidden" name="totalPrice" value="${cart.totalPrice}">
-                            <button type="submit" class="btn btn-primary btn-block">Thanh toán VNPay</button>
+                        <form action="${pageContext.request.contextPath}/place-order" method="post" id="submitForm">
+                            <!-- 1.form thông tin người dùng -->
+                            <input type="hidden" name="firstName">
+                            <input type="hidden" name="lastName">
+                            <input type="hidden" name="phone">
+                            <input type="hidden" name="email">
+
+                            <!-- 2.form thông tin giao hàng -->
+                            <input type="hidden" name="address">
+                            <input type="hidden" name="ward">
+                            <input type="hidden" name="district">
+                            <input type="hidden" name="province">
+
+                            <!-- 3.form payment method -->
+
+                            <button type="submit" class="btn btn-primary btn-block">Thanh toán</button>
                         </form>
-                        <!--<a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>-->
 
                     </div> <!-- card-body.// -->
                 </div> <!-- card.// -->
@@ -180,5 +192,20 @@
 <!-- ========================= SECTION CONTENT END// ========================= -->
 
 <%@ include file="/view/view-index/footer.jsp" %>
+
+<script>
+    document.getElementById("submitForm").addEventListener("submit", function(e) {
+        const fields = ["firstName", "lastName", "phone", "email", "address", "ward", "district", "province"];
+
+        fields.forEach(field => {
+            const sourceInput = document.querySelector(`[name="${field}"]`);
+            const hiddenInput = document.querySelector(`#submitForm [name="${field}"]`);
+            if (sourceInput && hiddenInput) {
+                hiddenInput.value = sourceInput.value;
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
