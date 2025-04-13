@@ -21,7 +21,8 @@
                 <aside class="col-md-6">
                     <article class="gallery-wrap">
                         <div class="img-big-wrap">
-                            <a href="#"><img src="${pageContext.request.contextPath}/images/${product.image}" alt="Product Image">
+                            <a href="#">
+                                <img src="${imageUrl}" alt="${product.title}">
                             </a>
                         </div> <!-- img-big-wrap.// -->
 
@@ -30,13 +31,24 @@
                 <main class="col-md-6 border-left">
                     <article class="content-body">
 
-                        <h2 class="title">Off-White Odsy-1000 Low-Top Sneakers</h2>
+                        <h2 class="title">${product.title}</h2>
 
                         <div class="mb-3">
-                            <var class="price h4">$815.00</var>
+                            <var class="price h4">
+                                <c:choose>
+                                    <c:when test="${not empty product.discount}">
+                                        <span style="text-decoration: line-through; color: gray;">${product.price}₫</span>
+                                        <span class="text-danger ml-2">${product.price - (product.price * product.discount.discountAmount / 100)}₫</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${product.price}₫
+                                    </c:otherwise>
+                                </c:choose>
+                            </var>
                         </div>
 
-                        <p>Virgil Abloh’s Off-White is a streetwear-inspired collection that continues to break away from the conventions of mainstream fashion. Made in Italy, these black and brown Odsy-1000 low-top sneakers.</p>
+                        <p>${product.description}</p>
+
 
 
                         <hr>

@@ -46,10 +46,9 @@
                     <label>Tên Đăng Nhập</label>
                     <input type="text" name="username" class="form-control" placeholder="Tên Đăng Nhập" required>
                 </div>
-
                 <div class="form-group">
                     <label>Số Điện Thoại</label>
-                    <input type="text" name="phoneNumber" class="form-control" placeholder="Số Điện Thoại" required>
+                    <input type="text" name="phoneNumber" class="form-control" placeholder="Số Điện Thoại" >
                 </div>
 
                 <div class="form-row">
