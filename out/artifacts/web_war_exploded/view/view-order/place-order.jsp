@@ -156,13 +156,19 @@
                         </dl>
                         <dl class="dlist-align">
                             <dt>Tổng:</dt>
-                            <dd class="text-right text-dark b"><strong>$59.97</strong></dd>
+                            <dd class="text-right text-dark b">
+                                <strong><fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/></strong>
+                            </dd>
                         </dl>
                         <hr>
                         <p class="text-center mb-3">
                             <img src="./images/misc/payments.png" height="26">
                         </p>
-                        <a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>
+                        <form action="${pageContext.request.contextPath}/vnpay-payment" method="post">
+                            <input type="hidden" name="totalPrice" value="${cart.totalPrice}">
+                            <button type="submit" class="btn btn-primary btn-block">Thanh toán VNPay</button>
+                        </form>
+                        <!--<a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>-->
 
                     </div> <!-- card-body.// -->
                 </div> <!-- card.// -->

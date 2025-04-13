@@ -35,6 +35,7 @@
                                         </div>
                                         <figcaption class="info">
                                             <a href="#" class="title text-dark">${item.productTitle}</a>
+                                            <p>${item.idVariant}</p>
 <%--                                            <p class="text-muted small">Matrix: 25 Mpx <br> Brand: Canon</p>--%>
                                         </figcaption>
                                     </figure>
@@ -73,14 +74,15 @@
                                     <!-- col.// -->
                                     <div class="col">
                                         <div class="input-group input-spinner">
+                                            <input class="idVariant-qty" type="hidden" name="idVariant" value="${item.idVariant}"/>
+                                            <input class="qty-qty" type="hidden" name="quantity" value="${item.quantity}"/>
+
                                             <div class="input-group-prepend">
-                                                <button class="btn btn-light" type="button" id="button-plus"><i
-                                                        class="fa fa-minus"></i></button>
+                                                <button class="btn btn-light btn-update-quantity" type="button" data-action="minus"><i class="fa fa-minus"></i></button>
                                             </div>
-                                            <input type="text" class="form-control" value="1">
+                                            <input type="text" class="form-control input-qty" data-id-variant="${item.idVariant}" value="${item.quantity}" name="quantity"/>
                                             <div class="input-group-append">
-                                                <button class="btn btn-light" type="button" id="button-minus"><i
-                                                        class="fa fa-plus"></i></button>
+                                                <button class="btn btn-light btn-update-quantity" type="button" data-action="plus"><i class="fa fa-plus"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -112,9 +114,9 @@
                 <div class="card">
                     <div class="card-body">
                         <dl class="dlist-align">
-                            <dt>Tồng tiền:</dt>
+                            <dt>Tổng tiền:</dt>
                             <dd class="text-right">
-                                <fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/>
+                                <span id="total-price"><fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/></span>
                             </dd>
                         </dl>
                         <dl class="dlist-align">
@@ -134,12 +136,12 @@
                         <form action="${pageContext.request.contextPath}/place-order" method="get">
                             <button type="submit" class="btn btn-primary btn-block"> Thanh toán </button>
                         </form>
-<%--                        <a href="./place-order.html" class="btn btn-primary btn-block"> Thanh toán </a>--%>
+
                         <form action="${pageContext.request.contextPath}/cart" method="post">
                             <input type="hidden" name="action" value="continue">
                             <button type="submit" class="btn btn-light btn-block mt-4">Tiếp tục mua hàng</button>
                         </form>
-<%--                        <a href="./store.html" class="btn btn-light btn-block">Tiếp tục mua hàng</a>--%>
+
                     </div>
                 </div>
 
@@ -151,5 +153,85 @@
 
     </div>
 </section>
+<%--<script>--%>
+<%--    document.querySelectorAll('.btn-update-quantity').forEach(button => {--%>
+<%--        button.addEventListener('click', function () {--%>
+<%--            const input = this.closest('.input-spinner').querySelector('.input-qty');--%>
+<%--            let quantity = parseInt(input.value);--%>
+<%--            const action = this.dataset.action;--%>
+<%--            const idVariant = input.dataset.idVariant;--%>
+
+<%--            if (action === 'plus') quantity++;--%>
+<%--            if (action === 'minus' && quantity > 1) quantity--;--%>
+
+<%--            input.value = quantity;--%>
+
+<%--            console.log(`Sending idVariant=${idVariant} and quantity=${quantity} `)--%>
+
+<%--            // Gửi AJAX cập nhật--%>
+<%--            fetch('/web/cart?action=updateQuantity', {--%>
+<%--                method: 'POST',--%>
+<%--                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },--%>
+<%--                body: `idVariant=${idVariant}&quantity=${quantity}`--%>
+<%--            })--%>
+<%--                .then(res => res.json())--%>
+<%--                .then(data => {--%>
+<%--                    if (data.totalPrice) {--%>
+<%--                        // Định dạng tiền tệ VNĐ (tạm thời không dùng JSTL)--%>
+<%--                        const formatted = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.totalPrice);--%>
+<%--                        document.getElementById('total-price').textContent = formatted;--%>
+<%--                    }--%>
+<%--                });--%>
+
+<%--        });--%>
+<%--    });--%>
+<%--</script>--%>
+
+<script>
+    document.querySelectorAll('.btn-update-quantity').forEach(button => {
+        button.addEventListener('click', function () {
+            const spinner = this.closest('.input-spinner');
+            const inputQty = spinner.querySelector('.input-qty');
+            const hiddenIdVariant = spinner.querySelector('.idVariant-qty');
+            const hiddenQuantity = spinner.querySelector('.qty-qty');
+
+            console.log(hiddenIdVariant);  // Kiểm tra phần tử chứa idVariant
+            console.log(hiddenIdVariant.value);  // Kiểm tra giá trị của idVariant
+
+
+            let quantity = parseInt(inputQty.value);
+            const action = this.dataset.action;
+            const idVariant = hiddenIdVariant.value;
+
+            if (action === 'plus') quantity++;
+            if (action === 'minus' && quantity > 1) quantity--;
+
+            console.log("new quantity " + quantity)
+            console.log("new idVatiant " + idVariant)
+
+            inputQty.value = quantity;
+            hiddenQuantity.value = quantity; // Đồng bộ luôn hidden quantity
+
+            console.log(`Sending idVariant=${idVariant} and quantity=${quantity}`);
+            console.log(quantity + ", " + idVariant);
+
+            fetch('/web/cart?action=updateQuantity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: "idVariant="+idVariant+"&quantity="+quantity
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.totalPrice) {
+                        const formatted = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.totalPrice);
+                        document.getElementById('total-price').textContent = formatted;
+                    }
+                });
+
+        });
+    });
+</script>
+
+
 <%@ include file="/view/view-index/footer.jsp" %>
 </html>

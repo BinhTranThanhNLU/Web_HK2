@@ -846,6 +846,68 @@ public class ProductDao {
                     .list();
         });
     }
+        public Product getProductById(int idProduct) {
+            return jdbi.withHandle(handle ->
+                handle.createQuery("""
+                    SELECT
+                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                        pi.idImage, pi.imageUrl, pi.`order`
+                    FROM products p
+                    JOIN categories c ON p.idCategory = c.idCategory
+                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+                    WHERE p.idProduct = :idProduct
+                """)
+                        .bind("idProduct", idProduct)
+                        .map((rs, ctx) -> {
+                            Product product = new Product();
+                            product.setIdProduct(rs.getInt("idProduct"));
+                            product.setTitle(rs.getString("title"));
+                            product.setPrice(rs.getDouble("price"));
+                            product.setDescription(rs.getString("description"));
+                            product.setStatus(rs.getBoolean("status"));
+                            product.setCreatedAt(rs.getTimestamp("createAt").toLocalDateTime());
+                            product.setUpdatedAt(rs.getTimestamp("updateAt").toLocalDateTime());
+
+                            // Danh mục
+                            Category category = new Category(
+                                    rs.getInt("idCategory"),
+                                    rs.getString("categoryType"),
+                                    rs.getString("categoryName"),
+                                    rs.getString("categoryDescription")
+                            );
+                            product.setCategory(category);
+
+                            // Giảm giá (nếu có)
+                            if (rs.getInt("idDiscount") != 0) {
+                                Discount discount = new Discount(
+                                        rs.getInt("idDiscount"),
+                                        rs.getDouble("discountAmount"),
+                                        rs.getTimestamp("startDate").toLocalDateTime(),
+                                        rs.getTimestamp("endDate").toLocalDateTime()
+                                );
+                                product.setDiscount(discount);
+                            }
+
+                            // Hình ảnh sản phẩm
+                            List<ProductImage> images = new ArrayList<>();
+                            if (rs.getInt("idImage") != 0) {
+                                ProductImage image = new ProductImage();
+                                image.setIdImage(rs.getInt("idImage"));
+                                image.setImageUrl(rs.getString("imageUrl"));
+                                image.setOrder(rs.getInt("order"));
+                                images.add(image);
+                            }
+                            product.setProductImages(images);
+
+                            return product;
+                        })
+                        .findOnly()
+        );
+    }
+
 
     public static void main(String[] args) {
         ProductDao productDao = new ProductDao();
