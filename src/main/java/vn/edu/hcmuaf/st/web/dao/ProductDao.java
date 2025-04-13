@@ -857,7 +857,7 @@ public class ProductDao {
                     FROM products p
                     JOIN categories c ON p.idCategory = c.idCategory
                     LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct AND pi.`order` = 1
+                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct             
                     WHERE p.idProduct = :idProduct
                 """)
                         .bind("idProduct", idProduct)

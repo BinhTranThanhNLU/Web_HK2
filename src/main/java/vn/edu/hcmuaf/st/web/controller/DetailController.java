@@ -34,7 +34,7 @@ public class DetailController extends HttpServlet {
                 return;
             }
 
-            request.setAttribute("product", product);  // Đưa sản phẩm ra view
+            request.setAttribute("product", product);
             request.getRequestDispatcher("/view/view-product/product-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid product ID");
@@ -42,12 +42,13 @@ public class DetailController extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response); // ✅ phải gọi xử lý GET
+        processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
+
 
 }

@@ -22,7 +22,7 @@
                     <article class="gallery-wrap">
                         <div class="img-big-wrap">
                             <a href="#">
-                                <img src="${imageUrl}" alt="${product.title}">
+                                <img src="${product.productImages[0].imageUrl}" alt="${product.title}">
                             </a>
                         </div> <!-- img-big-wrap.// -->
 
@@ -91,7 +91,8 @@
                             </div>
                         </div> <!-- row.// -->
                         <hr>
-                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Đưa Vào Giỏ Hàng</span> <i class="fas fa-shopping-cart"></i>  </a>
+                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span> <i class="fas fa-shopping-cart"></i>  </a>
+                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span> <i class="fas fa-shopping-cart"></i>  </a>
                     </article> <!-- product-info-aside .// -->
                 </main> <!-- col.// -->
             </div> <!-- row.// -->
