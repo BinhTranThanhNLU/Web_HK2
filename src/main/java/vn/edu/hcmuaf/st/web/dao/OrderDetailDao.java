@@ -13,7 +13,7 @@ public class OrderDetailDao {
     }
 
     public void insert(OrderDetail orderDetail) {
-        String sql = "INSERT INTO order_detail (idOrder, idVariant, quantity, price, discountPrice) " +
+        String sql = "INSERT INTO orderDetail (idOrder, idVariant, quantity, price, discountPrice) " +
                 "VALUES (:idOrder, :idVariant, :quantity, :price, :discountPrice)";
 
         jdbi.useHandle(handle -> {

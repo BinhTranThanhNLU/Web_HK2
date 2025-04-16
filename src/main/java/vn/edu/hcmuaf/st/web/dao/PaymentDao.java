@@ -13,7 +13,7 @@ public class PaymentDao {
     }
 
     public void insert(Payment payment) {
-        String sql = "INSERT INTO payment (idOrder, paymentMethod, amount, status) " +
+        String sql = "INSERT INTO payments (idOrder, paymentMethod, amount, status) " +
                 "VALUES (:idOrder, :paymentMethod, :amount, :status)";
 
         jdbi.useHandle(handle -> {

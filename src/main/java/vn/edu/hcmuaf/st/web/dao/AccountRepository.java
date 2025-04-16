@@ -92,6 +92,8 @@ public class AccountRepository {
                         .map((rs, ctx) -> {
                             User user = new User();
                             user.setIdUser(rs.getInt("idUser"));
+                            System.out.println("RS CHECK idUser = " + rs.getInt("idUser")); // debug
+                            System.out.println("AFTER SET => user.getIdUser() = " + user.getIdUser()); // thêm dòng này
                             user.setFullName(rs.getString("fullName"));
                             user.setPassword(rs.getString("password"));
                             user.setUsername(rs.getString("username"));
@@ -171,6 +173,13 @@ public class AccountRepository {
             e.printStackTrace();  // In ra lỗi nếu có
             return null;  // Trả về null nếu có lỗi
         }
+    }
+
+    public static void main(String[] args) {
+        AccountRepository repo = new AccountRepository();
+        User user = repo.getUserByUsername("hatest123");
+        System.out.println(user.getIdUser());
+        System.out.println(user.getFullName());
     }
 
 
