@@ -100,5 +100,11 @@ public class AccountService {
 
         return googleAccount;
     }
+
+    public static void main(String[] args) {
+        AccountService accountService = new AccountService();
+        User user = accountService.getUserByUsername("hatest123");
+        System.out.println(user.getIdUser());
+    }
 }
 

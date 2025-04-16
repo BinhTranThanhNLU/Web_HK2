@@ -32,7 +32,7 @@ public class User {
     }
 
     public void setIdUser(int user) {
-        this.idUser = idUser;
+        this.idUser = user;
     }
 
     public int getIdRole() {
