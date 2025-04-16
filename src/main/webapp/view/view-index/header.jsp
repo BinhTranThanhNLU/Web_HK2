@@ -58,28 +58,7 @@
             </div> <!-- col.// -->
             <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
                 <div class="d-flex justify-content-end mb-3 mb-lg-0">
-                    <%--                    <div class="widget-header">--%>
-                    <%--                        <small class="title text-muted">--%>
-                    <%--                            ${not empty googleAccount ? googleAccount.name : (not empty sessionScope.fullname ? sessionScope.fullname : "Khách!")}--%>
-                    <%--                        </small>--%>
-                    <%--                        <div>--%>
-                    <%--                            <c:choose>--%>
-                    <%--                                <c:when test="${not empty googleAccount or not empty sessionScope.fullname}">--%>
-                    <%--                                    <a href="${pageContext.request.contextPath}/view/view-account/profile.jsp">Xem Tài Khoản</a>--%>
-                    <%--&lt;%&ndash;                                    <a href="${pageContext.request.contextPath}/profile">Xem Tài Khoản</a>&ndash;%&gt;--%>
-                    <%--                                    <span class="dark-transp"> | </span>--%>
-                    <%--                                    <a href="${pageContext.request.contextPath}/logout">Đăng Xuất</a>--%>
-                    <%--                                </c:when>--%>
-                    <%--                                <c:otherwise>--%>
-                    <%--                                    <a href="${pageContext.request.contextPath}/view/view-account/signin.jsp">Đăng--%>
-                    <%--                                        Nhập</a>--%>
-                    <%--                                    <span class="dark-transp"> | </span>--%>
-                    <%--                                    <a href="${pageContext.request.contextPath}/view/view-account/register.jsp">Đăng--%>
-                    <%--                                        Ký</a>--%>
-                    <%--                                </c:otherwise>--%>
-                    <%--                            </c:choose>--%>
-                    <%--                        </div>--%>
-                    <%--                    </div>--%>
+
                     <div class="widget-header">
                         <small class="title text-muted">
                             ${not empty facebookName ? facebookName : (not empty googleAccount ? googleAccount.fullName : (not empty sessionScope.fullname ? sessionScope.fullname : "Khách!"))}
@@ -87,8 +66,8 @@
                         <div>
                             <c:choose>
                                 <c:when test="${not empty facebookName or not empty googleAccount or not empty sessionScope.fullname}">
-                                    <a href="${pageContext.request.contextPath}/view/view-account/profile.jsp">Xem Tài
-                                        Khoản</a>
+                                    <a href="${pageContext.request.contextPath}/profile">Xem Tài Khoản</a>
+
                                     <span class="dark-transp"> | </span>
                                     <a href="${pageContext.request.contextPath}/logout">Đăng Xuất</a>
                                 </c:when>

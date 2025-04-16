@@ -25,6 +25,17 @@ public class Address implements Serializable
         this.idAddress = idAddress;
     }
 
+    public Address(int idAddress, User user, String address, String ward, String district, String province, boolean isDefault) {
+        this.idAddress = idAddress;
+        this.user = user;
+        this.address = address;
+        this.ward = ward;
+        this.district = district;
+        this.province = province;
+        this.isDefault = isDefault;
+    }
+
+
     public int getIdAddress() {
         return idAddress;
     }
@@ -85,7 +96,7 @@ public class Address implements Serializable
     public String toString() {
         return "Address{" +
                 "idAddress=" + idAddress +
-                ", user=" + user +
+                ", user=" + (user != null ? user.getUsername() : "No user") +  // Lấy thông tin cần thiết từ User thay vì gọi toàn bộ toString()
                 ", address='" + address + '\'' +
                 ", ward='" + ward + '\'' +
                 ", district='" + district + '\'' +
@@ -93,5 +104,6 @@ public class Address implements Serializable
                 ", isDefault=" + isDefault +
                 '}';
     }
+
 }
 
