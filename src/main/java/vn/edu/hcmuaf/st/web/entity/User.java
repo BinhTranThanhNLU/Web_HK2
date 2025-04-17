@@ -11,11 +11,41 @@ public class User {
     private String email;
     private String phoneNumber;
     private Boolean active;
-    private Date birthDate;
+    private String birthDate;
     private String image;
     private String authProvider;
     private String socialId;
     private Date createAt;
+    private Address address;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "idUser=" + idUser +
+                ", idRole=" + idRole +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", active=" + active +
+                ", birthDate=" + birthDate +
+                ", image='" + image + '\'' +
+                ", authProvider='" + authProvider + '\'' +
+                ", socialId='" + socialId + '\'' +
+                ", createAt=" + createAt +
+                ", address=" + (address != null ? address.getAddress() : "No address") +  // Lấy thông tin từ Address thay vì gọi toàn bộ toString()
+                '}';
+    }
+
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public User() {}
 
@@ -91,11 +121,11 @@ public class User {
         this.active = active;
     }
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -131,22 +161,5 @@ public class User {
         this.createAt = createAt;
     }
 
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "idUser=" + idUser +
-                ", idRole=" + idRole +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", active=" + active +
-                ", birthDate=" + birthDate +
-                ", image='" + image + '\'' +
-                ", authProvider='" + authProvider + '\'' +
-                ", socialId='" + socialId + '\'' +
-                ", createAt=" + createAt +
-                '}';
-    }
+
 }

@@ -1,7 +1,5 @@
 package vn.edu.hcmuaf.st.web.service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.st.web.controller.SocialLogin;
 import vn.edu.hcmuaf.st.web.dao.AccountRepository;
@@ -9,11 +7,10 @@ import vn.edu.hcmuaf.st.web.dao.AccountRepository;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import vn.edu.hcmuaf.st.web.entity.Address;
 import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
 import vn.edu.hcmuaf.st.web.entity.User;
 
-import java.io.IOException;
+import java.sql.Date;
 import java.util.Properties;
 import java.util.Random;
 
@@ -28,7 +25,6 @@ public class AccountService {
     public boolean login(String username, String password) {
         return accountRepository.validateUser(username, password);
     }
-
     // Đăng ký tài khoản
     public boolean register(String username, String password, String fullname, String email, String phoneNumber) {
         if (accountRepository.isUsernameExists(username)) {
@@ -40,13 +36,12 @@ public class AccountService {
         // Tạo tài khoản mới (truyền các tham số cần thiết)
         return accountRepository.addUser(username, hashedPassword, fullname, email, phoneNumber);
     }
-
     // Dịch vụ gửi email
     public int generateOTP() {
         Random rand = new Random();
         return 100000 + rand.nextInt(900000);
     }
-
+    // gửi otp
     public void sendOTP(String userEmail, int otpvalue) throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -66,40 +61,36 @@ public class AccountService {
 
         Transport.send(message);
     }
-
+    // đổi mk
     public boolean updatePassword(String email, String newPassword) {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         return accountRepository.updatePasswordByEmail(email, hashedPassword);
     }
-
-    // lấy tên người dùng sau khi đăng nhập thành công
-    public String getFullNameByUsername(String username) {
-        return accountRepository.getFullNameByUsername(username);
-    }
-
-    public void logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false); // Lấy session hiện tại (không tạo mới nếu không có)
-        if (session != null) {
-            session.invalidate(); // Hủy session
-        }
-    }
-
-
+    // hiển thị tên khi đăng nhập thành công
     public User getUserByUsername(String username) {
         return accountRepository.getUserByUsername(username);
     }
-
+    // Lấy thông tin người dùng theo username ( hiển thị trong profile.jsp)
+    public User getUserByUsernameAndAddress(String username) {
+        return accountRepository.getUserByUsernameAndAddress(username);  // Gọi phương thức từ DAO
+    }
+    // đăng nhập google
     public GoogleAccount handleGoogleLogin(String code) throws Exception {
         // Lấy thông tin tài khoản Google
         SocialLogin gg = new SocialLogin();
         String accessToken = gg.getToken(code);
         GoogleAccount googleAccount = gg.getUserInfo(accessToken);
-
         // Thêm mới hoặc cập nhật người dùng
         accountRepository.insertOrUpdateUser(googleAccount);  // Thêm hoặc cập nhật người dùng trong CSDL
-
         return googleAccount;
     }
+    // cập nhật thông tin người dùng
+    public boolean updateUserInfo(int idUser, String fullName, String phoneNumber, String email,
+                                  String address, String ward, String district, String province,
+                                  java.util.Date birthDate) {
+        return accountRepository.updateUserInfo(idUser, fullName, phoneNumber, email, address, ward, district, province, birthDate);
+    }
+
 
     public static void main(String[] args) {
         AccountService accountService = new AccountService();
