@@ -34,7 +34,7 @@ public class OrderController extends HttpServlet {
         }
 
         req.setAttribute("cart", cart);
-        req.getRequestDispatcher("view/view-order/cart").forward(req, resp);
+        req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
     }
 
     @Override

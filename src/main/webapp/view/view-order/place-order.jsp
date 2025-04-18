@@ -7,12 +7,62 @@
 <html>
 <head>
     <title>Thanh toán</title>
+    <style>
+        .shipping-option {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .shipping-option input[type="radio"] {
+            display: none;
+        }
+
+        .shipping-option.selected {
+            border-color: #28a745; /* xanh lá */
+            background-color: #f4fffa;
+        }
+
+        .shipping-option:hover {
+            border-color: #28a745;
+        }
+
+        .shipping-option .price {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .shipping-option del {
+            color: #999;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
 <section class="section-content padding-y bg">
     <div class="container">
 
+        <div class="border-top pt-3 mt-4">
+            <div class="bg-light py-3 px-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="toggleCoupon" data-toggle="collapse" data-target="#couponForm">
+                    <label class="form-check-label font-weight-bold" for="toggleCoupon">
+                        Bạn có mã giảm giá vận chuyển? <span class="text-primary">Nhấn vào đây để điền mã giảm giá</span>
+                    </label>
+                </div>
+            </div>
 
+            <div id="couponForm" class="collapse px-3 mt-3">
+                <p>Hãy nhập mã giảm giá vận chuyển</p>
+                <div class="form-inline">
+                    <input type="text" class="form-control mr-2 mb-2" placeholder="Enter coupon code" style="min-width: 250px;">
+                    <button class="btn btn-danger mb-2 font-weight-bold text-uppercase">Áp dụng mã giảm giá</button>
+                </div>
+            </div>
+        </div>
 
         <!-- ============================ COMPONENT 2 ================================= -->
         <div class="row">
@@ -100,46 +150,88 @@
                 <article class="accordion" id="accordion_pay">
                     <div class="card">
                         <header class="card-header">
-                            <img src="./images/misc/payment-paypal.png" class="float-right" height="24">
-                            <label class="form-check collapsed" data-toggle="collapse" data-target="#pay_paynet">
-                                <input class="form-check-input" name="payment-option" checked type="radio" value="option2">
-                                <h6 class="form-check-label">
-                                    Paypal
+                            <i class="fas fa-wallet float-right mt-1 text-primary"></i>
+                            <label class="form-check collapsed" data-toggle="collapse" data-target="#pay_ewallet">
+                                <input class="form-check-input" name="payment-option" checked type="radio" value="ewallet">
+                                <h6 class="form-check-label mb-0">
+                                    Thanh toán qua ví điện tử
                                 </h6>
                             </label>
                         </header>
-                        <div id="pay_paynet" class="collapse show" data-parent="#accordion_pay">
-                            <div class="card-body">
-                                <p class="text-center text-muted">Connect your PayPal account and use it to pay your bills. You'll be redirected to PayPal to add your billing information.</p>
-                                <p class="text-center">
-                                    <a href="#"><img src="./images/misc/btn-paypal.png" height="32"></a>
-                                    <br><br>
-                                </p>
-                            </div> <!-- card body .// -->
-                        </div> <!-- collapse .// -->
-                    </div> <!-- card.// -->
+                        <div id="pay_ewallet" class="collapse show" data-parent="#accordion_pay">
+                            <div class="card-body text-center">
+                                <p class="text-muted">Sử dụng ví điện tử như Momo, ZaloPay để thanh toán. Bạn sẽ được chuyển hướng để xác nhận giao dịch.</p>
+                                <a href="#"><img src="./images/misc/btn-momo.webp" height="32" class="mr-2"></a>
+                                <a href="#"><img src="./images/misc/btn-zalopay.png" height="32"></a>
+                                <a href="#"><img src="./images/misc/btn-vnpay.png" height="32"></a>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card">
                         <header class="card-header">
-                            <img src="./images/misc/payment-card.png" class="float-right" height="24">
-                            <label class="form-check" data-toggle="collapse" data-target="#pay_payme">
-                                <input class="form-check-input" name="payment-option" type="radio" value="option2">
-                                <h6 class="form-check-label"> Credit Card  </h6>
+                            <i class="fas fa-truck float-right mt-1 text-success"></i>
+                            <label class="form-check" data-toggle="collapse" data-target="#pay_cod">
+                                <input class="form-check-input" name="payment-option" type="radio" value="cod">
+                                <h6 class="form-check-label mb-0">
+                                    Thanh toán khi nhận hàng (COD)
+                                </h6>
                             </label>
                         </header>
-                        <div id="pay_payme" class="collapse" data-parent="#accordion_pay">
+                        <div id="pay_cod" class="collapse" data-parent="#accordion_pay">
                             <div class="card-body">
-                                <p class="alert alert-success">Some information or instruction</p>
-                                <form class="form-inline">
-                                    <input type="text" class="form-control mr-2" placeholder="xxxx-xxxx-xxxx-xxxx" name="">
-                                    <input type="text" class="form-control mr-2" style="width: 100px"  placeholder="dd/yy" name="">
-                                    <input type="number" maxlength="3" class="form-control mr-2"  style="width: 100px"  placeholder="cvc" name="">
-                                    <button class="btn btn btn-success">Button</button>
-                                </form>
-                            </div> <!-- card body .// -->
-                        </div> <!-- collapse .// -->
-                    </div> <!-- card.// -->
+                                <p class="text-success">Bạn sẽ thanh toán khi nhận được hàng từ nhân viên giao hàng.</p>
 
+                                <div class="mt-3">
+                                    <h6 class="font-weight-bold">Phương thức vận chuyển</h6>
+
+                                    <div class="shipping-option selected" onclick="selectOption(this)">
+                                        <input type="radio" name="shipping" value="tietkiem" checked>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <strong>Tiết Kiệm</strong>
+                                                <div class="text-muted small">Giao từ 7-12 ngày</div>
+                                                <div class="text-muted small">coupon dùng để miễn phí vận chuyển #FreeShip</div>
+                                            </div>
+                                            <div class="text-right">
+                                                <div><del>18.000₫</del></div>
+                                                <div class="price">Miễn phí</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="shipping-option" onclick="selectOption(this)">
+                                        <input type="radio" name="shipping" value="nhanh">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <strong>Nhanh</strong>
+                                                <div class="text-muted small">Giao từ 3-5 ngày</div>
+                                            </div>
+                                            <div class="text-right">
+                                                <div>22.200₫</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="shipping-option" onclick="selectOption(this)">
+                                        <input type="radio" name="shipping" value="hoatoc">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <strong>Hỏa Tốc</strong>
+                                                <div class="text-info small">🚚 Đảm bảo nhận hàng vào ngày mai</div>
+                                                <div class="text-muted small">Không hỗ trợ chương trình Đồng Kiểm</div>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="price text-dark">65.100₫</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </article>
+
                 <!-- accordion end.// -->
 
             </main> <!-- col.// -->
@@ -148,16 +240,34 @@
                     <div class="card-body">
                         <dl class="dlist-align">
                             <dt>Tổng tiền:</dt>
-                            <dd class="text-right">$69.97</dd>
+                            <dd class="text-right" id="total-price">
+                                <span>
+                                    <fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/>
+                                </span>
+                            </dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Tiền vận chuyển:</dt>
+                            <dd class="text-right">
+                                <span>
+                                    <fmt:formatNumber value="0" pattern="#,##0 đ"/>
+                                </span>
+                            </dd>
                         </dl>
                         <dl class="dlist-align">
                             <dt>Giảm:</dt>
-                            <dd class="text-right"> $10.00</dd>
+                            <dd class="text-right" id="discount-amount">
+                                <span>
+                                    <fmt:formatNumber value="${cart.discountAmount}" pattern="#,##0 đ"/>
+                                </span>
+                            </dd>
                         </dl>
                         <dl class="dlist-align">
-                            <dt>Tổng:</dt>
-                            <dd class="text-right text-dark b">
-                                <strong><fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/></strong>
+                            <dt>Tổng thanh toán</dt>
+                            <dd class="text-right text-dark b" id="final-total">
+                                <strong>
+                                    <fmt:formatNumber value="${cart.finalTotal}" pattern="#,##0 đ"/>
+                                </strong>
                             </dd>
                         </dl>
                         <hr>
@@ -206,6 +316,16 @@
         });
     });
 </script>
+
+<script>
+    function selectOption(el) {
+        const options = document.querySelectorAll('.shipping-option');
+        options.forEach(opt => opt.classList.remove('selected'));
+        el.classList.add('selected');
+        el.querySelector('input[type="radio"]').checked = true;
+    }
+</script>
+
 
 </body>
 </html>
