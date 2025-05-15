@@ -10,6 +10,7 @@ import vn.edu.hcmuaf.st.web.entity.*;
 import vn.edu.hcmuaf.st.web.service.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "orderController", urlPatterns = "/place-order")
 public class OrderController extends HttpServlet {
@@ -22,6 +23,7 @@ public class OrderController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         HttpSession session = req.getSession();
 
         //kiem tra cart
@@ -40,6 +42,9 @@ public class OrderController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+
         HttpSession session = req.getSession();
 
         Cart cart = (Cart) session.getAttribute("cart");
@@ -51,7 +56,14 @@ public class OrderController extends HttpServlet {
         }
 
         //1. Lay thong tin tu form
-        //1.1. Form thong tin giao hangg
+
+        //1.1 Lay thong tin nguoi dung
+        String firstName = req.getParameter("firstName");
+        String lastName = req.getParameter("lastName");
+        String phone = req.getParameter("phone");
+        String email = req.getParameter("email");
+
+        //1.2. Form thong tin giao hangg
         String addressText = req.getParameter("address");
         String ward = req.getParameter("ward");
         String district = req.getParameter("district");
@@ -79,7 +91,7 @@ public class OrderController extends HttpServlet {
         //4.tao chi tiet don hang
         for(CartItem cartItem : cart.getCartItems().values()) {
             OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(order);
+            orderDetail.setIdOrder(orderId);
             orderDetail.setIdVariant(cartItem.getIdVariant());
             orderDetail.setQuantity(cartItem.getQuantity());
             orderDetail.setPrice(cartItem.getPrice());
@@ -98,10 +110,20 @@ public class OrderController extends HttpServlet {
         //6.xoa gio hang
         req.getSession().removeAttribute("cart");
 
-        //7.chuyen huong toi order-complete
-        req.setAttribute("orderId", orderId);
-        req.getRequestDispatcher("view/view-order/order-complete.jsp").forward(req, resp);
+        // Truy vấn lại đầy đủ order sau khi tạo (kèm theo address, user, orderDetails)
+        Order fullOrder = orderService.getOrderById(orderId);
+        List<OrderDetail> orderDetails = orderDetailService.getOrderDetailsByOrderId(orderId);
+        //Payment paymentInfo = paymentService.getPaymentByOrderId(orderId);
 
+        req.setAttribute("order", fullOrder);
+        req.setAttribute("orderDetails", orderDetails);
+        //req.setAttribute("payment", paymentInfo);
+
+        req.setAttribute("orderDate", java.sql.Timestamp.valueOf(fullOrder.getCreatedAt()));
+
+        //resp.sendRedirect(req.getContextPath() + "/order-complete?id=" + orderId);
+
+        req.getRequestDispatcher("/view/view-order/order-complete.jsp").forward(req, resp);
 
     }
 }
