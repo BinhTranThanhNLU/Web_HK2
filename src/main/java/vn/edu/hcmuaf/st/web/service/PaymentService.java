@@ -14,4 +14,8 @@ public class PaymentService {
     public void createPayment(Payment payment) {
         paymentDao.insert(payment);
     }
+
+    public Payment getPaymentByOrderId(int orderId) {
+        return paymentDao.getPaymentByOrderId(orderId);
+    }
 }
