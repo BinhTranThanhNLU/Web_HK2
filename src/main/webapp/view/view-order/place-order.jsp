@@ -101,24 +101,24 @@
                             <h4 class="card-title mb-4">Thông tin liên lạc</h4>
 
                                 <div class="row">
-                                    <div class="form-group col-sm-6">
-                                        <label> Họ </label>
-                                        <input type="text" name="firstName" placeholder="Nhập thông tin"
-                                               class="form-control">
+                                    <div class="form-group col-sm-12">
+                                        <label> Họ và Tên </label>
+                                        <input type="text" name="fullName" placeholder="Nhập thông tin"
+                                               class="form-control"
+                                               value="${not empty fullName ? fullName : null}" />
                                     </div>
-                                    <div class="form-group col-sm-6">
-                                        <label> Tên </label>
-                                        <input type="text" name="lastName" placeholder="Nhập thông tin"
-                                               class="form-control">
-                                    </div>
+
                                     <div class="form-group col-sm-6">
                                         <label>Số điện thoại</label>
-                                        <input type="text" name="phone" placeholder="+98" class="form-control">
+                                        <input type="text" name="phone" placeholder="+98"
+                                               class="form-control"
+                                               value="${not empty phone ? phone : null}" />
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label>Email</label>
                                         <input type="email" name="email" placeholder="example@gmail.com"
-                                               class="form-control">
+                                               class="form-control"
+                                               value="${not empty email ? email : null}" />
                                     </div>
                                 </div> <!-- row.// -->
 
@@ -135,19 +135,19 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12">
                                         <label> Địa chỉ* </label>
-                                        <input type="text" name="address" placeholder="Type here" class="form-control">
+                                        <input type="text" name="address" placeholder="Nhập địa chỉ" class="form-control">
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <label> Phường/Xã* </label>
-                                        <input type="text" name="ward" placeholder="Type here" class="form-control">
+                                        <input type="text" name="ward" placeholder="Nhập phường/xã" class="form-control">
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <label> Quận/Huyện* </label>
-                                        <input type="text" name="district" placeholder="" class="form-control">
+                                        <input type="text" name="district" placeholder="Nhập quận/huyện" class="form-control">
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <label> Tỉnh/Thành phố* </label>
-                                        <input type="text" name="province" placeholder="" class="form-control">
+                                        <input type="text" name="province" placeholder="Nhập tỉnh/thành phố" class="form-control">
                                     </div>
                                 </div> <!-- row.// -->
 
