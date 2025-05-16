@@ -30,10 +30,21 @@ public class OrderController extends HttpServlet {
         Cart cart = (Cart) session.getAttribute("cart");
         User user = (User) session.getAttribute("user");
 
-        if (user == null || cart == null || cart.getCartItems().isEmpty()) {
+        if (cart == null || cart.getCartItems().isEmpty()) {
             resp.sendRedirect(req.getContextPath()+"/cart");
             return;
         }
+
+        //Google account
+//        GoogleAccount googleAccount = (GoogleAccount) session.getAttribute("googleAccount");
+//        req.setAttribute("fullName2", googleAccount.getFullName());
+//        req.setAttribute("email2", googleAccount.getEmail());
+//        req.setAttribute("phone2", googleAccount.getPhoneNumber());
+
+        // Gán thông tin người dùng để hiển thị sẵn trong form
+        req.setAttribute("fullName", user.getFullName());
+        req.setAttribute("email", user.getEmail());
+        req.setAttribute("phone", user.getPhoneNumber());
 
         req.setAttribute("cart", cart);
         req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
@@ -120,8 +131,6 @@ public class OrderController extends HttpServlet {
         //req.setAttribute("payment", paymentInfo);
 
         req.setAttribute("orderDate", java.sql.Timestamp.valueOf(fullOrder.getCreatedAt()));
-
-        //resp.sendRedirect(req.getContextPath() + "/order-complete?id=" + orderId);
 
         req.getRequestDispatcher("/view/view-order/order-complete.jsp").forward(req, resp);
 
