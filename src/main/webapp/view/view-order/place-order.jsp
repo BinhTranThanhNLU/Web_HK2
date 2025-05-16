@@ -138,16 +138,16 @@
                                         <input type="text" name="address" placeholder="Nhập địa chỉ" class="form-control">
                                     </div>
                                     <div class="form-group col-sm-4">
-                                        <label> Phường/Xã* </label>
-                                        <input type="text" name="ward" placeholder="Nhập phường/xã" class="form-control">
+                                        <label>Phường/Xã*</label>
+                                        <select name="ward" id="ward" class="form-control" required></select>
                                     </div>
                                     <div class="form-group col-sm-4">
-                                        <label> Quận/Huyện* </label>
-                                        <input type="text" name="district" placeholder="Nhập quận/huyện" class="form-control">
+                                        <label>Quận/Huyện*</label>
+                                        <select name="district" id="district" class="form-control" onchange="onDistrictChange()" required></select>
                                     </div>
                                     <div class="form-group col-sm-4">
-                                        <label> Tỉnh/Thành phố* </label>
-                                        <input type="text" name="province" placeholder="Nhập tỉnh/thành phố" class="form-control">
+                                        <label>Tỉnh/Thành phố*</label>
+                                        <select name="province" id="province" class="form-control" onchange="onProvinceChange()" required></select>
                                     </div>
                                 </div> <!-- row.// -->
 
@@ -316,6 +316,54 @@
         el.querySelector('input[type="radio"]').checked = true;
     }
 </script>
+
+<script>
+    let data = [];
+
+    fetch('${pageContext.request.contextPath}/json/vietnam-location.json')
+        .then(res => res.json())
+        .then(json => {
+            data = json;
+            const provinceSelect = document.getElementById('province');
+            json.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province.name;
+                option.textContent = province.name;
+                provinceSelect.appendChild(option);
+            });
+            onProvinceChange(); // Tự động load quận/huyện đầu tiên
+        });
+
+    function onProvinceChange() {
+        const provinceName = document.getElementById('province').value;
+        const province = data.find(p => p.name === provinceName);
+        const districtSelect = document.getElementById('district');
+        districtSelect.innerHTML = '';
+        province?.districts.forEach(d => {
+            const option = document.createElement('option');
+            option.value = d.name;
+            option.textContent = d.name;
+            districtSelect.appendChild(option);
+        });
+        onDistrictChange();
+    }
+
+    function onDistrictChange() {
+        const provinceName = document.getElementById('province').value;
+        const districtName = document.getElementById('district').value;
+        const province = data.find(p => p.name === provinceName);
+        const district = province?.districts.find(d => d.name === districtName);
+        const wardSelect = document.getElementById('ward');
+        wardSelect.innerHTML = '';
+        district?.wards.forEach(w => {
+            const option = document.createElement('option');
+            option.value = w;
+            option.textContent = w;
+            wardSelect.appendChild(option);
+        });
+    }
+</script>
+
 
 
 </body>

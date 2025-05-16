@@ -300,6 +300,13 @@ public class AccountController extends HttpServlet {
 
             // Gán user vào session như bình thường
             session.setAttribute("user", user);
+            session.setAttribute("username", user.getUsername());
+            session.setAttribute("fullname", user.getFullName());
+            session.setAttribute("email", user.getEmail());
+            session.setAttribute("password", user.getPassword());
+            session.setAttribute("phoneNumber", user.getPhoneNumber());// Chú ý: Không nên lưu mật khẩu vào session!
+            session.setAttribute("birthDate", user.getBirthDate());
+            session.setAttribute("image", user.getImage());
             response.sendRedirect(request.getContextPath() + "/home");
 
         } catch (Exception e) {
