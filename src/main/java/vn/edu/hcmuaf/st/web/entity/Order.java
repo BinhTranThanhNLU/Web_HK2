@@ -1,6 +1,8 @@
 package vn.edu.hcmuaf.st.web.entity;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class Order {
 
@@ -26,6 +28,10 @@ public class Order {
         this.address = address;
         this.totalPrice = totalPrice;
         this.status = status;
+    }
+
+    public Date getCreatedAtAsDate() {
+        return Date.from(createdAt.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public double getFinalPrice() {

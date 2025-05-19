@@ -11,9 +11,21 @@
           rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="../../css/view.css">
-    <link rel="stylesheet" href="../../css/both-nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/view.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/both-nav.css">
     <title>Chi tiết đơn hàng</title>
+    <style>
+        #buy-table td {
+            color: #000 !important;
+        }
+        #buy-table th {
+            background-color: #333;
+            color: #fff;
+        }
+        #buy-table tbody tr:hover td {
+            color: #000 !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -34,12 +46,12 @@
                 <h4>Thông Tin Cá Nhân</h4>
             </div>
             <div class="card-body">
-                <p><strong>ID:</strong> #CD12837</p>
-                <p><strong>Tên Tài Khoản:</strong> nguyenA</p>
-                <p><strong>Họ và Tên:</strong> Nguyễn Văn A</p>
-                <p><strong>Email:</strong> nguyenvana@example.com</p>
-                <p><strong>Số Điện Thoại:</strong> 0901234567</p>
-                <p><strong>Địa Chỉ:</strong> 123 Đường ABC, Quận 1, TP.HCM</p>
+                <p><strong>ID:</strong> #DH${order.idOrder}</p>
+                <p><strong>Tên Tài Khoản:</strong> ${order.user.username}</p>
+                <p><strong>Họ và Tên:</strong> ${order.user.fullName}</p>
+                <p><strong>Email:</strong> ${order.user.email}</p>
+                <p><strong>Số Điện Thoại:</strong> ${order.user.phoneNumber}</p>
+                <p><strong>Địa Chỉ:</strong> ${order.address.address}, ${order.address.ward}, ${order.address.district}, ${order.address.province}</p>
             </div>
         </div>
 
@@ -71,24 +83,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Áo Thun Trẻ Em</td>
-                        <td>2</td>
-                        <td>200,000 VND</td>
-                        <td>400,000 VND</td>
-                    </tr>
-                    <tr>
-                        <td>Giày Bé Gái</td>
-                        <td>1</td>
-                        <td>500,000 VND</td>
-                        <td>500,000 VND</td>
-                    </tr>
-                    <tr>
-                        <td>Xe Đạp Trẻ Em</td>
-                        <td>1</td>
-                        <td>4,000,000 VND</td>
-                        <td>4,000,000 VND</td>
-                    </tr>
+                    <c:forEach var="d" items="${details}">
+                        <tr>
+                            <td>${d.nameProduct}</td>
+                            <td>${d.quantity}</td>
+                            <td><fmt:formatNumber value="${d.discountPrice > 0 ? d.discountPrice : d.price}" type="currency"/></td>
+                            <td>
+                                <fmt:formatNumber value="${(d.discountPrice > 0 ? d.discountPrice : d.price) * d.quantity}" type="currency"/>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -108,7 +112,7 @@
 
         <!-- Nút quay lại -->
         <div class="back-btn">
-            <a href="./manage-order.jsp" class="btn btn-secondary"><i class="fas fa-arrow-left"></i></a>
+            <a href="${pageContext.request.contextPath}/admin/manage-order" class="btn btn-secondary"><i class="fas fa-arrow-left"></i></a>
         </div>
     </div>
 
