@@ -265,9 +265,9 @@
                             <dl class="dlist-align">
                                 <dt>Tiền vận chuyển:</dt>
                                 <dd class="text-right">
-                                <span>
-                                    <fmt:formatNumber value="0" pattern="#,##0 đ"/>
-                                </span>
+                                    <span id="shipping-fee">
+                                        <fmt:formatNumber value="0" pattern="#,##0 đ"/>
+                                    </span>
                                 </dd>
                             </dl>
                             <dl class="dlist-align">
@@ -299,6 +299,11 @@
                 </aside>
                 <!-- col.// -->
             </div>
+
+            <!-- Các input ẩn -->
+            <input type="hidden" name="amountDelivery" id="amountDelivery">
+            <input type="hidden" name="finalPrice" id="finalPrice">
+
         </form><!-- row.// -->
         <!-- ============================ COMPONENT 2 END//  ================================= -->
     </div> <!-- container .//  -->
@@ -363,6 +368,44 @@
         });
     }
 </script>
+
+<script>
+    const shippingOptions = document.querySelectorAll('.shipping-option');
+    const totalPriceText = "${cart.totalPrice}"; // từ server render
+    const discountAmountText = "${cart.discountAmount}"; // từ server render
+    const totalPrice = parseFloat(totalPriceText);
+    const discountAmount = parseFloat(discountAmountText);
+
+    function selectOption(el) {
+        // UI: Highlight selected
+        shippingOptions.forEach(opt => opt.classList.remove('selected'));
+        el.classList.add('selected');
+        el.querySelector('input[type="radio"]').checked = true;
+
+        // Logic: Xác định phí vận chuyển theo value
+        const value = el.querySelector('input[type="radio"]').value;
+        let deliveryFee = 0;
+
+        if (value === 'nhanh') deliveryFee = 22200;
+        else if (value === 'hoatoc') deliveryFee = 65100;
+        else deliveryFee = 0;
+
+        // Cập nhật vào DOM
+        document.querySelector('dd span[id="shipping-fee"]')?.remove(); // clean nếu có
+        const shippingDisplay = document.createElement('span');
+        shippingDisplay.id = "shipping-fee";
+        shippingDisplay.textContent = new Intl.NumberFormat('vi-VN').format(deliveryFee) + ' đ';
+        el.closest('form').querySelector('dl:nth-of-type(2) dd').appendChild(shippingDisplay);
+
+        const finalTotal = totalPrice + deliveryFee - discountAmount;
+        document.getElementById("final-total").innerHTML = "<strong>" + new Intl.NumberFormat('vi-VN').format(finalTotal) + " đ</strong>";
+
+        // Gán vào input ẩn
+        document.getElementById("amountDelivery").value = deliveryFee;
+        document.getElementById("finalPrice").value = finalTotal;
+    }
+</script>
+
 
 
 

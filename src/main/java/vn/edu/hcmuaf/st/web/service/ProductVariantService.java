@@ -19,4 +19,8 @@ public class ProductVariantService {
         return productVariantDao.getProductVariantsByIdProduct(idProduct);
     }
 
+    public void reduceQuantity(int idVariant, int quantity) {
+        productVariantDao.reduceQuantity(idVariant, quantity);
+    }
+
 }
