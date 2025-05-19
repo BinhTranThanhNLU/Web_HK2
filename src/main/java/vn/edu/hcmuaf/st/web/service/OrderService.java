@@ -3,6 +3,8 @@ package vn.edu.hcmuaf.st.web.service;
 import vn.edu.hcmuaf.st.web.dao.OrderDao;
 import vn.edu.hcmuaf.st.web.entity.Order;
 
+import java.util.List;
+
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -17,6 +19,10 @@ public class OrderService {
 
     public Order getOrderById(int id) {
         return orderDao.getOrderById(id);
+    }
+
+    public List<Order> getAllOrders() {
+        return orderDao.getAllOrders();
     }
 
     public static void main(String[] args) {
