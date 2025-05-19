@@ -20,6 +20,7 @@ public class OrderController extends HttpServlet {
     private final PaymentService paymentService = new PaymentService();
     private final AccountService accountService = new AccountService();
     private final OrderService orderService = new OrderService();
+    private final ProductVariantService productVariantService = new ProductVariantService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,12 +35,6 @@ public class OrderController extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/cart");
             return;
         }
-
-        //Google account
-//        GoogleAccount googleAccount = (GoogleAccount) session.getAttribute("googleAccount");
-//        req.setAttribute("fullName2", googleAccount.getFullName());
-//        req.setAttribute("email2", googleAccount.getEmail());
-//        req.setAttribute("phone2", googleAccount.getPhoneNumber());
 
         // Gán thông tin người dùng để hiển thị sẵn trong form
         req.setAttribute("fullName", user.getFullName());
@@ -65,6 +60,13 @@ public class OrderController extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/cart");
             return;
         }
+
+        // ⬇️ LẤY GIÁ TRỊ GỬI TỪ FORM (phí ship và tổng tiền sau khi cộng phí ship, trừ giảm giá)
+        String shippingFeeStr = req.getParameter("amountDelivery");
+        String finalPriceStr = req.getParameter("finalPrice");
+
+        double amountDelivery = shippingFeeStr != null ? Double.parseDouble(shippingFeeStr) : 0;
+        double finalPrice = finalPriceStr != null ? Double.parseDouble(finalPriceStr) : cart.getTotalPrice();
 
         //1. Lay thong tin tu form
 
@@ -96,6 +98,8 @@ public class OrderController extends HttpServlet {
         order.setAddress(address);
         order.setTotalPrice(cart.getTotalPrice());
         order.setStatus("Chờ xác nhận");
+        order.setAmountDelivery(amountDelivery); // không lưu DB nhưng giữ trong object
+        order.setFinalPrice(finalPrice);
         int orderId = orderService.createOrder(order);
         order.setIdOrder(orderId);
 
@@ -108,6 +112,9 @@ public class OrderController extends HttpServlet {
             orderDetail.setPrice(cartItem.getPrice());
 
             orderDetailService.createOrderDetail(orderDetail);
+
+            // ⬇️ TRỪ SỐ LƯỢNG SAU KHI TẠO CHI TIẾT ĐƠN HÀNG
+            productVariantService.reduceQuantity(cartItem.getIdVariant(), cartItem.getQuantity());
         }
 
         //5.tao thanh toan
@@ -131,6 +138,9 @@ public class OrderController extends HttpServlet {
         //req.setAttribute("payment", paymentInfo);
 
         req.setAttribute("orderDate", java.sql.Timestamp.valueOf(fullOrder.getCreatedAt()));
+
+        req.setAttribute("amountDelivery", amountDelivery);
+        req.setAttribute("finalPrice", finalPrice);
 
         req.getRequestDispatcher("/view/view-order/order-complete.jsp").forward(req, resp);
 
