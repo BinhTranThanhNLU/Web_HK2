@@ -59,20 +59,12 @@ public class ProductVariantDao {
         );
     }
 
-    public void reduceQuantity(int idVariant, int quantity) {
-        String sql = "UPDATE product_variants SET stockQuantity = stockQuantity - :qty WHERE idVariant = :idVariant";
-
-        jdbi.useHandle(handle ->
-                handle.createUpdate(sql)
-                        .bind("qty", quantity)
-                        .bind("idVariant", idVariant)
-                        .execute()
-        );
-    }
-
     public static void main(String[] args) {
         ProductVariantDao dao = new ProductVariantDao();
-        dao.reduceQuantity(1,1);
+        List<ProductVariant> list = dao.getProductVariantsByIdProduct(1);
+        for(ProductVariant variant : list) {
+            System.out.println(variant);
+        }
     }
 
 }

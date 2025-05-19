@@ -79,15 +79,11 @@
                                     </tr>
                                     <tr>
                                         <th colspan="2" class="text-right">Tiền vận chyển:</th>
-                                        <th class="text-center">
-                                            <fmt:formatNumber value="${amountDelivery}" pattern="#,##0 đ"/>
-                                        </th>
+                                        <th class="text-center">50.000 đ</th>
                                     </tr>
                                     <tr>
                                         <th colspan="2" class="text-right">Tổng thanh toán:</th>
-                                        <th class="text-center">
-                                            <fmt:formatNumber value="${finalPrice}" pattern="#,##0 đ"/>
-                                        </th>
+                                        <th class="text-center">300.000 đ</th>
                                     </tr>
                                     </tfoot>
                                 </table>
