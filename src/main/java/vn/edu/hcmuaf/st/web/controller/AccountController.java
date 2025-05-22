@@ -266,47 +266,47 @@ public class AccountController extends HttpServlet {
             }
 
             // Gọi service để xử lý đăng nhập Google
-            //googleAccount = accountService.handleGoogleLogin(code);
+            googleAccount = accountService.handleGoogleLogin(code);
 
             // Lưu vào session
-            //session.setAttribute("googleAccount", googleAccount);
+            session.setAttribute("googleAccount", googleAccount);
 
             // Chuyển hướng đến trang home sau khi đăng nhập thành công
-            //response.sendRedirect(request.getContextPath() + "/home");
+            response.sendRedirect(request.getContextPath() + "/home");
 
 
             //-----------------BINH-----------------------
-            googleAccount = accountService.handleGoogleLogin(code);
+            //googleAccount = accountService.handleGoogleLogin(code);
 
             // Kiểm tra xem user đã tồn tại trong DB chưa
-            User user = accountService.getUserByEmail(googleAccount.getEmail());
-            if (user == null) {
-                // Nếu chưa có → tạo mới User trong DB
-                user = new User();
-                user.setIdUser(Integer.parseInt(googleAccount.getId()));
-                user.setUsername(googleAccount.getUsername());
-                user.setEmail(googleAccount.getEmail());
-                user.setFullName(googleAccount.getFullName());
-                user.setPhoneNumber(googleAccount.getPhoneNumber());
-                user.setAuthProvider("google");
-                user.setSocialId(googleAccount.getId());
-                user.setImage(googleAccount.getImage());
-                user.setIdRole(googleAccount.getIdRole());
-
-                // Tạo user trong DB (bạn cần viết hàm createUser nếu chưa có)
-                user = accountService.insertOrUpdateUserAndReturn(googleAccount);
-            }
+//            User user = accountService.getUserByEmail(googleAccount.getEmail());
+//            if (user == null) {
+//                // Nếu chưa có → tạo mới User trong DB
+//                user = new User();
+//                user.setIdUser(Integer.parseInt(googleAccount.getId()));
+//                user.setUsername(googleAccount.getUsername());
+//                user.setEmail(googleAccount.getEmail());
+//                user.setFullName(googleAccount.getFullName());
+//                user.setPhoneNumber(googleAccount.getPhoneNumber());
+//                user.setAuthProvider("google");
+//                user.setSocialId(googleAccount.getId());
+//                user.setImage(googleAccount.getImage());
+//                user.setIdRole(googleAccount.getIdRole());
+//
+//                // Tạo user trong DB (bạn cần viết hàm createUser nếu chưa có)
+//                user = accountService.insertOrUpdateUserAndReturn(googleAccount);
+//            }
 
             // Gán user vào session như bình thường
-            session.setAttribute("user", user);
-            session.setAttribute("username", user.getUsername());
-            session.setAttribute("fullname", user.getFullName());
-            session.setAttribute("email", user.getEmail());
-            session.setAttribute("password", user.getPassword());
-            session.setAttribute("phoneNumber", user.getPhoneNumber());// Chú ý: Không nên lưu mật khẩu vào session!
-            session.setAttribute("birthDate", user.getBirthDate());
-            session.setAttribute("image", user.getImage());
-            response.sendRedirect(request.getContextPath() + "/home");
+//            session.setAttribute("user", user);
+//            session.setAttribute("username", user.getUsername());
+//            session.setAttribute("fullname", user.getFullName());
+//            session.setAttribute("email", user.getEmail());
+//            session.setAttribute("password", user.getPassword());
+//            session.setAttribute("phoneNumber", user.getPhoneNumber());// Chú ý: Không nên lưu mật khẩu vào session!
+//            session.setAttribute("birthDate", user.getBirthDate());
+//            session.setAttribute("image", user.getImage());
+//            response.sendRedirect(request.getContextPath() + "/home");
 
         } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=true");
