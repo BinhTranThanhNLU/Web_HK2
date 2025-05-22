@@ -35,9 +35,9 @@ public class AccountRepository {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         return jdbi.withHandle(handle -> {
             int rowsInserted = handle.createUpdate(query)
-                    .bind(0, 2) // idRole = 2 (người dùng mặc định)
+                    .bind(0, 2)
                     .bind(1, username)
-                    .bind(2, password) // Bind mật khẩu đã mã hóa từ register
+                    .bind(2, password)
                     .bind(3, fullname)
                     .bind(4, email)
                     .bind(5, phoneNumber)
