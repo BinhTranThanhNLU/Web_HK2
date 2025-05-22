@@ -13,6 +13,7 @@ public class Payment implements Serializable {
     private String status;
     private LocalDate createAt;
     private LocalDate updateAt;
+    private double amountDelivery = 0; // mới thêm
 
     public Payment() {
     }
@@ -24,6 +25,7 @@ public class Payment implements Serializable {
         this.amount = amount;
         this.status = status;
     }
+
 
     public int getIdPayment() {
         return idPayment;
@@ -71,6 +73,30 @@ public class Payment implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDate getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(LocalDate updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public LocalDate getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(LocalDate createAt) {
+        this.createAt = createAt;
+    }
+
+    public double getAmountDelivery() {
+        return amountDelivery;
+    }
+
+    public void setAmountDelivery(double amountDelivery) {
+        this.amountDelivery = amountDelivery;
     }
 
     @Override

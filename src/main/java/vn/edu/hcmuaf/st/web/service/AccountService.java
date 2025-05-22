@@ -93,6 +93,15 @@ public class AccountService {
         return accountRepository.updateUserInfo(idUser, fullName, phoneNumber, email, address, ward, district, province, birthDate);
     }
 
+    public User insertOrUpdateUserAndReturn(GoogleAccount googleAccount) {
+        accountRepository.insertOrUpdateUser(googleAccount);
+        return accountRepository.getUserByEmail(googleAccount.getEmail());
+    }
+
+    public User getUserByEmail(String email) {
+        return accountRepository.getUserByEmail(email);
+    }
+
 
     public static void main(String[] args) {
         AccountService accountService = new AccountService();

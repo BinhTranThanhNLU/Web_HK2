@@ -603,49 +603,49 @@ public class ProductDao {
     public List<Product> getAllProducts() {
         return jdbi.withHandle(handle -> {
             return handle.createQuery("""
-            SELECT 
-                p.idProduct,
-                p.idCategory,
-                p.idDiscount,
-                p.title AS productTitle,
-                p.price,
-                p.description AS productDescription,
-                p.status AS productStatus,
-                p.createAt,
-                p.updateAt,
-                c.categoryType,
-                c.name AS categoryName,
-                c.description AS categoryDescription,
-                d.discountAmount,
-                d.startDate AS discountStartDate,
-                d.endDate AS discountEndDate,
-                s.size AS size,
-                s.idSize AS idSize,
-                cl.color AS color,
-                cl.hexCode AS colorHexCode,
-                pv.idVariant,  
-                pv.idProduct AS variantIdProduct,
-                cl.idColor,
-                pv.stockQuantity,
-                pi.idImage,
-                pi.imageUrl AS productImageUrl,
-                pi.order AS imageOrder,
-                p.boy_or_girl  -- Thêm trường boy_or_girl ở đây
-            FROM 
-                products p
-            LEFT JOIN 
-                categories c ON p.idCategory = c.idCategory
-            LEFT JOIN 
-                discount d ON p.idDiscount = d.idDiscount
-            LEFT JOIN 
-                product_variants pv ON p.idProduct = pv.idProduct
-            LEFT JOIN 
-                sizes s ON pv.idSize = s.idSize
-            LEFT JOIN 
-                colors cl ON pv.idColor = cl.idColor
-            LEFT JOIN 
-                product_images pi ON p.idProduct = pi.idProduct;
-        """)
+                                SELECT 
+                                    p.idProduct,
+                                    p.idCategory,
+                                    p.idDiscount,
+                                    p.title AS productTitle,
+                                    p.price,
+                                    p.description AS productDescription,
+                                    p.status AS productStatus,
+                                    p.createAt,
+                                    p.updateAt,
+                                    c.categoryType,
+                                    c.name AS categoryName,
+                                    c.description AS categoryDescription,
+                                    d.discountAmount,
+                                    d.startDate AS discountStartDate,
+                                    d.endDate AS discountEndDate,
+                                    s.size AS size,
+                                    s.idSize AS idSize,
+                                    cl.color AS color,
+                                    cl.hexCode AS colorHexCode,
+                                    pv.idVariant,  
+                                    pv.idProduct AS variantIdProduct,
+                                    cl.idColor,
+                                    pv.stockQuantity,
+                                    pi.idImage,
+                                    pi.imageUrl AS productImageUrl,
+                                    pi.order AS imageOrder,
+                                    p.boy_or_girl  -- Thêm trường boy_or_girl ở đây
+                                FROM 
+                                    products p
+                                LEFT JOIN 
+                                    categories c ON p.idCategory = c.idCategory
+                                LEFT JOIN 
+                                    discount d ON p.idDiscount = d.idDiscount
+                                LEFT JOIN 
+                                    product_variants pv ON p.idProduct = pv.idProduct
+                                LEFT JOIN 
+                                    sizes s ON pv.idSize = s.idSize
+                                LEFT JOIN 
+                                    colors cl ON pv.idColor = cl.idColor
+                                LEFT JOIN 
+                                    product_images pi ON p.idProduct = pi.idProduct;
+                            """)
                     .map((rs, ctx) -> {
                         Product product = new Product();
                         product.setIdProduct(rs.getInt("idProduct"));
@@ -722,20 +722,21 @@ public class ProductDao {
                     .list(); // Trả về danh sách sản phẩm
         });
     }
-        public Product getProductById(int idProduct) {
-            return jdbi.withHandle(handle ->
+
+    public Product getProductById(int idProduct) {
+        return jdbi.withHandle(handle ->
                 handle.createQuery("""
-                    SELECT
-                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
-                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
-                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
-                        pi.idImage, pi.imageUrl, pi.`order`
-                    FROM products p
-                    JOIN categories c ON p.idCategory = c.idCategory
-                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
-                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct             
-                    WHERE p.idProduct = :idProduct
-                """)
+                                    SELECT
+                                        p.idProduct, p.title, p.price, p.description, p.status, p.createAt, p.updateAt,
+                                        c.idCategory, c.categoryType, c.name AS categoryName, c.description AS categoryDescription,
+                                        d.idDiscount, d.discountAmount, d.startDate, d.endDate,
+                                        pi.idImage, pi.imageUrl, pi.`order`
+                                    FROM products p
+                                    JOIN categories c ON p.idCategory = c.idCategory
+                                    LEFT JOIN discount d ON p.idDiscount = d.idDiscount
+                                    LEFT JOIN product_images pi ON p.idProduct = pi.idProduct             
+                                    WHERE p.idProduct = :idProduct
+                                """)
                         .bind("idProduct", idProduct)
                         .map((rs, ctx) -> {
                             Product product = new Product();
@@ -783,7 +784,6 @@ public class ProductDao {
                         .findOnly()
         );
     }
-
 
 
     public static void main(String[] args) {

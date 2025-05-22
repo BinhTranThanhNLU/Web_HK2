@@ -274,6 +274,28 @@ public class AccountRepository {
         }
     }
 
+    public User getUserByEmail(String email) {
+        String query = "SELECT idUser, fullName, password, username, email, phoneNumber FROM users WHERE email = ?";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(query)
+                        .bind(0, email)
+                        .map((rs, ctx) -> {
+                            User user = new User();
+                            user.setIdUser(rs.getInt("idUser"));
+                            user.setFullName(rs.getString("fullName"));
+                            user.setPassword(rs.getString("password"));
+                            user.setUsername(rs.getString("username"));
+                            user.setEmail(rs.getString("email"));
+                            user.setPhoneNumber(rs.getString("phoneNumber"));
+                            return user;
+                        })
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+
 
 
 }
