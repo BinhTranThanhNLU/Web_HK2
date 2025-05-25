@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import java.text.SimpleDateFormat;
+import java.util.Random;
 
 @WebServlet(urlPatterns = {"/sign", "/register", "/forgot-password", "/enter-otp", "/login", "/reset-password", "/logout", "/profile"})
 public class AccountController extends HttpServlet {
@@ -36,6 +37,9 @@ public class AccountController extends HttpServlet {
                 request.getRequestDispatcher("/view/view-account/enter-otp.jsp").forward(request, response);
                 break;
             case "/sign":
+                String captchaText = generateCaptchaText(6);
+                request.getSession().setAttribute("captcha", captchaText);
+                request.setAttribute("captchaText", captchaText);
                 request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
                 break;
             case "/login":
@@ -96,12 +100,37 @@ public class AccountController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
     }
+    private String generateCaptchaText(int length) {
+        String chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$%";
+        Random rand = new Random();
+        StringBuilder captcha = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            captcha.append(chars.charAt(rand.nextInt(chars.length())));
+        }
+        return captcha.toString();
+    }
+
+    // Trong controller hoặc servlet xử lý hiển thị trang login:
+
 
     // Đăng Nhập
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String captchaInput = request.getParameter("captchaInput");
+        String captchaSession = (String) request.getSession().getAttribute("captcha");
+
+        if (captchaSession == null || !captchaSession.equalsIgnoreCase(captchaInput)) {
+            request.setAttribute("error", "Mã xác nhận không đúng!");
+            // Sinh lại CAPTCHA mới cho lần render lại
+            String captchaText = generateCaptchaText(6);
+            request.getSession().setAttribute("captcha", captchaText);
+            request.setAttribute("captchaText", captchaText);
+            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+            return;
+        }
 
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
@@ -119,7 +148,7 @@ public class AccountController extends HttpServlet {
                 session.setAttribute("username", user.getUsername());
                 session.setAttribute("fullname", user.getFullName());
                 session.setAttribute("email", user.getEmail());
-                session.setAttribute("password", user.getPassword());
+//                session.setAttribute("password", user.getPassword());
                 session.setAttribute("phoneNumber", user.getPhoneNumber());// Chú ý: Không nên lưu mật khẩu vào session!
                 session.setAttribute("birthDate", user.getBirthDate());
                 session.setAttribute("image", user.getImage());
@@ -323,7 +352,8 @@ public class AccountController extends HttpServlet {
         // Đảm bảo response chưa bị committed trước khi gửi redirect
         response.setStatus(HttpServletResponse.SC_OK);  // Đảm bảo không có lỗi status
         // Sau khi logout, chuyển hướng về trang đăng nhập
-        response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp");
+        response.sendRedirect(request.getContextPath() + "/sign");
+
     }
 
     private void handleProfileUpdate(HttpServletRequest request, HttpServletResponse response)
@@ -403,7 +433,8 @@ public class AccountController extends HttpServlet {
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
             return;
         }
-        User user = accountService.getUserByUsernameAndAddress(username);
+        User user = accountService.getUserByUsername(username);
+
         if (user != null) {
             request.setAttribute("user", user);
             request.getRequestDispatcher("/view/view-account/profile.jsp").forward(request, response);

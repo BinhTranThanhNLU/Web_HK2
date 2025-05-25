@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -51,7 +50,6 @@
                         <p>${product.description}</p>
 
 
-
                         <hr>
                         <div class="row">
                             <div class="item-option-select">
@@ -61,7 +59,7 @@
                                         <input type="radio" name="radio_color"> Silver
                                     </label>
                                     <label class="btn btn-light">
-                                        <input type="radio" name="radio_color" > Gray
+                                        <input type="radio" name="radio_color"> Gray
                                     </label>
                                     <label class="btn btn-light active">
                                         <input type="radio" name="radio_color checked"> Gold
@@ -92,8 +90,10 @@
                             </div>
                         </div> <!-- row.// -->
                         <hr>
-                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span> <i class="fas fa-shopping-cart"></i>  </a>
-                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span> <i class="fas fa-shopping-cart"></i>  </a>
+                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span>
+                            <i class="fas fa-shopping-cart"></i> </a>
+                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span>
+                            <i class="fas fa-shopping-cart"></i> </a>
                     </article> <!-- product-info-aside .// -->
                 </main> <!-- col.// -->
             </div> <!-- row.// -->
