@@ -72,10 +72,10 @@
                                     <a href="${pageContext.request.contextPath}/logout">Đăng Xuất</a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="${pageContext.request.contextPath}/view/view-account/signin.jsp">Đăng
+                                    <a href="${pageContext.request.contextPath}/sign">Đăng
                                         Nhập</a>
                                     <span class="dark-transp"> | </span>
-                                    <a href="${pageContext.request.contextPath}/view/view-account/register.jsp">Đăng
+                                    <a href="${pageContext.request.contextPath}/register">Đăng
                                         Ký</a>
                                 </c:otherwise>
                             </c:choose>

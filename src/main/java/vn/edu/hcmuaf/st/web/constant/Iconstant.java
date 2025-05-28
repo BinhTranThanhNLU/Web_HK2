@@ -1,11 +1,9 @@
 package vn.edu.hcmuaf.st.web.constant;
 
 public class Iconstant {
-    //public static final String GOOGLE_CLIENT_ID = "//////////////";
 
     public static final String GOOGLE_CLIENT_ID = "783371694466-v4tsjt4ch1ulqtbdinv02of0q3t4tpm8.apps.googleusercontent.com";
 
-    //public static final String GOOGLE_CLIENT_SECRET = "//////////";
 
     public static final String GOOGLE_CLIENT_SECRET = "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";
 
