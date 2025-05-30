@@ -21,7 +21,7 @@
                 <aside class="col-md-6">
                     <article class="gallery-wrap">
                         <div class="img-big-wrap">
-                            <a href="#">
+                            <a href="${product.productImages[0].imageUrl}">
                                 <img src="${product.productImages[0].imageUrl}" alt="${product.title}">
                             </a>
                         </div> <!-- img-big-wrap.// -->
@@ -48,7 +48,6 @@
                         </div>
 
                         <p>${product.description}</p>
-
 
 
                         <hr>
