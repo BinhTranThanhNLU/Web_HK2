@@ -53,7 +53,7 @@
             </a>
         </li>
         <li class="menu-item">
-            <a class="menu-link" href="${pageContext.request.contextPath}/view-admin/admin-order/manage-order.jsp">
+            <a class="menu-link" href="${pageContext.request.contextPath}/admin/manage-order">
                 <span class="menu-icon"><i class="fa fa-tasks"></i></span>
                 <span class="menu-title">Quản lý đơn hàng</span>
             </a>

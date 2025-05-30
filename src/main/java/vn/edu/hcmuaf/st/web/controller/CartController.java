@@ -71,22 +71,25 @@ public class CartController extends HttpServlet {
                     String idVariantStr = req.getParameter("idVariant");
                     String quantityStr = req.getParameter("quantity");
 
-                    if (idVariantStr == null || quantityStr == null || idVariantStr.isEmpty() || quantityStr.isEmpty()) {
-                        resp.setContentType("application/json");
-                        resp.setCharacterEncoding("UTF-8");
-                        resp.getWriter().write("{\"error\": \"Invalid input\"}");
-                        return;
-                    }
-
                     int idVariantUpdate = Integer.parseInt(idVariantStr);
                     int newQuantity = Integer.parseInt(quantityStr);
 
                     cart.addQuantity(idVariantUpdate, newQuantity);
                     session.setAttribute("cart", cart);
 
+                    double totalPrice = cart.getTotalPrice();
+                    double discountAmount = cart.getDiscountAmount(); // nếu có giảm giá
+                    double finalTotal = cart.getFinalTotal();
+
                     resp.setContentType("application/json");
                     resp.setCharacterEncoding("UTF-8");
-                    resp.getWriter().write("{\"totalPrice\": \"" + cart.getTotalPrice() + "\"}");
+
+                    String json = String.format(
+                            "{\"totalPrice\": %.0f, \"discountAmount\": %.0f, \"finalTotal\": %.0f}",
+                            totalPrice, discountAmount, finalTotal
+                    );
+
+                    resp.getWriter().write(json);
                 } catch (NumberFormatException e) {
                     resp.setContentType("text/plain");
                     resp.setCharacterEncoding("UTF-8");

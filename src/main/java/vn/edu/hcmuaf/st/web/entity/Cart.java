@@ -9,6 +9,7 @@ public class Cart implements Serializable {
     private int idUser;
     private Map<Integer, CartItem> cartItems;
     private double totalPrice;
+    private double discountAmount = 0.0;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -104,6 +105,11 @@ public class Cart implements Serializable {
         }
     }
 
+    //tong tien cuoi cung
+    public double getFinalTotal() {
+        return totalPrice - discountAmount;
+    }
+
     public int getIdUser() {
         return idUser;
     }
@@ -142,6 +148,14 @@ public class Cart implements Serializable {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public double getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(double discountAmount) {
+        this.discountAmount = discountAmount;
     }
 
     @Override

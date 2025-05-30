@@ -1,17 +1,17 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: hdanh
-  Date: 24/02/2025
-  Time: 8:48 SA
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ include file="/view/view-index/header.jsp" %>
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
-    <title>Chi Tiết Sản Phẩm </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
+<%@ include file="/view/view-index/header.jsp" %>
 <section class="section-content padding-y bg">
     <div class="container">
 
@@ -59,7 +59,7 @@
                                         <input type="radio" name="radio_color"> Silver
                                     </label>
                                     <label class="btn btn-light">
-                                        <input type="radio" name="radio_color" > Gray
+                                        <input type="radio" name="radio_color"> Gray
                                     </label>
                                     <label class="btn btn-light active">
                                         <input type="radio" name="radio_color checked"> Gold
@@ -90,8 +90,10 @@
                             </div>
                         </div> <!-- row.// -->
                         <hr>
-                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span> <i class="fas fa-shopping-cart"></i>  </a>
-                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span> <i class="fas fa-shopping-cart"></i>  </a>
+                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span>
+                            <i class="fas fa-shopping-cart"></i> </a>
+                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span>
+                            <i class="fas fa-shopping-cart"></i> </a>
                     </article> <!-- product-info-aside .// -->
                 </main> <!-- col.// -->
             </div> <!-- row.// -->
@@ -170,6 +172,6 @@
 
     </div> <!-- container .//  -->
 </section>
+<%@ include file="/view/view-index/footer.jsp" %>
 </body>
 </html>
-<%@ include file="/view/view-index/footer.jsp" %>

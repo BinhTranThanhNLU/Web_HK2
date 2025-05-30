@@ -31,6 +31,13 @@
                 <div class="form-group">
                     <a href="<%= request.getContextPath() %>/view/view-account/forgot-password.jsp" class="float-right">Quên Mật Khẩu?</a>
                 </div>
+
+                <!-- Các trường đăng nhập khác -->
+                <label>Mã xác nhận:</label><br>
+                <div style="font-weight: bold; font-size: 20px; letter-spacing: 2px; color: blue;">
+                    ${captchaText}
+                </div>
+                <input type="text" name="captchaInput" required><br><br>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block"> Đăng Nhập </button>
                 </div>
@@ -54,6 +61,7 @@
                     </a>
                 </div>
             </div>
+
 
             <!-- Hiển thị lỗi nếu có -->
             <div class="form-group">
