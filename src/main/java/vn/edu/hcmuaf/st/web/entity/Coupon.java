@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.st.web.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Coupon {
     private int idCoupon;
@@ -8,8 +9,8 @@ public class Coupon {
     private double discountAmount;
     private boolean isPercentage;
     private double minOrderValue;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private int usageLimit;
     private int usedCount;
 
@@ -19,7 +20,7 @@ public class Coupon {
 
     // Constructor đầy đủ
     public Coupon(int idCoupon, String code, double discountAmount, boolean isPercentage,
-                  double minOrderValue, Date startDate, Date endDate, int usageLimit, int usedCount) {
+                  double minOrderValue, LocalDateTime startDate, LocalDateTime endDate, int usageLimit, int usedCount) {
         this.idCoupon = idCoupon;
         this.code = code;
         this.discountAmount = discountAmount;
@@ -73,19 +74,19 @@ public class Coupon {
         this.minOrderValue = minOrderValue;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
