@@ -91,10 +91,8 @@
                         </div> <!-- row.// -->
                         <hr>
 
-                        <a href="#" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span>
-                            <i class="fas fa-shopping-cart"></i> </a>
-                        <a href="#" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span>
-                            <i class="fas fa-shopping-cart"></i> </a>
+                        <a href="${pageContext.request.contextPath}/view/view-order/cart.jsp" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span></a>
+                        <a href="${pageContext.request.contextPath}/view/view-order/place-order.jsp" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span> </a>
                     </article> <!-- product-info-aside .// -->
                 </main> <!-- col.// -->
             </div> <!-- row.// -->
