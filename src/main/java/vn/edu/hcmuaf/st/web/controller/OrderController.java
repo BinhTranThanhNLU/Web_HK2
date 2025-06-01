@@ -10,8 +10,8 @@ import vn.edu.hcmuaf.st.web.entity.*;
 import vn.edu.hcmuaf.st.web.service.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet(name = "orderController", urlPatterns = "/place-order")
 public class OrderController extends HttpServlet {
@@ -46,6 +46,12 @@ public class OrderController extends HttpServlet {
 
         req.setAttribute("cart", cart);
         req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
+
+        // Lấy danh sách discount đang còn hiệu lực
+        List<Discount> activeDiscounts = discountService.getActiveDiscounts();
+        req.setAttribute("activeDiscounts", activeDiscounts);
+
+        req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
     }
 
     @Override
@@ -61,29 +67,6 @@ public class OrderController extends HttpServlet {
 
         if (user == null || cart == null || cart.getCartItems().isEmpty()) {
             resp.sendRedirect(req.getContextPath()+"/cart");
-            return;
-        }
-
-        // 1. KIỂM TRA TỒN KHO
-        boolean stockEnough = true;
-        List<String> outOfStockItems = new ArrayList<>();
-
-        for (CartItem item : cart.getCartItems().values()) {
-            int variantId = item.getIdVariant();
-            int requiredQty = item.getQuantity();
-
-            int stockQty = productVariantService.getStockQuantity(variantId); // Bạn cần viết hàm này trong service/dao
-            if (stockQty < requiredQty) {
-                stockEnough = false;
-                outOfStockItems.add(item.getProductTitle() + " (size: " + item.getSize().getSize() + ", color: " + item.getColor().getColor() + ")");
-            }
-        }
-
-        if (!stockEnough) {
-            // Trả về thông báo lỗi
-            req.setAttribute("errorMessage", "Sản phẩm dưới đây không đủ tồn kho hoặc đã hết hàng: " + String.join(", ", outOfStockItems));
-            req.setAttribute("cart", cart);
-            req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
             return;
         }
 
@@ -169,6 +152,27 @@ public class OrderController extends HttpServlet {
         req.setAttribute("finalPrice", finalPrice);
 
         req.getRequestDispatcher("/view/view-order/order-complete.jsp").forward(req, resp);
+
+
+        // Lấy discountId từ form
+        String discountIdStr = req.getParameter("discountId");
+        Discount selectedDiscount = null;
+        double discountAmount = 0;
+
+        if (discountIdStr != null && !discountIdStr.isEmpty()) {
+            int discountId = Integer.parseInt(discountIdStr);
+            Optional<Discount> discountOpt = discountService.getDiscountById(discountId);
+
+            if (discountOpt.isPresent()) {
+                Discount discount = discountOpt.get();
+                if (discountService.isDiscountValid(discount)) {
+                    selectedDiscount = discount;
+                    discountAmount = discount.getDiscountAmount(); // Ví dụ: 10 nghĩa là 10%
+                    double discountValue = cart.getTotalPrice() * discountAmount / 100.0;
+                    finalPrice -= discountValue;
+                }
+            }
+        }
 
     }
 }
