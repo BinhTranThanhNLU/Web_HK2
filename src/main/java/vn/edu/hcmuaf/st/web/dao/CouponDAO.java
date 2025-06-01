@@ -4,6 +4,7 @@ import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.st.web.entity.Coupon;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,8 +67,8 @@ public class CouponDAO {
                         .bind("discountAmount", coupon.getDiscountAmount())
                         .bind("isPercentage", coupon.isPercentage())
                         .bind("minOrderValue", coupon.getMinOrderValue())
-                        .bind("startDate", coupon.getStartDate())
-                        .bind("endDate", coupon.getEndDate())
+                        .bind("startDate", java.sql.Timestamp.valueOf(coupon.getStartDate()))
+                        .bind("endDate", java.sql.Timestamp.valueOf(coupon.getEndDate()))
                         .bind("usageLimit", coupon.getUsageLimit())
                         .bind("usedCount", coupon.getUsedCount())
                         .execute() > 0
@@ -89,4 +90,12 @@ public class CouponDAO {
                         .execute() > 0
         );
     }
+
+    public boolean isCouponValid(Coupon coupon) {
+        LocalDateTime now = LocalDateTime.now();
+        return now.isAfter(coupon.getStartDate()) &&
+                now.isBefore(coupon.getEndDate()) &&
+                coupon.getUsedCount() < coupon.getUsageLimit();
+    }
+
 }

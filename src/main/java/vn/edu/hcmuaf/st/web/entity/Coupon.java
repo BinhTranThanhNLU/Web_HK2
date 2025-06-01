@@ -1,9 +1,10 @@
 package vn.edu.hcmuaf.st.web.entity;
 
-import java.sql.Date;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Coupon {
+public class Coupon implements Serializable {
+
     private int idCoupon;
     private String code;
     private double discountAmount;
@@ -105,4 +106,20 @@ public class Coupon {
     public void setUsedCount(int usedCount) {
         this.usedCount = usedCount;
     }
+
+    @Override
+    public String toString() {
+        return "Coupon{" +
+                "idCoupon=" + idCoupon +
+                ", code='" + code +
+                ", discountAmount=" + discountAmount +
+                ", isPercentage=" + isPercentage +
+                ", minOrderValue=" + minOrderValue +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", usageLimit=" + usageLimit +
+                ", usedCount=" + usedCount +
+                '}';
+    }
+
 }

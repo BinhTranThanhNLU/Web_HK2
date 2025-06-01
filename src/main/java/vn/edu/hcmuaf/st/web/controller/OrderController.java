@@ -21,6 +21,8 @@ public class OrderController extends HttpServlet {
     private final AccountService accountService = new AccountService();
     private final OrderService orderService = new OrderService();
     private final ProductVariantService productVariantService = new ProductVariantService();
+    private final CouponService couponService = new CouponService();
+    private final DiscountService discountService = new DiscountService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
