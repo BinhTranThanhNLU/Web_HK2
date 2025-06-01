@@ -6,8 +6,29 @@
 <%@ include file="/view/view-index/header.jsp" %>
 
 <html>
+
+<style>
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #ced4da; /* hoặc bất kỳ màu border mặc định nào */
+    }
+</style>
+
 <section class="section-content padding-y bg">
     <div class="container">
+
+        <div id="error-notification" style="
+                display: none;
+                background-color: #f8d7da;
+                color: #842029;
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+                border: 1px solid #f5c2c7;
+                font-weight: bold;
+            ">
+        </div>
+
 
         <!-- ============================ COMPONENT 1 ================================= -->
 
@@ -111,22 +132,47 @@
             </aside> <!-- col.// -->
             <aside class="col-lg-3">
 
+                <!-- Form áp dụng mã giảm giá -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form action="${pageContext.request.contextPath}/cart?action=coupon" method="post">
+                            <div class="form-group">
+                                <label for="discountCode">Mã giảm giá</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="discountCode" name="discountCode" placeholder="Nhập mã...">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-primary" type="submit">Áp dụng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="card-body">
                         <dl class="dlist-align">
                             <dt>Tổng tiền:</dt>
-                            <dd class="text-right">
-                                <span id="total-price"><fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/></span>
+                            <dd class="text-right" id="total-price">
+                                <span>
+                                    <fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/>
+                                </span>
                             </dd>
                         </dl>
                         <dl class="dlist-align">
                             <dt>Giảm:</dt>
-                            <dd class="text-right"> 10000</dd>
+                            <dd class="text-right" id="discount-amount">
+                                <span>
+                                    <fmt:formatNumber value="${cart.discountAmount}" pattern="#,##0 đ"/>
+                                </span>
+                            </dd>
                         </dl>
                         <dl class="dlist-align">
-                            <dt>Tổng:</dt>
-                            <dd class="text-right text-dark b">
-                                <strong><fmt:formatNumber value="${cart.totalPrice}" pattern="#,##0 đ"/></strong>
+                            <dt>Tổng thanh toán:</dt>
+                            <dd class="text-right text-dark b" id="final-total">
+                                <strong>
+                                    <fmt:formatNumber value="${cart.finalTotal}" pattern="#,##0 đ"/>
+                                </strong>
                             </dd>
                         </dl>
                         <hr>
@@ -173,6 +219,10 @@
             inputQty.value = quantity;
             hiddenQuantity.value = quantity; // Đồng bộ luôn hidden quantity
 
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+            }
+
             fetch('/web/cart?action=updateQuantity', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -181,12 +231,31 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.totalPrice) {
-                        const formatted = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.totalPrice);
-                        document.getElementById('total-price').textContent = formatted;
+                        document.getElementById('total-price').textContent = formatCurrency(data.totalPrice);
+                    }
+                    if (data.discountAmount !== undefined) {
+                        document.getElementById('discount-amount').textContent = formatCurrency(data.discountAmount);
+                    }
+                    if (data.finalTotal !== undefined) {
+                        document.getElementById('final-total').textContent = formatCurrency(data.finalTotal);
                     }
                 });
 
         });
+    });
+</script>
+
+<script>
+    const isLoggedIn = ${sessionScope.user != null ? "true" : "false"};
+    const errorDiv = document.getElementById('error-notification');
+
+    document.querySelector('form[action$="/place-order"]').addEventListener('submit', function(e) {
+        if (!isLoggedIn) {
+            e.preventDefault();
+            errorDiv.textContent = 'Bạn cần đăng nhập để thanh toán!';
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
+        }
     });
 </script>
 

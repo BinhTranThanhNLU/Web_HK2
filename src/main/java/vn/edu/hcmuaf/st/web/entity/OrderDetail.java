@@ -3,8 +3,9 @@ package vn.edu.hcmuaf.st.web.entity;
 public class OrderDetail {
 
     private int idDetail;
-    private Order order;
+    private int idOrder;
     private int idVariant;
+    private String nameProduct; //mới thêm vào
     private int quantity;
     private double price;
     private double discountPrice;
@@ -12,13 +13,14 @@ public class OrderDetail {
     public OrderDetail() {
     }
 
-    public OrderDetail(int idDetail, double discountPrice, double price, int quantity, int idVariant, Order order) {
+    public OrderDetail(int idDetail, double discountPrice, double price, int quantity, int idVariant, int idOrder, String nameProduct) {
         this.idDetail = idDetail;
         this.discountPrice = discountPrice;
         this.price = price;
         this.quantity = quantity;
         this.idVariant = idVariant;
-        this.order = order;
+        this.idOrder = idOrder;
+        this.nameProduct = nameProduct;
     }
 
     public int getIdDetail() {
@@ -29,12 +31,12 @@ public class OrderDetail {
         this.idDetail = idDetail;
     }
 
-    public Order getOrder() {
-        return order;
+    public int getIdOrder() {
+        return idOrder;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setIdOrder(int idOrder) {
+        this.idOrder = idOrder;
     }
 
     public int getIdVariant() {
@@ -69,12 +71,21 @@ public class OrderDetail {
         this.discountPrice = discountPrice;
     }
 
+    public String getNameProduct() {
+        return nameProduct;
+    }
+
+    public void setNameProduct(String nameProduct) {
+        this.nameProduct = nameProduct;
+    }
+
     @Override
     public String toString() {
         return "OrderDetail{" +
                 "idDetail=" + idDetail +
-                ", order=" + order +
+                ", idOrder=" + idOrder +
                 ", idVariant=" + idVariant +
+                ", nameProduct='" + nameProduct + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", discountPrice=" + discountPrice +

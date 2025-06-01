@@ -1,127 +1,108 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: hdanh
-  Date: 24/02/2025
-  Time: 8:47 SA
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%@ include file="/view/view-index/header.jsp" %>
 
-
 <body>
-<div class="container" style="margin-top: 50px;">
-    <center><i class="fas fa-check-circle" style="font-size: 72px;margin-bottom: 20px;color: #28A745;"></i></center>
-    <h2 class="text-center">Payment Successful</h2>
-    <br>
-    <div class="text-center">
-        <a href="{% url 'store' %}" class="btn btn-success">Shop more</a>
-    </div>
-</div>
 
-<div class="container" style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
-
-    <div style="color: red">
-        ${requestScope.message}
+<div class="container"
+     style="margin: 0 auto; width: 60%; padding: 50px; background: #f1f1f1; margin-top: 50px; margin-bottom: 50px;">
+    <h2 class="text-center text-success">
+        <i class="fas fa-check-circle"></i> Thanh toán thành công
+    </h2>
+    <div class="text-center my-3">
+        <a href="${pageContext.request.contextPath}/home" class="btn btn-success">Tiếp tục mua sắm</a>
     </div>
 
     <div class="row invoice row-printable">
         <div class="col-md-12">
-            <!-- col-lg-12 start here -->
-            <div class="panel panel-default plain" id="dash_0">
-                <!-- Start .panel -->
+            <div class="panel panel-default plain">
                 <div class="panel-body p30">
                     <div class="row">
-                        <!-- Start .row -->
+                        <!-- Logo và thông tin người nhận -->
                         <div class="col-lg-6">
-                            <!-- col-lg-6 start here -->
-                            <div class="invoice-logo"><img src="/images/logo.png" alt="Invoice logo" style="max-height: 40px;"></div>
+                            <div class="invoice-logo">
+                                <img src="${pageContext.request.contextPath}/images/logo.png" style="max-height: 40px;">
+                            </div>
                         </div>
-                        <!-- col-lg-6 end here -->
-                        <div class="col-lg-6">
-                            <!-- col-lg-6 start here -->
-                            <div class="invoice-from">
-                                <ul class="list-unstyled text-right">
-                                    <li><strong>Invoiced To</strong></li>
-                                    <li>Jakob Smith</li>
-                                    <li>Roupark 37</li>
-                                    <li>New York, NY, 2014</li>
-                                    <li>USA</li>
+                        <div class="col-lg-6 text-right">
+                            <ul class="list-unstyled">
+                                <li><strong>Hóa đơn cho</strong></li>
+                                <li>${order.user.fullName}</li>
+                                <li>${order.address.address}</li>
+                                <li>${order.address.ward}, ${order.address.district}, ${order.address.province}</li>
+                            </ul>
+                        </div>
+
+                        <!-- Chi tiết hóa đơn -->
+                        <div class="col-lg-12 mt-4">
+                            <div class="well">
+                                <ul class="list-unstyled mb-0">
+                                    <li><strong>Hóa đơn:</strong> #${order.idOrder}</li>
+                                    <li><strong>Giao dịch:</strong> COD</li>
+                                    <li><strong>Ngày:</strong>
+                                        <fmt:formatDate value="${orderDate}" pattern="dd/MM/yyyy"/>
+                                    </li>
                                 </ul>
                             </div>
-                        </div>
-                        <!-- col-lg-6 end here -->
-                        <div class="col-lg-12">
-                            <!-- col-lg-12 start here -->
-                            <div class="invoice-details mt25">
-                                <div class="well">
-                                    <ul class="list-unstyled mb0">
-                                        <li><strong>Order</strong> #</li>
-                                        <li><strong>Transaction</strong> #</li>
-                                        <li><strong>Order Date:</strong> Monday, October 10th, 2015</li>
-                                        <li><strong>Status:</strong> PAID</li>
-                                    </ul>
-                                </div>
+
+                            <!-- Danh sách sản phẩm -->
+                            <div class="table-responsive mt-4">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">Sản phẩm</th>
+                                        <th class="text-center">Số lượng</th>
+                                        <th class="text-center">Thành tiền</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="item" items="${orderDetails}">
+                                        <tr>
+                                            <td>${item.nameProduct}</td>
+                                            <td class="text-center">${item.quantity}</td>
+                                            <td class="text-center">
+                                                <fmt:formatNumber value="${item.price * item.quantity}" type="currency"
+                                                                  currencySymbol="" groupingUsed="true"/> đ
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th colspan="2" class="text-right">Tổng tiền:</th>
+                                        <th class="text-center">
+                                            <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="" groupingUsed="true"/> đ
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2" class="text-right">Tiền vận chyển:</th>
+                                        <th class="text-center">
+                                            <fmt:formatNumber value="${amountDelivery}" pattern="#,##0 đ"/>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2" class="text-right">Tổng thanh toán:</th>
+                                        <th class="text-center">
+                                            <fmt:formatNumber value="${finalPrice}" pattern="#,##0 đ"/>
+                                        </th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
                             </div>
 
-                            <div class="invoice-items">
-                                <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th class="per70 text-center">Description</th>
-                                            <th class="per5 text-center">Qty</th>
-                                            <th class="per25 text-center">Total</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>1024MB Cloud 2.0 Server - elisium.dynamic.com (12/04/2014 - 01/03/2015)</td>
-                                            <td class="text-center">1</td>
-                                            <td class="text-center">$25.00 USD</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Logo design</td>
-                                            <td class="text-center">1</td>
-                                            <td class="text-center">$200.00 USD</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Backup - 1024MB Cloud 2.0 Server - elisium.dynamic.com</td>
-                                            <td class="text-center">12</td>
-                                            <td class="text-center">$12.00 USD</td>
-                                        </tr>
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <th colspan="2" class="text-right">Sub Total:</th>
-                                            <th class="text-center">$237.00 USD</th>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="2" class="text-right">Tax:</th>
-                                            <th class="text-center">$47.40 USD</th>
-                                        </tr>
-
-                                        <tr>
-                                            <th colspan="2" class="text-right">Grand Total:</th>
-                                            <th class="text-center">$284.4.40 USD</th>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="invoice-footer mt25">
-                                <p class="text-center">Thank you for shopping with us!</p>
+                            <div class="invoice-footer text-center mt-4">
+                                <p>Cảm ơn bạn đã mua sắm tại GreatKart!</p>
                             </div>
                         </div>
-                        <!-- col-lg-12 end here -->
                     </div>
-                    <!-- End .row -->
                 </div>
             </div>
-            <!-- End .panel -->
         </div>
-        <!-- col-lg-12 end here -->
     </div>
+
 </div>
 
 

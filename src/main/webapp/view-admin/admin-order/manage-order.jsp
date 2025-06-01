@@ -11,8 +11,8 @@
           rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="../../css/manage.css">
-    <link rel="stylesheet" href="../../css/both-nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manage.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/both-nav.css">
     <title>Quản lý đơn hàng</title>
 </head>
 <body>
@@ -55,23 +55,28 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>#DH12837</td>
-                    <td>nguyenA</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>nguyenvana@example.com</td>
-                    <td>0901234567</td>
-                    <td>123 Đường ABC, Quận 1, TP.HCM</td>
-                    <td>5,000,000 VND</td>
-                    <td>Chờ xác nhận</td>
-                    <td>2025-02-23</td>
-                    <td>COD</td>
-                    <td>
-                        <a href="./view-order.jsp" class="btn btn-view"><i class="fas fa-eye"></i></a>
-                        <button class="btn btn-trash"><i class="fas fa-trash-alt"></i></button>
-                        <a href="./update-order.jsp" class="btn btn-edit"><i class="fas fa-edit"></i></a>
-                    </td>
-                </tr>
+                <c:forEach var="order" items="${orders}">
+                    <tr>
+                        <td>#DH${order.idOrder}</td>
+                        <td>${order.user.username}</td>
+                        <td>${order.user.fullName}</td>
+                        <td>${order.user.email}</td>
+                        <td>${order.user.phoneNumber}</td>
+                        <td>${order.address.address}, ${order.address.ward}, ${order.address.district}, ${order.address.province}</td>
+                        <td><fmt:formatNumber value="${order.totalPrice}" type="currency"/></td>
+                        <td>${order.status}</td>
+                        <td><fmt:formatDate value="${order.createdAtAsDate}" pattern="yyyy-MM-dd"/></td>
+                        <td>COD</td>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/admin/view-order?id=${order.idOrder}" class="btn btn-view"><i class="fas fa-eye"></i></a>
+                            <form action="./delete-order" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="${order.idOrder}" />
+                                <button class="btn btn-trash" onclick="return confirm('Xoá đơn hàng?')"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                            <a href="./update-order.jsp?id=${order.idOrder}" class="btn btn-edit"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
 
@@ -81,7 +86,7 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="../../js/admin.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -90,6 +95,7 @@
             "searching": true,      // Bật tìm kiếm
             "ordering": true,       // Bật sắp xếp cột
             "info": true,           // Hiển thị thông tin tổng số dòng
+            "order": [[9, "desc"]],  // 👉 Thêm dòng này để mặc định sắp xếp theo Ngày Đặt Hàng giảm dần
             "language": {           // Tùy chỉnh ngôn ngữ
                 "search": "Tìm kiếm:",
                 "lengthMenu": "Hiển thị _MENU_ dòng",

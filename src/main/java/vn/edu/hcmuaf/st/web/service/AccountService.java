@@ -1,7 +1,5 @@
 package vn.edu.hcmuaf.st.web.service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.st.web.controller.SocialLogin;
 import vn.edu.hcmuaf.st.web.dao.AccountRepository;
@@ -9,11 +7,11 @@ import vn.edu.hcmuaf.st.web.dao.AccountRepository;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import vn.edu.hcmuaf.st.web.entity.Address;
 import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
 import vn.edu.hcmuaf.st.web.entity.User;
 
-import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Random;
 
@@ -47,6 +45,7 @@ public class AccountService {
         return 100000 + rand.nextInt(900000);
     }
 
+    // gửi otp
     public void sendOTP(String userEmail, int otpvalue) throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -67,38 +66,101 @@ public class AccountService {
         Transport.send(message);
     }
 
+    // đổi mk
     public boolean updatePassword(String email, String newPassword) {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         return accountRepository.updatePasswordByEmail(email, hashedPassword);
     }
 
-    // lấy tên người dùng sau khi đăng nhập thành công
-    public String getFullNameByUsername(String username) {
-        return accountRepository.getFullNameByUsername(username);
-    }
-
-    public void logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false); // Lấy session hiện tại (không tạo mới nếu không có)
-        if (session != null) {
-            session.invalidate(); // Hủy session
-        }
-    }
-
-
+    // hiển thị tên khi đăng nhập thành công
     public User getUserByUsername(String username) {
         return accountRepository.getUserByUsername(username);
     }
 
+    // Lấy thông tin người dùng theo username ( hiển thị trong profile.jsp)
+    public User getUserByUsernameAndAddress(String username) {
+        return accountRepository.getUserByUsernameAndAddress(username);  // Gọi phương thức từ DAO
+    }
+
+
+    // đăng nhập google
     public GoogleAccount handleGoogleLogin(String code) throws Exception {
         // Lấy thông tin tài khoản Google
         SocialLogin gg = new SocialLogin();
         String accessToken = gg.getToken(code);
         GoogleAccount googleAccount = gg.getUserInfo(accessToken);
-
         // Thêm mới hoặc cập nhật người dùng
         accountRepository.insertOrUpdateUser(googleAccount);  // Thêm hoặc cập nhật người dùng trong CSDL
-
         return googleAccount;
     }
+
+    // cập nhật thông tin người dùng
+    public boolean updateUserInfo(int idUser, String fullName, String phoneNumber, String email,
+                                  String address, String ward, String district, String province,
+                                  java.util.Date birthDate) {
+        return accountRepository.updateUserInfo(idUser, fullName, phoneNumber, email, address, ward, district, province, birthDate);
+    }
+
+    public User insertOrUpdateUserAndReturn(GoogleAccount googleAccount) {
+        accountRepository.insertOrUpdateUser(googleAccount);
+        return accountRepository.getUserByEmail(googleAccount.getEmail());
+    }
+
+    public User getUserByEmail(String email) {
+        return accountRepository.getUserByEmail(email);
+    }
+
+
+    public void lockUserForDuration(String username, int minutes) {
+        LocalDateTime lockedUntil = LocalDateTime.now().plusMinutes(minutes);
+        accountRepository.setUserLockedUntil(username, lockedUntil);
+    }
+
+    public void unlockUserIfTimePassed(String username) {
+        User user = accountRepository.getUserByUsername(username);
+        if (user == null || user.getLockedUntil() == null) return;
+
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(user.getLockedUntil())) {
+            accountRepository.unlockUser(username);
+        }
+    }
+
+    public boolean isUserLocked(String username) {
+        User user = accountRepository.getUserByUsername(username);
+        if (user == null || user.getLockedUntil() == null) return false;
+
+        return LocalDateTime.now().isBefore(user.getLockedUntil());
+    }
+
+    public void unlockUser(String username) {
+        accountRepository.unlockUser(username);
+    }
+
+    public void resetLoginAttempts(String username) {
+        accountRepository.updateLoginAttempts(username, 0);
+    }
+
+    public void incrementLoginAttempts(String username) {
+        User user = accountRepository.getUserByUsername(username);
+        if (user != null) {
+            int attempts = user.getLoginAttempts() + 1;
+            accountRepository.updateLoginAttempts(username, attempts);
+        }
+    }
+
+
+
+    public boolean  checkLogin(String username, String password) {
+        return accountRepository.checkLogin(username, password);
+    }
+    public static void main(String[] args) {
+        AccountService accountService = new AccountService();
+        User user = accountService.getUserByUsername("hatest123");
+        System.out.println(user.getIdUser());
+    }
+
+
+
 }
 

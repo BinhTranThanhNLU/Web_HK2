@@ -59,15 +59,32 @@ public class ProductVariantDao {
         );
     }
 
-    public static void main(String[] args) {
-        ProductVariantDao dao = new ProductVariantDao();
-        List<ProductVariant> list = dao.getProductVariantsByIdProduct(1);
-        for(ProductVariant variant : list) {
-            System.out.println(variant);
-        }
+    public void reduceQuantity(int idVariant, int quantity) {
+        String sql = "UPDATE product_variants SET stockQuantity = stockQuantity - :qty WHERE idVariant = :idVariant";
+
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("qty", quantity)
+                        .bind("idVariant", idVariant)
+                        .execute()
+        );
     }
 
+    public int getStockQuantity(int idVariant) {
+        String sql = "SELECT stockQuantity FROM product_variants WHERE idVariant = :idVariant";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("idVariant", idVariant)
+                        .mapTo(Integer.class)
+                        .findOne()
+                        .orElse(0)
+        );
+    }
 
-
+    public static void main(String[] args) {
+        ProductVariantDao dao = new ProductVariantDao();
+        int quantity = dao.getStockQuantity(1);
+        System.out.println(quantity);
+    }
 
 }

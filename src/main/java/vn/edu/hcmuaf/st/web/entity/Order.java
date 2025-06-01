@@ -1,6 +1,8 @@
 package vn.edu.hcmuaf.st.web.entity;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class Order {
 
@@ -13,6 +15,9 @@ public class Order {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    private double amountDelivery;  // Phí vận chuyển
+    private double finalPrice;      // Tổng thanh toán (đã cộng phí vận chuyển và trừ giảm giá nếu có)
+
     public Order() {
 
     }
@@ -23,6 +28,26 @@ public class Order {
         this.address = address;
         this.totalPrice = totalPrice;
         this.status = status;
+    }
+
+    public Date getCreatedAtAsDate() {
+        return Date.from(createdAt.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public double getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(double finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
+    public double getAmountDelivery() {
+        return amountDelivery;
+    }
+
+    public void setAmountDelivery(double amountDelivery) {
+        this.amountDelivery = amountDelivery;
     }
 
     public int getIdOrder() {
@@ -97,9 +122,11 @@ public class Order {
                 ", address=" + address +
                 ", idCoupon=" + idCoupon +
                 ", totalPrice=" + totalPrice +
-                ", status=" + status +
+                ", status='" + status + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", amountDelivery=" + amountDelivery +
+                ", finalPrice=" + finalPrice +
                 '}';
     }
 }
