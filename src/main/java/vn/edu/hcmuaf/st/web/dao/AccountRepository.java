@@ -11,6 +11,7 @@ import vn.edu.hcmuaf.st.web.entity.User;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 public class AccountRepository {
     private final Jdbi jdbi;
@@ -139,25 +140,34 @@ public class AccountRepository {
 
 
     public User getUserByUsername(String username) {
-        String query = "SELECT idUser, fullName, password, username, email, phoneNumber,idRole FROM users WHERE username = ?";
+        String query = "SELECT idUser, fullName, password, username, email, phoneNumber, idRole, loginAttempts, lockedUntil FROM users WHERE username = ?";
         return jdbi.withHandle(handle ->
                 handle.createQuery(query)
                         .bind(0, username)
                         .map((rs, ctx) -> {
                             User user = new User();
                             user.setIdUser(rs.getInt("idUser"));
-                            System.out.println("RS CHECK idUser = " + rs.getInt("idUser")); // debug
-                            System.out.println("AFTER SET => user.getIdUser() = " + user.getIdUser()); // thêm dòng này
                             user.setFullName(rs.getString("fullName"));
                             user.setPassword(rs.getString("password"));
                             user.setUsername(rs.getString("username"));
                             user.setEmail(rs.getString("email"));
                             user.setPhoneNumber(rs.getString("phoneNumber"));
                             user.setIdRole(rs.getInt("idRole"));
+                            // Thêm lấy loginAttempts
+                            user.setLoginAttempts(rs.getInt("loginAttempts"));
+                            // Lấy lockedUntil (có thể null)
+                            java.sql.Timestamp lockedUntilTimestamp = rs.getTimestamp("lockedUntil");
+                            if (lockedUntilTimestamp != null) {
+                                user.setLockedUntil(lockedUntilTimestamp.toLocalDateTime());
+                            } else {
+                                user.setLockedUntil(null);
+                            }
                             return user;
                         }).findOne().orElse(null)
+
         );
     }
+
 
     // Tạo mới nếu chưa có tài khoản ,cập nhật nếu như email đã tồn tại
     public User insertOrUpdateUser(GoogleAccount googleAccount) {
@@ -212,22 +222,22 @@ public class AccountRepository {
                                   java.util.Date birthDate) {
 
         String updateUserSql = """
-            UPDATE users SET 
-                fullName = :fullName,
-                phoneNumber = :phoneNumber,
-                email = :email,
-                birthDate = :birthDate
-            WHERE idUser = :idUser
-            """;
+                UPDATE users SET 
+                    fullName = :fullName,
+                    phoneNumber = :phoneNumber,
+                    email = :email,
+                    birthDate = :birthDate
+                WHERE idUser = :idUser
+                """;
 
         String updateAddressSql = """
-            UPDATE address SET 
-                address = :address,
-                ward = :ward,
-                district = :district,
-                province = :province
-            WHERE idUser = :idUser
-            """;
+                UPDATE address SET 
+                    address = :address,
+                    ward = :ward,
+                    district = :district,
+                    province = :province
+                WHERE idUser = :idUser
+                """;
 
         try {
             return jdbi.withHandle(handle -> {
@@ -255,25 +265,41 @@ public class AccountRepository {
         }
     }
 
-    public static void main(String[] args) {
-        AccountRepository repo = new AccountRepository();
-
-        String username = "danh";
-        User user = repo.getUserByUsernameAndAddress(username);
-
-        if (user != null) {
-            System.out.println("===== THÔNG TIN NGƯỜI DÙNG =====");
-            System.out.println("ID: " + user.getIdUser());
-            System.out.println("Họ tên: " + user.getFullName());
-            System.out.println("Username: " + user.getUsername());
-            System.out.println("Email: " + user.getEmail());
-            System.out.println("Số điện thoại: " + user.getPhoneNumber());
-            System.out.println("Ngày sinh: " + user.getBirthDate());
-            System.out.println("Địa chỉ: " + user.getAddress());
-        } else {
-            System.out.println("Không tìm thấy người dùng với username = " + username);
-        }
+    // thời gian khóa tài khoản
+    public void lockUserForDuration(String username, int minutes) {
+        String sql = "UPDATE users SET lockedUntil = NOW() + INTERVAL :minutes MINUTE WHERE username = :username";
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("minutes", minutes)
+                        .bind("username", username)
+                        .execute()
+        );
     }
+
+    //kiểm tra người dùng bị khóa
+    public boolean isUserLocked(String username) {
+        String sql = "SELECT lockedUntil FROM users WHERE username = :username";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("username", username)
+                        .mapTo(java.sql.Timestamp.class)
+                        .findOne()
+                        .map(lockedUntil -> lockedUntil != null && lockedUntil.after(new java.util.Date()))
+                        .orElse(false)
+        );
+    }
+
+    // làm mới thời gian
+    public void unlockUserIfTimePassed(String username) {
+        String sql = "UPDATE users SET lockedUntil = NULL WHERE username = :username AND lockedUntil < NOW()";
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("username", username)
+                        .execute()
+        );
+    }
+
+
 
     public User getUserByEmail(String email) {
         String query = "SELECT idUser, fullName, password, username, email, phoneNumber FROM users WHERE email = ?";
@@ -295,5 +321,111 @@ public class AccountRepository {
                         .orElse(null)
         );
     }
+
+    public void setUserLockedUntil(String username, LocalDateTime lockedUntil) {
+        String sql = "UPDATE users SET lockedUntil = :lockedUntil WHERE username = :username";
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("lockedUntil", java.sql.Timestamp.valueOf(lockedUntil))
+                        .bind("username", username)
+                        .execute()
+        );
+    }
+
+    // Đặt lại số lần đăng nhập sai về 0
+    public void resetLoginAttempts(String username) {
+        String sql = "UPDATE users SET loginAttempts = 0 WHERE username = :username";
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("username", username)
+                        .execute()
+        );
+    }
+
+    // Tăng số lần đăng nhập sai lên 1
+    public void incrementLoginAttempts(String username) {
+        String sql = "UPDATE users SET loginAttempts = loginAttempts + 1 WHERE username = :username";
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("username", username)
+                        .execute()
+        );
+    }
+
+    // Mở khóa người dùng (đặt lockedUntil về NULL và reset loginAttempts về 0)
+    public void unlockUser(String username) {
+        String sql = "UPDATE users SET lockedUntil = NULL, loginAttempts = 0 WHERE username = :username";
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("username", username)
+                        .execute()
+        );
+    }
+
+
+    // Cập nhật số lần đăng nhập sai
+    public void updateLoginAttempts(String username, int attempts) {
+        String sql = "UPDATE users SET loginAttempts = :attempts WHERE username = :username";
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("attempts", attempts)
+                        .bind("username", username)
+                        .execute()
+        );
+    }
+
+    // Kiểm tra login (username, password)
+    public boolean checkLogin(String username, String password) {
+        String sql = "SELECT password FROM users WHERE username = :username";
+        return jdbi.withHandle(handle -> {
+            String hashedPassword = handle.createQuery(sql)
+                    .bind("username", username)
+                    .mapTo(String.class)
+                    .findOne()
+                    .orElse(null);
+            if (hashedPassword == null) return false;
+            return BCrypt.checkpw(password, hashedPassword);
+        });
+    }
+
+    public static void main(String[] args) {
+        AccountRepository repo = new AccountRepository();
+
+        String username1 = "hdanhv5879";
+        User user1 = repo.getUserByUsernameAndAddress(username1);
+
+        if (user1 != null) {
+            System.out.println("===== THÔNG TIN NGƯỜI DÙNG (getUserByUsernameAndAddress) =====");
+            System.out.println("ID: " + user1.getIdUser());
+            System.out.println("Họ tên: " + user1.getFullName());
+            System.out.println("Username: " + user1.getUsername());
+            System.out.println("Email: " + user1.getEmail());
+            System.out.println("Số điện thoại: " + user1.getPhoneNumber());
+            System.out.println("Ngày sinh: " + user1.getBirthDate());
+            System.out.println("Địa chỉ: " + user1.getAddress());
+        } else {
+            System.out.println("Không tìm thấy người dùng với username = " + username1);
+        }
+
+        // Test getUserByUsername
+        String username2 = "hdanhv5879";
+        User user2 = repo.getUserByUsername(username2);
+
+        if (user2 != null) {
+            System.out.println("===== THÔNG TIN NGƯỜI DÙNG (getUserByUsername) =====");
+            System.out.println("ID: " + user2.getIdUser());
+            System.out.println("Full name: " + user2.getFullName());
+            System.out.println("Username: " + user2.getUsername());
+            System.out.println("Email: " + user2.getEmail());
+            System.out.println("Phone: " + user2.getPhoneNumber());
+            System.out.println("Role ID: " + user2.getIdRole());
+            System.out.println("Login attempts: " + user2.getLoginAttempts());
+            System.out.println("Locked until: " + user2.getLockedUntil());
+        } else {
+            System.out.println("User not found with username = " + username2);
+        }
+    }
+
+
 }
 

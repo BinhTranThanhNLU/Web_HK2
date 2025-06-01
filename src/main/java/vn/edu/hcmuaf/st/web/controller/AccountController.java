@@ -111,10 +111,13 @@ public class AccountController extends HttpServlet {
         }
         return captcha.toString();
     }
+    // làm mới capcha
+    private void setCaptchaForRequest(HttpServletRequest request) {
+        String captchaText = generateCaptchaText(6);
+        request.getSession().setAttribute("captcha", captchaText);
+        request.setAttribute("captchaText", captchaText);
+    }
 
-
-    // Đăng Nhập
-    // Đăng Nhập
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -123,55 +126,82 @@ public class AccountController extends HttpServlet {
         String captchaInput = request.getParameter("captchaInput");
         String captchaSession = (String) request.getSession().getAttribute("captcha");
 
+        // Luôn tạo captcha mới mỗi lần vào xử lý login
+        setCaptchaForRequest(request);
+
+        // Kiểm tra mã xác nhận
         if (captchaSession == null || !captchaSession.equalsIgnoreCase(captchaInput)) {
             request.setAttribute("error", "Mã xác nhận không đúng!");
-            // Sinh lại CAPTCHA mới cho lần render lại
-            String captchaText = generateCaptchaText(6);
-            request.getSession().setAttribute("captcha", captchaText);
-            request.setAttribute("captchaText", captchaText);
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
             return;
         }
 
+        // Kiểm tra username và password
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
             return;
         }
 
-        if (accountService.login(username, password)) {
+        User user = accountService.getUserByUsername(username);
+
+        if (user == null) {
+            request.setAttribute("error", "Tài khoản không tồn tại!");
+            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+            return;
+        }
+
+        // Mở khóa nếu đã hết thời gian khóa
+        accountService.unlockUserIfTimePassed(username);
+
+        // Kiểm tra xem tài khoản có đang bị khóa tạm thời không
+        if (accountService.isUserLocked(username)) {
+            request.setAttribute("error", "Tài khoản đang bị khóa! Vui lòng thử lại sau 5 phút.");
+            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+            return;
+        }
+
+        if (accountService.checkLogin(username, password)) {
+            // Đăng nhập thành công: reset số lần sai và xóa trạng thái khóa
+            accountService.resetLoginAttempts(username);
+            accountService.unlockUser(username); // Xóa lockedUntil nếu có
+
             HttpSession session = request.getSession();
+            session.setAttribute("username", user.getUsername());
+            session.setAttribute("fullname", user.getFullName());
+            session.setAttribute("email", user.getEmail());
+            session.setAttribute("phoneNumber", user.getPhoneNumber());
+            session.setAttribute("birthDate", user.getBirthDate());
+            session.setAttribute("image", user.getImage());
+            session.setAttribute("user", user);
 
-            // Lấy toàn bộ thông tin user từ database
-            User user = accountService.getUserByUsername(username);
-
-            if (user != null) {
-                session.setAttribute("username", user.getUsername());
-                session.setAttribute("fullname", user.getFullName());
-                session.setAttribute("email", user.getEmail());
-                session.setAttribute("phoneNumber", user.getPhoneNumber());
-                session.setAttribute("birthDate", user.getBirthDate());
-                session.setAttribute("image", user.getImage());
-                session.setAttribute("user", user);
-            }
-
-            // check
             System.out.println(">> Logged in user ID = " + user.getIdUser());
             System.out.println(">> Logged in Role = " + user.getIdRole());
 
-            // Điều hướng dựa trên idRole
-            int idRole = user.getIdRole(); // Giả sử User có phương thức getIdRole()
+            int idRole = user.getIdRole();
             if (idRole == 1) {
                 response.sendRedirect(request.getContextPath() + "/admin");
             } else if (idRole == 2) {
                 response.sendRedirect(request.getContextPath() + "/home");
             } else {
-                // Trường hợp không xác định vai trò
                 request.setAttribute("error", "Tài khoản không được phân quyền hợp lệ.");
                 request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
             }
+
         } else {
-            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
+            // Đăng nhập thất bại: tăng số lần sai
+            int currentAttempts = user.getLoginAttempts();
+            currentAttempts++;
+            accountService.incrementLoginAttempts(username);
+
+            if (currentAttempts >= 3) {
+                accountService.lockUserForDuration(username, 5); // Khóa trong 5 phút
+                request.setAttribute("error", "Tài khoản của bạn đã bị khóa 5 phút do đăng nhập sai quá 3 lần.");
+            } else {
+                int remaining = 3 - currentAttempts;
+                request.setAttribute("error", "Sai mật khẩu! Bạn còn " + remaining + " lần thử.");
+            }
+
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
         }
     }
@@ -211,23 +241,6 @@ public class AccountController extends HttpServlet {
 //                session.setAttribute("fullname", user.getFullName());
 //                session.setAttribute("email", user.getEmail());
 
-    /// /                session.setAttribute("password", user.getPassword());
-//                session.setAttribute("phoneNumber", user.getPhoneNumber());// Chú ý: Không nên lưu mật khẩu vào session!
-//                session.setAttribute("birthDate", user.getBirthDate());
-//                session.setAttribute("image", user.getImage());
-//            }
-//
-//            session.setAttribute("user", user);
-//
-//            //check
-//            System.out.println(">> Logged in user ID = " + user.getIdUser());
-//
-//            response.sendRedirect(request.getContextPath() + "/home");
-//        } else {
-//            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
-//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
-//        }
-//    }
 
 
     // Đăng Ký

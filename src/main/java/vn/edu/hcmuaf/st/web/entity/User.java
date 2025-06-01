@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.st.web.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class User {
@@ -17,6 +18,29 @@ public class User {
     private String socialId;
     private Date createAt;
     private Address address;
+    private int loginAttempts;
+    private boolean isLocked;
+    private LocalDateTime lockedUntil;
+
+    public User(int idUser, int idRole, String username, String password, String fullName, String email, String phoneNumber, Boolean active, String birthDate, String image, String authProvider, String socialId, Date createAt, Address address, int loginAttempts, boolean isLocked, LocalDateTime lockedUntil) {
+        this.idUser = idUser;
+        this.idRole = idRole;
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.active = active;
+        this.birthDate = birthDate;
+        this.image = image;
+        this.authProvider = authProvider;
+        this.socialId = socialId;
+        this.createAt = createAt;
+        this.address = address;
+        this.loginAttempts = loginAttempts;
+        this.isLocked = isLocked;
+        this.lockedUntil = lockedUntil;
+    }
 
     @Override
     public String toString() {
@@ -29,15 +53,24 @@ public class User {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", active=" + active +
-                ", birthDate=" + birthDate +
+                ", birthDate='" + birthDate + '\'' +
                 ", image='" + image + '\'' +
                 ", authProvider='" + authProvider + '\'' +
                 ", socialId='" + socialId + '\'' +
                 ", createAt=" + createAt +
-                ", address=" + (address != null ? address.getAddress() : "No address") +  // Lấy thông tin từ Address thay vì gọi toàn bộ toString()
+                ", address=" + address +
+                ", loginAttempts=" + loginAttempts +
+                ", isLocked=" + isLocked +
+                ", lockedUntil=" + lockedUntil +
                 '}';
     }
 
+    // Getter/Setter
+    public int getLoginAttempts() { return loginAttempts; }
+    public void setLoginAttempts(int loginAttempts) { this.loginAttempts = loginAttempts; }
+
+    public boolean isLocked() { return isLocked; }
+    public void setLocked(boolean isLocked) { this.isLocked = isLocked; }
 
     public Address getAddress() {
         return address;
@@ -162,5 +195,11 @@ public class User {
         this.createAt = createAt;
     }
 
+    public LocalDateTime getLockedUntil() {
+        return lockedUntil;
+    }
 
+    public void setLockedUntil(LocalDateTime lockedUntil) {
+        this.lockedUntil = lockedUntil;
+    }
 }
