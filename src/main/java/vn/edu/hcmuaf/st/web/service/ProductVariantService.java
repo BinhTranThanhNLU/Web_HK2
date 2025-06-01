@@ -23,4 +23,9 @@ public class ProductVariantService {
         productVariantDao.reduceQuantity(idVariant, quantity);
     }
 
+    public int getStockQuantity(int idVariant) {
+        return productVariantDao.getStockQuantity(idVariant);
+    }
+
+
 }

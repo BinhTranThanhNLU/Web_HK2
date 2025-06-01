@@ -128,12 +128,9 @@ public class ProductService {
         return productDao.getTotalProductsByBoyOrGirl(boy_or_girl);
     }
 
-
     public static void main(String[] args) {
         ProductService productService = new ProductService();
         Product product = productService.getProductByIdVariant(1);
         System.out.println(product);
     }
-
-
 }
