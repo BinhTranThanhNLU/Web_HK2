@@ -139,7 +139,7 @@ public class AccountRepository {
 
 
     public User getUserByUsername(String username) {
-        String query = "SELECT idUser, fullName, password, username, email, phoneNumber FROM users WHERE username = ?";
+        String query = "SELECT idUser, fullName, password, username, email, phoneNumber,idRole FROM users WHERE username = ?";
         return jdbi.withHandle(handle ->
                 handle.createQuery(query)
                         .bind(0, username)
@@ -153,6 +153,7 @@ public class AccountRepository {
                             user.setUsername(rs.getString("username"));
                             user.setEmail(rs.getString("email"));
                             user.setPhoneNumber(rs.getString("phoneNumber"));
+                            user.setIdRole(rs.getInt("idRole"));
                             return user;
                         }).findOne().orElse(null)
         );

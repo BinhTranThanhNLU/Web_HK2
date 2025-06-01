@@ -61,6 +61,7 @@ public class User {
         return idUser;
     }
 
+
     public void setIdUser(int user) {
         this.idUser = user;
     }

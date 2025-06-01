@@ -100,6 +100,8 @@ public class AccountController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
     }
+
+    // Mã Capcha
     private String generateCaptchaText(int length) {
         String chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$%";
         Random rand = new Random();
@@ -110,9 +112,8 @@ public class AccountController extends HttpServlet {
         return captcha.toString();
     }
 
-    // Trong controller hoặc servlet xử lý hiển thị trang login:
 
-
+    // Đăng Nhập
     // Đăng Nhập
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -148,23 +149,85 @@ public class AccountController extends HttpServlet {
                 session.setAttribute("username", user.getUsername());
                 session.setAttribute("fullname", user.getFullName());
                 session.setAttribute("email", user.getEmail());
-//                session.setAttribute("password", user.getPassword());
-                session.setAttribute("phoneNumber", user.getPhoneNumber());// Chú ý: Không nên lưu mật khẩu vào session!
+                session.setAttribute("phoneNumber", user.getPhoneNumber());
                 session.setAttribute("birthDate", user.getBirthDate());
                 session.setAttribute("image", user.getImage());
+                session.setAttribute("user", user);
             }
 
-            session.setAttribute("user", user);
-
-            //check
+            // check
             System.out.println(">> Logged in user ID = " + user.getIdUser());
+            System.out.println(">> Logged in Role = " + user.getIdRole());
 
-            response.sendRedirect(request.getContextPath() + "/home");
+            // Điều hướng dựa trên idRole
+            int idRole = user.getIdRole(); // Giả sử User có phương thức getIdRole()
+            if (idRole == 1) {
+                response.sendRedirect(request.getContextPath() + "/admin");
+            } else if (idRole == 2) {
+                response.sendRedirect(request.getContextPath() + "/home");
+            } else {
+                // Trường hợp không xác định vai trò
+                request.setAttribute("error", "Tài khoản không được phân quyền hợp lệ.");
+                request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+            }
         } else {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
         }
     }
+
+//    private void handleLogin(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//
+//        String username = request.getParameter("username");
+//        String password = request.getParameter("password");
+//        String captchaInput = request.getParameter("captchaInput");
+//        String captchaSession = (String) request.getSession().getAttribute("captcha");
+//
+//        if (captchaSession == null || !captchaSession.equalsIgnoreCase(captchaInput)) {
+//            request.setAttribute("error", "Mã xác nhận không đúng!");
+//            // Sinh lại CAPTCHA mới cho lần render lại
+//            String captchaText = generateCaptchaText(6);
+//            request.getSession().setAttribute("captcha", captchaText);
+//            request.setAttribute("captchaText", captchaText);
+//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+//            return;
+//        }
+//
+//        if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
+//            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
+//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+//            return;
+//        }
+//
+//        if (accountService.login(username, password)) {
+//            HttpSession session = request.getSession();
+//
+//            // Lấy toàn bộ thông tin user từ database
+//            User user = accountService.getUserByUsername(username);
+//
+//            if (user != null) {
+//                session.setAttribute("username", user.getUsername());
+//                session.setAttribute("fullname", user.getFullName());
+//                session.setAttribute("email", user.getEmail());
+
+    /// /                session.setAttribute("password", user.getPassword());
+//                session.setAttribute("phoneNumber", user.getPhoneNumber());// Chú ý: Không nên lưu mật khẩu vào session!
+//                session.setAttribute("birthDate", user.getBirthDate());
+//                session.setAttribute("image", user.getImage());
+//            }
+//
+//            session.setAttribute("user", user);
+//
+//            //check
+//            System.out.println(">> Logged in user ID = " + user.getIdUser());
+//
+//            response.sendRedirect(request.getContextPath() + "/home");
+//        } else {
+//            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
+//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+//        }
+//    }
 
 
     // Đăng Ký
@@ -303,40 +366,6 @@ public class AccountController extends HttpServlet {
             // Chuyển hướng đến trang home sau khi đăng nhập thành công
             response.sendRedirect(request.getContextPath() + "/home");
 
-
-            //-----------------BINH-----------------------
-            //googleAccount = accountService.handleGoogleLogin(code);
-
-            // Kiểm tra xem user đã tồn tại trong DB chưa
-//            User user = accountService.getUserByEmail(googleAccount.getEmail());
-//            if (user == null) {
-//                // Nếu chưa có → tạo mới User trong DB
-//                user = new User();
-//                user.setIdUser(Integer.parseInt(googleAccount.getId()));
-//                user.setUsername(googleAccount.getUsername());
-//                user.setEmail(googleAccount.getEmail());
-//                user.setFullName(googleAccount.getFullName());
-//                user.setPhoneNumber(googleAccount.getPhoneNumber());
-//                user.setAuthProvider("google");
-//                user.setSocialId(googleAccount.getId());
-//                user.setImage(googleAccount.getImage());
-//                user.setIdRole(googleAccount.getIdRole());
-//
-//                // Tạo user trong DB (bạn cần viết hàm createUser nếu chưa có)
-//                user = accountService.insertOrUpdateUserAndReturn(googleAccount);
-//            }
-
-            // Gán user vào session như bình thường
-//            session.setAttribute("user", user);
-//            session.setAttribute("username", user.getUsername());
-//            session.setAttribute("fullname", user.getFullName());
-//            session.setAttribute("email", user.getEmail());
-//            session.setAttribute("password", user.getPassword());
-//            session.setAttribute("phoneNumber", user.getPhoneNumber());// Chú ý: Không nên lưu mật khẩu vào session!
-//            session.setAttribute("birthDate", user.getBirthDate());
-//            session.setAttribute("image", user.getImage());
-//            response.sendRedirect(request.getContextPath() + "/home");
-
         } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=true");
         }
@@ -425,6 +454,7 @@ public class AccountController extends HttpServlet {
             request.getRequestDispatcher("/view/view-account/profile.jsp").forward(request, response);
         }
     }
+
     private void viewProfile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
