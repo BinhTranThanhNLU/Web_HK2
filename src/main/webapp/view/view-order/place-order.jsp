@@ -68,6 +68,11 @@
         </div>
 
         <!-- ============================ COMPONENT 2 ================================= -->
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger">
+                    ${errorMessage}
+            </div>
+        </c:if>
         <form action="${pageContext.request.contextPath}/place-order" method="post" id="submitForm">
             <div class="row">
                 <main class="col-md-8">

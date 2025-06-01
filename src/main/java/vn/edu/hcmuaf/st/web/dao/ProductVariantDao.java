@@ -70,9 +70,21 @@ public class ProductVariantDao {
         );
     }
 
+    public int getStockQuantity(int idVariant) {
+        String sql = "SELECT stockQuantity FROM product_variants WHERE idVariant = :idVariant";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("idVariant", idVariant)
+                        .mapTo(Integer.class)
+                        .findOne()
+                        .orElse(0)
+        );
+    }
+
     public static void main(String[] args) {
         ProductVariantDao dao = new ProductVariantDao();
-        dao.reduceQuantity(1,1);
+        int quantity = dao.getStockQuantity(1);
+        System.out.println(quantity);
     }
 
 }

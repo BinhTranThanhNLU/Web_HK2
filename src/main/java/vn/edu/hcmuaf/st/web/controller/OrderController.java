@@ -10,6 +10,7 @@ import vn.edu.hcmuaf.st.web.entity.*;
 import vn.edu.hcmuaf.st.web.service.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "orderController", urlPatterns = "/place-order")
@@ -60,6 +61,29 @@ public class OrderController extends HttpServlet {
 
         if (user == null || cart == null || cart.getCartItems().isEmpty()) {
             resp.sendRedirect(req.getContextPath()+"/cart");
+            return;
+        }
+
+        // 1. KIỂM TRA TỒN KHO
+        boolean stockEnough = true;
+        List<String> outOfStockItems = new ArrayList<>();
+
+        for (CartItem item : cart.getCartItems().values()) {
+            int variantId = item.getIdVariant();
+            int requiredQty = item.getQuantity();
+
+            int stockQty = productVariantService.getStockQuantity(variantId); // Bạn cần viết hàm này trong service/dao
+            if (stockQty < requiredQty) {
+                stockEnough = false;
+                outOfStockItems.add(item.getProductTitle() + " (size: " + item.getSize().getSize() + ", color: " + item.getColor().getColor() + ")");
+            }
+        }
+
+        if (!stockEnough) {
+            // Trả về thông báo lỗi
+            req.setAttribute("errorMessage", "Sản phẩm dưới đây không đủ tồn kho hoặc đã hết hàng: " + String.join(", ", outOfStockItems));
+            req.setAttribute("cart", cart);
+            req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
             return;
         }
 

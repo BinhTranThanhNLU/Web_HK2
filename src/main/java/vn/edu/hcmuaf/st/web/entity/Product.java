@@ -23,16 +23,9 @@ public class Product implements Serializable {
 
 
     public Product(int idProduct, String title, double price, double discountAmount, double priceAfterDiscount) {
-
     }
 
-    public int getBoy_or_girl() {
-        return boy_or_girl;
-    }
 
-    public void setBoy_or_girl(int boy_or_girl) {
-        this.boy_or_girl = boy_or_girl;
-    }
 
     public Product() {
     }
@@ -96,6 +89,14 @@ public class Product implements Serializable {
             sizes.add(productVariant.getSize());
         }
         return sizes;
+    }
+
+    public int getBoy_or_girl() {
+        return boy_or_girl;
+    }
+
+    public void setBoy_or_girl(int boy_or_girl) {
+        this.boy_or_girl = boy_or_girl;
     }
 
 
