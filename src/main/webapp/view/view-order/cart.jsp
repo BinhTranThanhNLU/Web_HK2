@@ -17,6 +17,19 @@
 <section class="section-content padding-y bg">
     <div class="container">
 
+        <div id="error-notification" style="
+                display: none;
+                background-color: #f8d7da;
+                color: #842029;
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+                border: 1px solid #f5c2c7;
+                font-weight: bold;
+            ">
+        </div>
+
+
         <!-- ============================ COMPONENT 1 ================================= -->
 
         <div class="row">
@@ -229,6 +242,20 @@
                 });
 
         });
+    });
+</script>
+
+<script>
+    const isLoggedIn = ${sessionScope.user != null ? "true" : "false"};
+    const errorDiv = document.getElementById('error-notification');
+
+    document.querySelector('form[action$="/place-order"]').addEventListener('submit', function(e) {
+        if (!isLoggedIn) {
+            e.preventDefault();
+            errorDiv.textContent = 'Bạn cần đăng nhập để thanh toán!';
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
+        }
     });
 </script>
 
