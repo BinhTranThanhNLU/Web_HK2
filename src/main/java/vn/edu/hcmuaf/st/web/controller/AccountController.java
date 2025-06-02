@@ -117,7 +117,7 @@ public class AccountController extends HttpServlet {
         request.getSession().setAttribute("captcha", captchaText);
         request.setAttribute("captchaText", captchaText);
     }
-//
+    //Đăng Nhập
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -363,7 +363,7 @@ public class AccountController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/sign");
 
     }
-
+    // Cập Nhật Tài Khoản
     private void handleProfileUpdate(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -433,7 +433,7 @@ public class AccountController extends HttpServlet {
             request.getRequestDispatcher("/view/view-account/profile.jsp").forward(request, response);
         }
     }
-
+    // xem tài khoản
     private void viewProfile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -442,7 +442,7 @@ public class AccountController extends HttpServlet {
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
             return;
         }
-        User user = accountService.getUserByUsername(username);
+        User user = accountService.getUserByUsernameAndAddress(username);
 
         if (user != null) {
             request.setAttribute("user", user);

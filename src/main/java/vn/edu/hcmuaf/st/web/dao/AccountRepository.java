@@ -5,6 +5,7 @@ import org.jdbi.v3.core.statement.Query;
 import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.st.web.entity.*;
+import vn.edu.hcmuaf.st.web.service.AccountService;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -70,19 +71,6 @@ public class AccountRepository {
                     .bind(1, email)
                     .execute();
             return rowsUpdated > 0;
-        });
-    }
-
-    // lấy tên
-    public String getFullNameByUsername(String username) {
-        String query = "SELECT fullName FROM users WHERE username = ?";
-        return jdbi.withHandle(handle -> {
-            // Thực hiện truy vấn và lấy giá trị fullName
-            String fullName = handle.createQuery(query)
-                    .bind(0, username)  // Bind giá trị username vào câu truy vấn
-                    .mapTo(String.class)  // Chuyển kết quả sang kiểu String
-                    .findOnly();  // Chỉ lấy một kết quả duy nhất
-            return fullName;  // Trả về giá trị fullName
         });
     }
 
@@ -453,6 +441,7 @@ public class AccountRepository {
                         .execute()
         );
     }
+    // lấy nhân viên thông qua id
     public User getStaffById(int id) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM users WHERE idUser = :id")
@@ -462,6 +451,7 @@ public class AccountRepository {
                         .orElse(null)
         );
     }
+    // lấy tất cả vai trò hiện có
     public List<Role> getAllRoles() {
         String sql = "SELECT idRole, role FROM role";
         return jdbi.withHandle(handle ->
@@ -476,7 +466,7 @@ public class AccountRepository {
         );
     }
 
-
+    // cập nhật thông tin nhân viên
     public void updateStaff(User user) {
         String sql = "UPDATE users SET username = :username, email = :email, phoneNumber = :phoneNumber, idRole = :idRole WHERE idUser = :idUser";
         jdbi.useHandle(handle -> handle.createUpdate(sql)
@@ -487,7 +477,7 @@ public class AccountRepository {
                 .bind("idUser", user.getIdUser())
                 .execute());
     }
-
+    // thêm nhân viên
     public int addStaff(User user) {
         String sql = "INSERT INTO users (username, email, phoneNumber, idRole, password) " +
                 "VALUES (:username, :email, :phoneNumber, :idRole, :password)";
@@ -507,9 +497,36 @@ public class AccountRepository {
 
 
     public static void main(String[] args) {
-        AccountRepository repo = new AccountRepository();
-        List<Role> roles = repo.getAllRoles();
-        roles.forEach(System.out::println);
+        AccountService accountService = new AccountService();
+
+        // Thử với một username có trong DB
+        String username = "danh"; // 🔁 đổi thành username hợp lệ trong DB của bạn
+
+        User user = accountService.getUserByUsernameAndAddress(username);
+
+        if (user != null) {
+            System.out.println("Thông tin người dùng:");
+            System.out.println("ID: " + user.getIdUser());
+            System.out.println("Họ tên: " + user.getFullName());
+            System.out.println("Username: " + user.getUsername());
+            System.out.println("Email: " + user.getEmail());
+            System.out.println("Phone: " + user.getPhoneNumber());
+            System.out.println("Ngày sinh: " + user.getBirthDate());
+
+            System.out.println("Địa chỉ:");
+            Address address = user.getAddress();
+            if (address != null) {
+                System.out.println("Địa chỉ: " + address.getAddress());
+                System.out.println("Phường: " + address.getWard());
+                System.out.println("Quận/Huyện: " + address.getDistrict());
+                System.out.println("Tỉnh/TP: " + address.getProvince());
+                System.out.println("Mặc định: " + address.isDefault());
+            } else {
+                System.out.println("Không có địa chỉ.");
+            }
+        } else {
+            System.out.println("Không tìm thấy người dùng với username: " + username);
+        }
     }
 
 
