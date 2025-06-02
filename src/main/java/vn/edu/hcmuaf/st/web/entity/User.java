@@ -21,8 +21,9 @@ public class User {
     private int loginAttempts;
     private boolean isLocked;
     private LocalDateTime lockedUntil;
+    private String role;
 
-    public User(int idUser, int idRole, String username, String password, String fullName, String email, String phoneNumber, Boolean active, String birthDate, String image, String authProvider, String socialId, Date createAt, Address address, int loginAttempts, boolean isLocked, LocalDateTime lockedUntil) {
+    public User(int idUser, int idRole, String username, String password, String fullName, String email, String phoneNumber, Boolean active, String birthDate, String image, String authProvider, String socialId, Date createAt, Address address, int loginAttempts, boolean isLocked, LocalDateTime lockedUntil, String role) {
         this.idUser = idUser;
         this.idRole = idRole;
         this.username = username;
@@ -40,6 +41,15 @@ public class User {
         this.loginAttempts = loginAttempts;
         this.isLocked = isLocked;
         this.lockedUntil = lockedUntil;
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override
@@ -62,6 +72,7 @@ public class User {
                 ", loginAttempts=" + loginAttempts +
                 ", isLocked=" + isLocked +
                 ", lockedUntil=" + lockedUntil +
+                ", role='" + role + '\'' +
                 '}';
     }
 
