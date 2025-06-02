@@ -110,6 +110,27 @@
             </div>
         </div>
 
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>Cập nhật trạng thái đơn hàng</h4>
+            </div>
+            <div class="card-body">
+                <form action="${pageContext.request.contextPath}/admin/update-order-status" method="post">
+                    <input type="hidden" name="idOrder" value="${order.idOrder}" />
+                    <div class="form-group">
+                        <label>Trạng thái đơn hàng:</label>
+                        <select class="form-control" name="status">
+                            <c:forEach var="s" items="${['Chờ xác nhận', 'Đang giao', 'Hoàn thành', 'Đã hủy']}">
+                                <option value="${s}" ${order.status == s ? 'selected' : ''}>${s}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Cập nhật</button>
+                </form>
+            </div>
+        </div>
+
+
         <!-- Nút quay lại -->
         <div class="back-btn">
             <a href="${pageContext.request.contextPath}/admin/manage-order" class="btn btn-secondary"><i class="fas fa-arrow-left"></i></a>
