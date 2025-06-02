@@ -117,7 +117,7 @@ public class AccountController extends HttpServlet {
         request.getSession().setAttribute("captcha", captchaText);
         request.setAttribute("captchaText", captchaText);
     }
-
+//
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -125,6 +125,7 @@ public class AccountController extends HttpServlet {
         String password = request.getParameter("password");
         String captchaInput = request.getParameter("captchaInput");
         String captchaSession = (String) request.getSession().getAttribute("captcha");
+
 
         // Luôn tạo captcha mới mỗi lần vào xử lý login
         setCaptchaForRequest(request);
@@ -156,15 +157,17 @@ public class AccountController extends HttpServlet {
 
         // Kiểm tra xem tài khoản có đang bị khóa tạm thời không
         if (accountService.isUserLocked(username)) {
-            request.setAttribute("error", "Tài khoản đang bị khóa! Vui lòng thử lại sau 5 phút.");
+            request.setAttribute("error", "Tài khoản đang bị khóa! Vui lòng thử lại sau 1 phút.");
+            request.setAttribute("isLocked", true);  // Gửi cờ về JSP để disable input
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
             return;
         }
 
+
         if (accountService.checkLogin(username, password)) {
             // Đăng nhập thành công: reset số lần sai và xóa trạng thái khóa
             accountService.resetLoginAttempts(username);
-            accountService.unlockUser(username); // Xóa lockedUntil nếu có
+            accountService.unlockUser(username);
 
             HttpSession session = request.getSession();
             session.setAttribute("username", user.getUsername());
@@ -179,7 +182,7 @@ public class AccountController extends HttpServlet {
             System.out.println(">> Logged in Role = " + user.getIdRole());
 
             int idRole = user.getIdRole();
-            if (idRole == 1) {
+            if (idRole == 1 || idRole ==0) {
                 response.sendRedirect(request.getContextPath() + "/admin");
             } else if (idRole == 2) {
                 response.sendRedirect(request.getContextPath() + "/home");
@@ -195,8 +198,8 @@ public class AccountController extends HttpServlet {
             accountService.incrementLoginAttempts(username);
 
             if (currentAttempts >= 3) {
-                accountService.lockUserForDuration(username, 5); // Khóa trong 5 phút
-                request.setAttribute("error", "Tài khoản của bạn đã bị khóa 5 phút do đăng nhập sai quá 3 lần.");
+                accountService.lockUserForDuration(username, 1);
+                request.setAttribute("error", "Tài khoản của bạn đã bị khóa 1 phút do đăng nhập sai quá 3 lần.");
             } else {
                 int remaining = 3 - currentAttempts;
                 request.setAttribute("error", "Sai mật khẩu! Bạn còn " + remaining + " lần thử.");
@@ -205,43 +208,6 @@ public class AccountController extends HttpServlet {
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
         }
     }
-
-//    private void handleLogin(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//
-//        String username = request.getParameter("username");
-//        String password = request.getParameter("password");
-//        String captchaInput = request.getParameter("captchaInput");
-//        String captchaSession = (String) request.getSession().getAttribute("captcha");
-//
-//        if (captchaSession == null || !captchaSession.equalsIgnoreCase(captchaInput)) {
-//            request.setAttribute("error", "Mã xác nhận không đúng!");
-//            // Sinh lại CAPTCHA mới cho lần render lại
-//            String captchaText = generateCaptchaText(6);
-//            request.getSession().setAttribute("captcha", captchaText);
-//            request.setAttribute("captchaText", captchaText);
-//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
-//            return;
-//        }
-//
-//        if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-//            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
-//            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
-//            return;
-//        }
-//
-//        if (accountService.login(username, password)) {
-//            HttpSession session = request.getSession();
-//
-//            // Lấy toàn bộ thông tin user từ database
-//            User user = accountService.getUserByUsername(username);
-//
-//            if (user != null) {
-//                session.setAttribute("username", user.getUsername());
-//                session.setAttribute("fullname", user.getFullName());
-//                session.setAttribute("email", user.getEmail());
-
-
 
     // Đăng Ký
     private void handleRegister(HttpServletRequest request, HttpServletResponse response)

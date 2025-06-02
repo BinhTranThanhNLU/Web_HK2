@@ -2,10 +2,19 @@ package vn.edu.hcmuaf.st.web.entity;
 
 public class Role {
     private int idRole;
-    private RoleName nameRole;
+    private RoleName role;
+
 
     public enum RoleName {
-        ROLE_ADMIN, ROLE_USER
+        ROLE_ADMIN, ROLE_USER,ROLE_EMPLOYEE
+    }
+
+    public Role(int idRole, RoleName role) {
+        this.idRole = idRole;
+        this.role = role;
+    }
+
+    public Role() {
     }
 
     public int getIdRole() {
@@ -16,19 +25,19 @@ public class Role {
         this.idRole = idRole;
     }
 
-    public RoleName getNameRole() {
-        return nameRole;
+    public RoleName getRole() {
+        return role;
     }
 
-    public void setNameRole(RoleName nameRole) {
-        this.nameRole = nameRole;
+    public void setRole(RoleName role) {
+        this.role = role;
     }
 
     @Override
     public String toString() {
-        return "RoleEntiry{" +
+        return "Role{" +
                 "idRole=" + idRole +
-                ", nameRole=" + nameRole +
+                ", role=" + role +
                 '}';
     }
 }

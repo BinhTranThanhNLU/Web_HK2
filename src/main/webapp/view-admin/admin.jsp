@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -22,10 +22,12 @@
     <div class="sidebar-header">
         <div class="user-profile">
             <div class="sidebar-title">
-                <a href="./admin.jsp" class="brand-logo-mini"><img src="<%= request.getContextPath() %>/images/logo.png" alt="logo" width="125"></a>
+                <a href="./admin.jsp" class="brand-logo-mini"><img src="<%= request.getContextPath() %>/images/logo.png"
+                                                                   alt="logo" width="125"></a>
                 <h2>Litte Whale</h2>
             </div>
-            <img class="user-avatar" src="<%= request.getContextPath() %>/images/avatar-admin.png" alt="User Image" width="100">
+            <img class="user-avatar" src="<%= request.getContextPath() %>/images/avatar-admin.png" alt="User Image"
+                 width="100">
             <div class="user-info">
                 <p class="user-name">AdminName</p>
                 <p class="user-greeting">Chào mừng bạn trở lại</p>
@@ -65,10 +67,20 @@
             </a>
         </li>
         <li class="menu-item">
-            <a class="menu-link" href="${pageContext.request.contextPath}/view-admin/admin-category/manage-category.jsp">
+            <a class="menu-link"
+               href="${pageContext.request.contextPath}/view-admin/admin-category/manage-category.jsp">
                 <span class="menu-icon"><i class="fa fa-chart-bar"></i></span>
                 <span class="menu-title">Quản lý danh mục</span>
             </a>
+        </li>
+        <li class="menu-item">
+
+
+            <a href="${pageContext.request.contextPath}/admin/staff-list">
+                <span class="menu-icon"><i class="fa fa-users"></i></span>
+                <span class="menu-title">Quản Lý Nhân Viên</span>
+            </a>
+
         </li>
     </ul>
 </nav>
@@ -85,7 +97,8 @@
             </div>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a href="${pageContext.request.contextPath}/view-admin/admin-product/add-product.jsp" class="nav-link"><i class="fa-solid fa-plus"></i>Thêm
+                    <a href="${pageContext.request.contextPath}/view-admin/admin-product/add-product.jsp"
+                       class="nav-link"><i class="fa-solid fa-plus"></i>Thêm
                         sản phẩm mới</a>
                 </li>
                 <li class="nav-item">
@@ -182,9 +195,9 @@
                     <td>2024-11-03</td>
                     <td><span class="status-label completed">Đã hoàn thành</span></td>
                     <td>
-                        <button class="btn btn-trash"><i class="fas fa-trash-alt"></i></button>
-                        <button class="btn btn-edit"><i class="fas fa-edit"></i></button>
-                    </td>
+
+                    </td>   <button class="btn btn-trash"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-edit"><i class="fas fa-edit"></i></button>
                 </tr>
                 <tr>
                     <td>MT9835</td>
