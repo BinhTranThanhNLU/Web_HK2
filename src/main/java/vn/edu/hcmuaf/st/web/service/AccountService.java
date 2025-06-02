@@ -79,9 +79,11 @@ public class AccountService {
     }
 
     // Lấy thông tin người dùng theo username ( hiển thị trong profile.jsp)
-    public User getUserByUsernameAndAddress(String username) {
-        return accountRepository.getUserByUsernameAndAddress(username);  // Gọi phương thức từ DAO
+    public User getUserByUsernameAndAddress(String email) {
+        return accountRepository.getUserByEmailAndAddress(email);  // Gọi phương thức từ DAO
     }
+
+
 
     // đăng nhập google
     public GoogleAccount handleGoogleLogin(String code) throws Exception {
@@ -182,6 +184,25 @@ public class AccountService {
         AccountService accountService = new AccountService();
         User user = accountService.getUserByUsername("hatest123");
         System.out.println(user.getIdUser());
+    }
+
+    public boolean isEmailExists(String email) {
+        return accountRepository.isEmailExists(email);
+    }
+
+    public boolean isPhoneNumberExists(String phoneNumber) {
+        return accountRepository.isPhoneNumberExists(phoneNumber);
+    }
+
+    public User createUserFromGoogleAccount(GoogleAccount googleAccount) {
+        // Thêm mới hoặc cập nhật user dựa trên GoogleAccount
+        accountRepository.insertOrUpdateUser(googleAccount);
+        // Lấy User từ email Google
+        return accountRepository.getUserByEmail(googleAccount.getEmail());
+    }
+
+    public User getUserByEmailAndAddress(String email) {
+        return accountRepository.getUserByEmailAndAddress(email);
     }
 }
 
