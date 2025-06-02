@@ -117,7 +117,7 @@ public class AccountController extends HttpServlet {
         request.getSession().setAttribute("captcha", captchaText);
         request.setAttribute("captchaText", captchaText);
     }
-//
+    //Đăng Nhập
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -227,6 +227,18 @@ public class AccountController extends HttpServlet {
             request.getRequestDispatcher("/view/view-account/register.jsp").forward(request, response);
             return;
         }
+        if (accountService.isEmailExists(email)) {
+            request.setAttribute("emailError", "Email đã được sử dụng!");
+            request.getRequestDispatcher("/view/view-account/register.jsp").forward(request, response);
+            return;
+        }
+
+        if (accountService.isPhoneNumberExists(phoneNumber)) {
+            request.setAttribute("phoneError", "Số điện thoại đã được sử dụng!");
+            request.getRequestDispatcher("/view/view-account/register.jsp").forward(request, response);
+            return;
+        }
+
 
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Mật khẩu xác nhận không trùng khớp!");
@@ -236,9 +248,9 @@ public class AccountController extends HttpServlet {
 
         boolean isRegistered = accountService.register(username, password, fullname, email, phoneNumber);
         if (isRegistered) {
-            request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/sign");
         } else {
-            request.setAttribute("error", "Tên người dùng đã tồn tại hoặc lỗi hệ thống!");
+            request.setAttribute("usernameError", "Tên đăng nhập đã tồn tại!");
             request.getRequestDispatcher("/view/view-account/register.jsp").forward(request, response);
         }
     }
@@ -306,28 +318,50 @@ public class AccountController extends HttpServlet {
         // Cập nhật mật khẩu vào cơ sở dữ liệu
         boolean isUpdated = accountService.updatePassword(email, password);
 
-        // Nếu cập nhật thành công
         if (isUpdated) {
-            request.setAttribute("status", "resetSuccess");
-            dispatcher = request.getRequestDispatcher("/view/view-account/signin.jsp");
+            response.sendRedirect(request.getContextPath() + "/sign?status=resetSuccess");
+            return;
         } else {
             request.setAttribute("status", "resetFailed");
-            dispatcher = request.getRequestDispatcher("/view/view-account/reset-password.jsp");
+            request.getRequestDispatcher("/view/view-account/reset-password.jsp").forward(request, response);
         }
-        dispatcher.forward(request, response);
     }
 
     // Đăng nhập Bằng gg
+//    private void handleGoogleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        try {
+//            HttpSession session = request.getSession();
+//            GoogleAccount googleAccount = (GoogleAccount) session.getAttribute("googleAccount");
+//
+//            // Nếu đã đăng nhập, chuyển hướng về trang home thay vì đăng nhập lại
+//            if (googleAccount != null) {
+//                response.sendRedirect(request.getContextPath() + "/home");
+//                return;
+//            }
+//
+//            // Lấy mã code từ request
+//            String code = request.getParameter("code");
+//            if (code == null || code.isEmpty()) {
+//                response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=missing_code");
+//                return;
+//            }
+//
+//            // Gọi service để xử lý đăng nhập Google
+//            googleAccount = accountService.handleGoogleLogin(code);
+//
+//            // Lưu vào session
+//            session.setAttribute("googleAccount", googleAccount);
+//
+//            // Chuyển hướng đến trang home sau khi đăng nhập thành công
+//            response.sendRedirect(request.getContextPath() + "/home");
+//
+//        } catch (Exception e) {
+//            response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=true");
+//        }
+//    }
     private void handleGoogleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             HttpSession session = request.getSession();
-            GoogleAccount googleAccount = (GoogleAccount) session.getAttribute("googleAccount");
-
-            // Nếu đã đăng nhập, chuyển hướng về trang home thay vì đăng nhập lại
-            if (googleAccount != null) {
-                response.sendRedirect(request.getContextPath() + "/home");
-                return;
-            }
 
             // Lấy mã code từ request
             String code = request.getParameter("code");
@@ -336,16 +370,32 @@ public class AccountController extends HttpServlet {
                 return;
             }
 
-            // Gọi service để xử lý đăng nhập Google
-            googleAccount = accountService.handleGoogleLogin(code);
+            // Gọi service để xử lý đăng nhập Google, trả về GoogleAccount
+            GoogleAccount googleAccount = accountService.handleGoogleLogin(code);
 
-            // Lưu vào session
-            session.setAttribute("googleAccount", googleAccount);
+            if (googleAccount == null) {
+                response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=google_login_failed");
+                return;
+            }
 
-            // Chuyển hướng đến trang home sau khi đăng nhập thành công
+            // Lấy hoặc tạo User tương ứng dựa trên email googleAccount
+            User user = accountService.getUserByEmail(googleAccount.getEmail());
+            if (user == null) {
+                // Nếu user chưa có trong db, có thể tạo mới hoặc báo lỗi
+                user = accountService.createUserFromGoogleAccount(googleAccount);
+            }
+
+            // Lưu User vào session (key "user"), dùng chung cho các phần khác
+            session.setAttribute("user", user);
+
+            // Xóa googleAccount nếu không cần thiết nữa hoặc cũng lưu nếu bạn muốn
+            session.removeAttribute("googleAccount");
+
+            // Chuyển hướng đến trang home
             response.sendRedirect(request.getContextPath() + "/home");
 
         } catch (Exception e) {
+            e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/view/view-account/signin.jsp?error=true");
         }
     }
@@ -363,7 +413,7 @@ public class AccountController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/sign");
 
     }
-
+    // Cập Nhật Tài Khoản
     private void handleProfileUpdate(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -433,25 +483,33 @@ public class AccountController extends HttpServlet {
             request.getRequestDispatcher("/view/view-account/profile.jsp").forward(request, response);
         }
     }
-
+    // xem tài khoản
     private void viewProfile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute("username");
-        if (username == null) {
+
+        // Lấy User từ session
+        User sessionUser = (User) session.getAttribute("user");
+
+        if (sessionUser == null) {
+            // Nếu chưa đăng nhập thì chuyển sang trang đăng nhập
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
             return;
         }
-        User user = accountService.getUserByUsername(username);
 
-        if (user != null) {
-            request.setAttribute("user", user);
+        // Truy vấn lại user từ DB theo email
+        String email = sessionUser.getEmail();
+        User userFromDB = accountService.getUserByEmailAndAddress(email); // Đúng hàm
+
+        if (userFromDB != null) {
+            request.setAttribute("user", userFromDB);
             request.getRequestDispatcher("/view/view-account/profile.jsp").forward(request, response);
         } else {
-            request.setAttribute("error", "Không tìm thấy người dùng.");
+            request.setAttribute("error", "Không tìm thấy thông tin người dùng.");
             request.getRequestDispatcher("/view/view-account/signin.jsp").forward(request, response);
         }
     }
+
 
 
 }

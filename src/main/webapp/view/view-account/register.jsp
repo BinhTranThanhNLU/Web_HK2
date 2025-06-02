@@ -31,36 +31,64 @@
                         <label>Active</label>
                         <input type="text" name="active" class="form-control" value="1">
                     </div>
+                    <!-- Họ và Tên -->
                     <div class="col form-group">
                         <label>Họ Và Tên</label>
-                        <input type="text" name="fullname" class="form-control" placeholder="Nhập Họ Và Tên">
-                    </div> <!-- form-group end.// -->
+                        <input type="text" name="fullname" class="form-control" placeholder="Nhập Họ Và Tên"
+                               value="${param.fullname}">
+                    </div>
+                    <!-- Email -->
                     <div class="col form-group">
-
                         <label>Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="Email">
-
-                    </div> <!-- form-group end.// -->
+                        <input type="email" name="email" class="form-control" placeholder="Email"
+                               value="${param.email}">
+                        <c:if test="${not empty emailError}">
+                            <div class="error-message text-danger">${emailError}</div>
+                        </c:if>
+                    </div>
                 </div> <!-- form-row end.// -->
+                <!-- Tên đăng nhập -->
                 <div class="form-group">
                     <label>Tên Đăng Nhập</label>
-                    <input type="text" name="username" class="form-control" placeholder="Tên Đăng Nhập" required>
+                    <input type="text" name="username" class="form-control"
+                           placeholder="Tên Đăng Nhập" required
+                           pattern="^[a-zA-Z0-9_]{4,}$"
+                           title="Chỉ được dùng chữ cái không dấu, số, dấu gạch dưới, ít nhất 4 ký tự"
+                           value="${param.username}">
+                    <c:if test="${not empty usernameError}">
+                        <div class="error-message text-danger">${usernameError}</div>
+                    </c:if>
                 </div>
+                <!-- Số điện thoại -->
                 <div class="form-group">
                     <label>Số Điện Thoại</label>
-                    <input type="text" name="phoneNumber" class="form-control" placeholder="Số Điện Thoại" >
+                    <input type="text" name="phoneNumber" class="form-control"
+                           placeholder="Số Điện Thoại"
+                           value="${param.phoneNumber}"
+                           required
+                           pattern="^0\d{9}$"
+                           title="Số điện thoại phải có đúng 10 chữ số và bắt đầu bằng số 0">
+                    <c:if test="${not empty phoneError}">
+                        <div class="error-message text-danger">${phoneError}</div>
+                    </c:if>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>Tạo mật khẩu</label>
-                        <input name="password" class="form-control" type="password">
-                    </div> <!-- form-group end.// -->
+                        <input name="password" class="form-control" type="password"
+                               required
+                               pattern="^(?=.*[A-Z])(?=.*\W).{8,}$"
+                               title="Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ in hoa và 1 ký tự đặc biệt">
+                    </div>
+
                     <div class="form-group col-md-6">
                         <label>Nhập lại mật khẩu</label>
-                        <input name="confirmPassword" class="form-control" type="password">
-                    </div> <!-- form-group end.// -->
+                        <input name="confirmPassword" class="form-control" type="password"
+                               required>
+                    </div>
                 </div>
+
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block"> Đăng ký</button>
                 </div> <!-- form-group// -->
@@ -78,6 +106,21 @@
     <!-- ============================ COMPONENT REGISTER  END.// ================================= -->
 </section>
 <%@ include file="/view/view-index/footer.jsp" %>
+<script>
+    function sanitizeUsername(input) {
+        // Loại bỏ dấu tiếng Việt, khoảng trắng và ký tự đặc biệt
+        input.value = input.value
+            .normalize("NFD")                     // Tách dấu ra khỏi chữ
+            .replace(/[\u0300-\u036f]/g, "")     // Xóa dấu
+            .replace(/\s+/g, "")                 // Xóa khoảng trắng
+            .replace(/[^a-zA-Z0-9_]/g, "");      // Xóa ký tự không hợp lệ
+    }
+</script>
+
+<input type="text" name="username" class="form-control"
+       placeholder="Tên Đăng Nhập" required
+       oninput="sanitizeUsername(this)">
+
 </body>
 </html>
 

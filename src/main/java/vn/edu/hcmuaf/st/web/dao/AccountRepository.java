@@ -5,6 +5,7 @@ import org.jdbi.v3.core.statement.Query;
 import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.st.web.entity.*;
+import vn.edu.hcmuaf.st.web.service.AccountService;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -73,35 +74,22 @@ public class AccountRepository {
         });
     }
 
-    // lấy tên
-    public String getFullNameByUsername(String username) {
-        String query = "SELECT fullName FROM users WHERE username = ?";
-        return jdbi.withHandle(handle -> {
-            // Thực hiện truy vấn và lấy giá trị fullName
-            String fullName = handle.createQuery(query)
-                    .bind(0, username)  // Bind giá trị username vào câu truy vấn
-                    .mapTo(String.class)  // Chuyển kết quả sang kiểu String
-                    .findOnly();  // Chỉ lấy một kết quả duy nhất
-            return fullName;  // Trả về giá trị fullName
-        });
-    }
-
-    public User getUserByUsernameAndAddress(String username) {
+    public User getUserByEmailAndAddress(String email) {
         String query = """
-                    SELECT 
-                        u.idUser AS u_idUser, u.fullName AS u_fullName, u.password AS u_password, 
-                        u.username AS u_username, u.email AS u_email, u.phoneNumber AS u_phoneNumber, 
-                        u.birthDate AS u_birthDate,
-                        a.idAddress AS a_idAddress, a.address AS a_address, a.ward AS a_ward, 
-                        a.district AS a_district, a.province AS a_province, a.isDefault AS a_isDefault
-                    FROM users u
-                    JOIN address a ON u.idUser = a.idUser
-                    WHERE u.username = ?
-                """;
+                SELECT 
+                    u.idUser AS u_idUser, u.fullName AS u_fullName, u.password AS u_password, 
+                    u.username AS u_username, u.email AS u_email, u.phoneNumber AS u_phoneNumber, 
+                    u.birthDate AS u_birthDate,
+                    a.idAddress AS a_idAddress, a.address AS a_address, a.ward AS a_ward, 
+                    a.district AS a_district, a.province AS a_province, a.isDefault AS a_isDefault
+                FROM users u
+                JOIN address a ON u.idUser = a.idUser
+                WHERE u.email = ?
+            """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(query)
-                        .bind(0, username)
+                        .bind(0, email)
                         .map((rs, ctx) -> {
                             User user = new User();
                             user.setIdUser(rs.getInt("u_idUser"));
@@ -121,7 +109,7 @@ public class AccountRepository {
                             // Tạo Address object
                             Address address = new Address(
                                     rs.getInt("a_idAddress"),
-                                    user, // truyền User vào
+                                    user,
                                     rs.getString("a_address"),
                                     rs.getString("a_ward"),
                                     rs.getString("a_district"),
@@ -163,9 +151,29 @@ public class AccountRepository {
 
         );
     }
+    // kiểm tra tồn tại của email
+    public boolean isEmailExists(String email) {
+        String query = "SELECT COUNT(*) FROM users WHERE email = ?";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(query)
+                        .bind(0, email)
+                        .mapTo(Integer.class)
+                        .one() > 0
+        );
+    }
+    // kiểm tra số điện thoại tồn tại chưa
+    public boolean isPhoneNumberExists(String phoneNumber) {
+        String query = "SELECT COUNT(*) FROM users WHERE phoneNumber = ?";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(query)
+                        .bind(0, phoneNumber)
+                        .mapTo(Integer.class)
+                        .one() > 0
+        );
+    }
 
     // Tạo mới nếu chưa có tài khoản ,cập nhật nếu như email đã tồn tại
-    public User insertOrUpdateUser(GoogleAccount googleAccount) {
+    public User insertOrUpdateUser(GoogleAccount user) {
         // Câu lệnh SQL để thêm mới hoặc cập nhật nếu đã tồn tại (dựa trên socialId hoặc email)
         String query = """
                     INSERT INTO users (username, password, fullName, email, idRole, image, socialId, phoneNumber)
@@ -179,32 +187,32 @@ public class AccountRepository {
                 """;
         System.out.println("Executing query: " + query);  // In câu lệnh SQL
         System.out.println("Parameters: ");
-        System.out.println("Username: " + googleAccount.getUsername());
-        System.out.println("Password: " + googleAccount.getPassword());
-        System.out.println("FullName: " + googleAccount.getFullName());
-        System.out.println("Email: " + googleAccount.getEmail());
-        System.out.println("IDRole: " + googleAccount.getIdRole());
-        System.out.println("Image: " + googleAccount.getImage());
-        System.out.println("SocialID: " + googleAccount.getId());
+        System.out.println("Username: " + user.getUsername());
+        System.out.println("Password: " + user.getPassword());
+        System.out.println("FullName: " + user.getFullName());
+        System.out.println("Email: " + user.getEmail());
+        System.out.println("IDRole: " + user.getIdRole());
+        System.out.println("Image: " + user.getImage());
+        System.out.println("SocialID: " + user.getId());
 
         try {
             // Thực hiện câu lệnh SQL để thêm mới hoặc cập nhật người dùng
             jdbi.useHandle(handle ->
                     handle.createUpdate(query)
-                            .bind("username", googleAccount.getUsername())
-                            .bind("password", googleAccount.getPassword())
-                            .bind("fullName", googleAccount.getFullName())
-                            .bind("email", googleAccount.getEmail())
-                            .bind("idRole", googleAccount.getIdRole())
-                            .bind("image", googleAccount.getImage())
-                            .bind("socialId", googleAccount.getId())  // Gán socialId từ Google
-                            .bind("phoneNumber", googleAccount.getPhoneNumber()) // Gán số điện thoại nếu có
+                            .bind("username", user.getUsername())
+                            .bind("password", user.getPassword())
+                            .bind("fullName", user.getFullName())
+                            .bind("email", user.getEmail())
+                            .bind("idRole", user.getIdRole())
+                            .bind("image", user.getImage())
+                            .bind("socialId", user.getId())  // Gán socialId từ Google
+                            .bind("phoneNumber", user.getPhoneNumber()) // Gán số điện thoại nếu có
 
                             .execute()
             );
 
             // Trả về đối tượng User sau khi thực hiện insert hoặc update thành công
-            return new User(googleAccount.getFullName(), googleAccount.getPassword(), googleAccount.getUsername(), googleAccount.getEmail());
+            return new User(user.getFullName(), user.getPassword(), user.getUsername(), user.getEmail());
         } catch (Exception e) {
             e.printStackTrace();  // In ra lỗi nếu có
             return null;  // Trả về null nếu có lỗi
@@ -217,22 +225,22 @@ public class AccountRepository {
                                   java.util.Date birthDate) {
 
         String updateUserSql = """
-                UPDATE users SET 
-                    fullName = :fullName,
-                    phoneNumber = :phoneNumber,
-                    email = :email,
-                    birthDate = :birthDate
-                WHERE idUser = :idUser
-                """;
+            UPDATE users SET 
+                fullName = :fullName,
+                phoneNumber = :phoneNumber,
+                email = :email,
+                birthDate = :birthDate
+            WHERE idUser = :idUser
+            """;
 
         String updateAddressSql = """
-                UPDATE address SET 
-                    address = :address,
-                    ward = :ward,
-                    district = :district,
-                    province = :province
-                WHERE idUser = :idUser
-                """;
+            UPDATE address SET 
+                address = :address,
+                ward = :ward,
+                district = :district,
+                province = :province
+            WHERE idUser = :idUser AND isDefault = true
+            """;
 
         try {
             return jdbi.withHandle(handle -> {
@@ -259,6 +267,7 @@ public class AccountRepository {
             return false;
         }
     }
+
 
     // thời gian khóa tài khoản
     public void lockUserForDuration(String username, int minutes) {
@@ -453,6 +462,7 @@ public class AccountRepository {
                         .execute()
         );
     }
+    // lấy nhân viên thông qua id
     public User getStaffById(int id) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM users WHERE idUser = :id")
@@ -462,6 +472,7 @@ public class AccountRepository {
                         .orElse(null)
         );
     }
+    // lấy tất cả vai trò hiện có
     public List<Role> getAllRoles() {
         String sql = "SELECT idRole, role FROM role";
         return jdbi.withHandle(handle ->
@@ -476,7 +487,7 @@ public class AccountRepository {
         );
     }
 
-
+    // cập nhật thông tin nhân viên
     public void updateStaff(User user) {
         String sql = "UPDATE users SET username = :username, email = :email, phoneNumber = :phoneNumber, idRole = :idRole WHERE idUser = :idUser";
         jdbi.useHandle(handle -> handle.createUpdate(sql)
@@ -487,7 +498,7 @@ public class AccountRepository {
                 .bind("idUser", user.getIdUser())
                 .execute());
     }
-
+    // thêm nhân viên
     public int addStaff(User user) {
         String sql = "INSERT INTO users (username, email, phoneNumber, idRole, password) " +
                 "VALUES (:username, :email, :phoneNumber, :idRole, :password)";
@@ -507,9 +518,36 @@ public class AccountRepository {
 
 
     public static void main(String[] args) {
-        AccountRepository repo = new AccountRepository();
-        List<Role> roles = repo.getAllRoles();
-        roles.forEach(System.out::println);
+        AccountService accountService = new AccountService();
+
+        // Thử với một username có trong DB
+        String username = "danh"; // 🔁 đổi thành username hợp lệ trong DB của bạn
+
+        User user = accountService.getUserByUsernameAndAddress(username);
+
+        if (user != null) {
+            System.out.println("Thông tin người dùng:");
+            System.out.println("ID: " + user.getIdUser());
+            System.out.println("Họ tên: " + user.getFullName());
+            System.out.println("Username: " + user.getUsername());
+            System.out.println("Email: " + user.getEmail());
+            System.out.println("Phone: " + user.getPhoneNumber());
+            System.out.println("Ngày sinh: " + user.getBirthDate());
+
+            System.out.println("Địa chỉ:");
+            Address address = user.getAddress();
+            if (address != null) {
+                System.out.println("Địa chỉ: " + address.getAddress());
+                System.out.println("Phường: " + address.getWard());
+                System.out.println("Quận/Huyện: " + address.getDistrict());
+                System.out.println("Tỉnh/TP: " + address.getProvince());
+                System.out.println("Mặc định: " + address.isDefault());
+            } else {
+                System.out.println("Không có địa chỉ.");
+            }
+        } else {
+            System.out.println("Không tìm thấy người dùng với username: " + username);
+        }
     }
 
 

@@ -6,7 +6,7 @@
     <div class="sidebar-header">
         <div class="user-profile">
             <div class="sidebar-title">
-                <a href="${pageContext.request.contextPath}/view-admin/admin.jsp" class="brand-logo-mini"><img src="${pageContext.request.contextPath}/images/logo.png" alt="logo"
+                <a href="${pageContext.request.contextPath}/admin" class="brand-logo-mini"><img src="${pageContext.request.contextPath}/images/logo.png" alt="logo"
                                                                         width="125"></a>
                 <h2>Litte Whale</h2>
             </div>
@@ -53,6 +53,12 @@
             <a class="menu-link" href="${pageContext.request.contextPath}/view-admin/admin-category/manage-category.jsp">
                 <span class="menu-icon"><i class="fa fa-chart-bar"></i></span>
                 <span class="menu-title">Quản lý danh mục</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="${pageContext.request.contextPath}/admin/staff-list">
+                <span class="menu-icon"><i class="fa fa-users"></i></span>
+                <span class="menu-title">Quản Lý Nhân Viên</span>
             </a>
         </li>
     </ul>

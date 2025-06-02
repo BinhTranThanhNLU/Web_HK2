@@ -67,7 +67,7 @@ public class AccountService {
         Transport.send(message);
     }
 
-    // đổi mk
+    // đổi mật khẩu
     public boolean updatePassword(String email, String newPassword) {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         return accountRepository.updatePasswordByEmail(email, hashedPassword);
@@ -79,9 +79,10 @@ public class AccountService {
     }
 
     // Lấy thông tin người dùng theo username ( hiển thị trong profile.jsp)
-    public User getUserByUsernameAndAddress(String username) {
-        return accountRepository.getUserByUsernameAndAddress(username);  // Gọi phương thức từ DAO
+    public User getUserByUsernameAndAddress(String email) {
+        return accountRepository.getUserByEmailAndAddress(email);  // Gọi phương thức từ DAO
     }
+
 
 
     // đăng nhập google
@@ -116,7 +117,7 @@ public class AccountService {
         LocalDateTime lockedUntil = LocalDateTime.now().plusMinutes(minutes);
         accountRepository.setUserLockedUntil(username, lockedUntil);
     }
-
+    // mở khóa
     public void unlockUserIfTimePassed(String username) {
         User user = accountRepository.getUserByUsername(username);
         if (user == null || user.getLockedUntil() == null) return;
@@ -141,7 +142,7 @@ public class AccountService {
     public void resetLoginAttempts(String username) {
         accountRepository.updateLoginAttempts(username, 0);
     }
-
+    //
     public void incrementLoginAttempts(String username) {
         User user = accountRepository.getUserByUsername(username);
         if (user != null) {
@@ -149,42 +150,59 @@ public class AccountService {
             accountRepository.updateLoginAttempts(username, attempts);
         }
     }
-
+    // kiểm tra đăng nhập
     public boolean checkLogin(String username, String password) {
         return accountRepository.checkLogin(username, password);
     }
 
-    public static void main(String[] args) {
-        AccountService accountService = new AccountService();
-        User user = accountService.getUserByUsername("hatest123");
-        System.out.println(user.getIdUser());
-    }
-
-
+    // lấy dữ liệu nhân viên
     public List<User> getUsersWithRoles(List<Integer> roleIds) {
-        // Gọi tới repository để lấy dữ liệu thực sự
         return accountRepository.getUsersWithRoles(roleIds);
     }
-
+    // xóa nhân viên
     public void deleteUserById(int id) {
         accountRepository.deleteStaffById(id);
     }
-
+    // lấy thông tin nhân viên qua id
     public User getStaffById(int id) {
         return accountRepository.getStaffById(id);
     }
-
+    // cập nhật thông tin nhân viên
     public void updateStaff(User user) {
         accountRepository.updateStaff(user);
     }
 
-
+    // hiển thị tất cả vai trò
     public List<Role> getAllRoles() {
         return accountRepository.getAllRoles();
     }
 
     public int addStaff(User user) {
         return accountRepository.addStaff(user);
+    }
+    public static void main(String[] args) {
+        AccountService accountService = new AccountService();
+        User user = accountService.getUserByUsername("hatest123");
+        System.out.println(user.getIdUser());
+    }
+
+    public boolean isEmailExists(String email) {
+        return accountRepository.isEmailExists(email);
+    }
+
+    public boolean isPhoneNumberExists(String phoneNumber) {
+        return accountRepository.isPhoneNumberExists(phoneNumber);
+    }
+
+    public User createUserFromGoogleAccount(GoogleAccount googleAccount) {
+        // Thêm mới hoặc cập nhật user dựa trên GoogleAccount
+        accountRepository.insertOrUpdateUser(googleAccount);
+        // Lấy User từ email Google
+        return accountRepository.getUserByEmail(googleAccount.getEmail());
+    }
+
+    public User getUserByEmailAndAddress(String email) {
+        return accountRepository.getUserByEmailAndAddress(email);
     }
 }
 

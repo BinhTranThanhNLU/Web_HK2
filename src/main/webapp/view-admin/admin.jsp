@@ -22,7 +22,7 @@
     <div class="sidebar-header">
         <div class="user-profile">
             <div class="sidebar-title">
-                <a href="./admin.jsp" class="brand-logo-mini"><img src="<%= request.getContextPath() %>/images/logo.png"
+                <a href="/admin" class="brand-logo-mini"><img src="<%= request.getContextPath() %>/images/logo.png"
                                                                    alt="logo" width="125"></a>
                 <h2>Litte Whale</h2>
             </div>
