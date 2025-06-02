@@ -25,6 +25,10 @@ public class OrderService {
         return orderDao.getAllOrders();
     }
 
+    public void updateOrderStatus(int idOrder, String status) {
+        orderDao.updateStatus(idOrder, status);
+    }
+
     public static void main(String[] args) {
         OrderService orderService = new OrderService();
         Order order = orderService.getOrderById(5);

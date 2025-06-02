@@ -108,7 +108,9 @@
         </div>
     </div>
 </div>
-<div class="container"> &nbsp;</div>
+<div class="container"> &nbsp;</div
+
+
 <%@ include file="/view/view-index/footer.jsp" %>
 </body>
 </html>

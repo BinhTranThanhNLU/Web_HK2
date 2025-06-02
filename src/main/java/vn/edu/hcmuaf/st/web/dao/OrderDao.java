@@ -124,6 +124,16 @@ public class OrderDao {
         );
     }
 
+    public void updateStatus(int idOrder, String status) {
+        String sql = "UPDATE orders SET status = :status WHERE idOrder = :idOrder";
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("status", status)
+                        .bind("idOrder", idOrder)
+                        .execute()
+        );
+    }
+
     public static void main(String[] args) {
         OrderDao dao = new OrderDao();
         List<Order> orders = dao.getAllOrders();
