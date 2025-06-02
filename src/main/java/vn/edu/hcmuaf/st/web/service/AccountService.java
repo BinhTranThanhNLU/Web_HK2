@@ -8,10 +8,11 @@ import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
+import vn.edu.hcmuaf.st.web.entity.Role;
 import vn.edu.hcmuaf.st.web.entity.User;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -149,11 +150,10 @@ public class AccountService {
         }
     }
 
-
-
-    public boolean  checkLogin(String username, String password) {
+    public boolean checkLogin(String username, String password) {
         return accountRepository.checkLogin(username, password);
     }
+
     public static void main(String[] args) {
         AccountService accountService = new AccountService();
         User user = accountService.getUserByUsername("hatest123");
@@ -161,6 +161,30 @@ public class AccountService {
     }
 
 
+    public List<User> getUsersWithRoles(List<Integer> roleIds) {
+        // Gọi tới repository để lấy dữ liệu thực sự
+        return accountRepository.getUsersWithRoles(roleIds);
+    }
 
+    public void deleteUserById(int id) {
+        accountRepository.deleteStaffById(id);
+    }
+
+    public User getStaffById(int id) {
+        return accountRepository.getStaffById(id);
+    }
+
+    public void updateStaff(User user) {
+        accountRepository.updateStaff(user);
+    }
+
+
+    public List<Role> getAllRoles() {
+        return accountRepository.getAllRoles();
+    }
+
+    public int addStaff(User user) {
+        return accountRepository.addStaff(user);
+    }
 }
 

@@ -4,14 +4,12 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.Query;
 import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.st.web.dao.db.JDBIConnect;
-import vn.edu.hcmuaf.st.web.entity.Address;
-import vn.edu.hcmuaf.st.web.entity.Category;
-import vn.edu.hcmuaf.st.web.entity.GoogleAccount;
-import vn.edu.hcmuaf.st.web.entity.User;
+import vn.edu.hcmuaf.st.web.entity.*;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class AccountRepository {
     private final Jdbi jdbi;
@@ -88,7 +86,6 @@ public class AccountRepository {
         });
     }
 
-
     public User getUserByUsernameAndAddress(String username) {
         String query = """
                     SELECT 
@@ -138,7 +135,6 @@ public class AccountRepository {
         );
     }
 
-
     public User getUserByUsername(String username) {
         String query = "SELECT idUser, fullName, password, username, email, phoneNumber, idRole, loginAttempts, lockedUntil FROM users WHERE username = ?";
         return jdbi.withHandle(handle ->
@@ -167,7 +163,6 @@ public class AccountRepository {
 
         );
     }
-
 
     // Tạo mới nếu chưa có tài khoản ,cập nhật nếu như email đã tồn tại
     public User insertOrUpdateUser(GoogleAccount googleAccount) {
@@ -299,8 +294,6 @@ public class AccountRepository {
         );
     }
 
-
-
     public User getUserByEmail(String email) {
         String query = "SELECT idUser, fullName, password, username, email, phoneNumber FROM users WHERE email = ?";
 
@@ -330,6 +323,7 @@ public class AccountRepository {
                         .bind("username", username)
                         .execute()
         );
+
     }
 
     // Đặt lại số lần đăng nhập sai về 0
@@ -388,43 +382,137 @@ public class AccountRepository {
         });
     }
 
+
+    public User getUserById(int id) {
+        String query = "SELECT * FROM users WHERE idUser = :id";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(query)
+                        .bind("id", id)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    public void updateUser(User user) {
+        String query = "UPDATE users SET username = :username, email = :email, phoneNumber = :phoneNumber WHERE idUser = :id";
+        jdbi.useHandle(handle ->
+                handle.createUpdate(query)
+                        .bind("id", user.getIdUser())
+                        .bind("username", user.getUsername())
+                        .bind("email", user.getEmail())
+                        .bind("phoneNumber", user.getPhoneNumber())
+                        .execute()
+        );
+    }
+
+    public List<User> getUsersWithRoles(List<Integer> roleIds) {
+        StringBuilder queryBuilder = new StringBuilder(
+                "SELECT u.idUser, u.username, u.email, u.phoneNumber, r.idRole, r.role " +
+                        "FROM users u " +
+                        "JOIN role r ON u.idRole = r.idRole " +
+                        "WHERE r.idRole IN ("
+        );
+
+        for (int i = 0; i < roleIds.size(); i++) {
+            queryBuilder.append("?");
+            if (i < roleIds.size() - 1) {
+                queryBuilder.append(",");
+            }
+        }
+        queryBuilder.append(")");
+
+        String query = queryBuilder.toString();
+
+        return jdbi.withHandle(handle -> {
+            var queryHandle = handle.createQuery(query);
+            for (int i = 0; i < roleIds.size(); i++) {
+                queryHandle.bind(i, roleIds.get(i));
+            }
+
+            return queryHandle
+                    .map((rs, ctx) -> {
+                        User user = new User();
+                        user.setIdUser(rs.getInt("idUser"));
+                        user.setUsername(rs.getString("username"));
+                        user.setEmail(rs.getString("email"));
+                        user.setPhoneNumber(rs.getString("phoneNumber"));
+                        user.setIdRole(rs.getInt("idRole"));
+                        user.setRole(rs.getString("role"));
+
+                        return user;
+                    })
+                    .list();
+        });
+    }
+    // Xóa Nhân Viên
+    public void deleteStaffById(int id) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate("DELETE FROM users WHERE idUser = :id")
+                        .bind("id", id)
+                        .execute()
+        );
+    }
+    public User getStaffById(int id) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE idUser = :id")
+                        .bind("id", id)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+    public List<Role> getAllRoles() {
+        String sql = "SELECT idRole, role FROM role";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .map((rs, ctx) -> {
+                            Role r = new Role();
+                            r.setIdRole(rs.getInt("idRole"));
+                            r.setRole(Role.RoleName.valueOf(rs.getString("role")));
+                            return r;
+                        })
+                        .list()
+        );
+    }
+
+
+    public void updateStaff(User user) {
+        String sql = "UPDATE users SET username = :username, email = :email, phoneNumber = :phoneNumber, idRole = :idRole WHERE idUser = :idUser";
+        jdbi.useHandle(handle -> handle.createUpdate(sql)
+                .bind("username", user.getUsername())
+                .bind("email", user.getEmail())
+                .bind("phoneNumber", user.getPhoneNumber())
+                .bind("idRole", user.getIdRole())
+                .bind("idUser", user.getIdUser())
+                .execute());
+    }
+
+    public int addStaff(User user) {
+        String sql = "INSERT INTO users (username, email, phoneNumber, idRole, password) " +
+                "VALUES (:username, :email, :phoneNumber, :idRole, :password)";
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("username", user.getUsername())
+                        .bind("email", user.getEmail())
+                        .bind("phoneNumber", user.getPhoneNumber())
+                        .bind("idRole", user.getIdRole())
+                        .bind("password", user.getPassword())  // Thêm bind password
+                        .executeAndReturnGeneratedKeys("idUser")
+                        .mapTo(Integer.class)
+                        .one());
+    }
+
+
+
+
     public static void main(String[] args) {
         AccountRepository repo = new AccountRepository();
-
-        String username1 = "hdanhv5879";
-        User user1 = repo.getUserByUsernameAndAddress(username1);
-
-        if (user1 != null) {
-            System.out.println("===== THÔNG TIN NGƯỜI DÙNG (getUserByUsernameAndAddress) =====");
-            System.out.println("ID: " + user1.getIdUser());
-            System.out.println("Họ tên: " + user1.getFullName());
-            System.out.println("Username: " + user1.getUsername());
-            System.out.println("Email: " + user1.getEmail());
-            System.out.println("Số điện thoại: " + user1.getPhoneNumber());
-            System.out.println("Ngày sinh: " + user1.getBirthDate());
-            System.out.println("Địa chỉ: " + user1.getAddress());
-        } else {
-            System.out.println("Không tìm thấy người dùng với username = " + username1);
-        }
-
-        // Test getUserByUsername
-        String username2 = "hdanhv5879";
-        User user2 = repo.getUserByUsername(username2);
-
-        if (user2 != null) {
-            System.out.println("===== THÔNG TIN NGƯỜI DÙNG (getUserByUsername) =====");
-            System.out.println("ID: " + user2.getIdUser());
-            System.out.println("Full name: " + user2.getFullName());
-            System.out.println("Username: " + user2.getUsername());
-            System.out.println("Email: " + user2.getEmail());
-            System.out.println("Phone: " + user2.getPhoneNumber());
-            System.out.println("Role ID: " + user2.getIdRole());
-            System.out.println("Login attempts: " + user2.getLoginAttempts());
-            System.out.println("Locked until: " + user2.getLockedUntil());
-        } else {
-            System.out.println("User not found with username = " + username2);
-        }
+        List<Role> roles = repo.getAllRoles();
+        roles.forEach(System.out::println);
     }
+
+
 
 
 }
