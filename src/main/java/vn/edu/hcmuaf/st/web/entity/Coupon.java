@@ -121,5 +121,20 @@ public class Coupon implements Serializable {
         this.discountType = discountType;
     }
 
-// Optionally: toString, equals, hashCode...
+
+    @Override
+    public String toString() {
+        return "Coupon{" +
+                "idCoupon=" + idCoupon +
+                ", code='" + code + '\'' +
+                ", discountAmount=" + discountAmount +
+                ", isPercentage=" + isPercentage +
+                ", minOrderValue=" + minOrderValue +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", usageLimit=" + usageLimit +
+                ", usedCount=" + usedCount +
+                ", discountType=" + discountType +
+                '}';
+    }
 }
