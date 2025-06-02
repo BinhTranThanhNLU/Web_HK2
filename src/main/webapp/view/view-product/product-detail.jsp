@@ -21,7 +21,7 @@
                 <aside class="col-md-6">
                     <article class="gallery-wrap">
                         <div class="img-big-wrap">
-                            <a href="#">
+                            <a href="${product.productImages[0].imageUrl}">
                                 <img src="${product.productImages[0].imageUrl}" alt="${product.title}">
                             </a>
                         </div> <!-- img-big-wrap.// -->
@@ -90,10 +90,9 @@
                             </div>
                         </div> <!-- row.// -->
                         <hr>
-                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span>
-                            <i class="fas fa-shopping-cart"></i> </a>
-                        <a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span>
-                            <i class="fas fa-shopping-cart"></i> </a>
+
+                        <a href="${pageContext.request.contextPath}/view/view-order/cart.jsp" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span></a>
+                        <a href="${pageContext.request.contextPath}/view/view-order/place-order.jsp" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span> </a>
                     </article> <!-- product-info-aside .// -->
                 </main> <!-- col.// -->
             </div> <!-- row.// -->
@@ -173,5 +172,9 @@
     </div> <!-- container .//  -->
 </section>
 <%@ include file="/view/view-index/footer.jsp" %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/main.js"></script>
+
 </body>
 </html>

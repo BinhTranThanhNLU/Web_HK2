@@ -11,6 +11,7 @@ import vn.edu.hcmuaf.st.web.service.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet(name = "orderController", urlPatterns = "/place-order")
 public class OrderController extends HttpServlet {
@@ -21,6 +22,8 @@ public class OrderController extends HttpServlet {
     private final AccountService accountService = new AccountService();
     private final OrderService orderService = new OrderService();
     private final ProductVariantService productVariantService = new ProductVariantService();
+    private final CouponService couponService = new CouponService();
+    private final DiscountService discountService = new DiscountService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,6 +45,12 @@ public class OrderController extends HttpServlet {
         req.setAttribute("phone", user.getPhoneNumber());
 
         req.setAttribute("cart", cart);
+        req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
+
+        // Lấy danh sách discount đang còn hiệu lực
+        List<Discount> activeDiscounts = discountService.getActiveDiscounts();
+        req.setAttribute("activeDiscounts", activeDiscounts);
+
         req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
     }
 
@@ -143,6 +152,27 @@ public class OrderController extends HttpServlet {
         req.setAttribute("finalPrice", finalPrice);
 
         req.getRequestDispatcher("/view/view-order/order-complete.jsp").forward(req, resp);
+
+
+        // Lấy discountId từ form
+        String discountIdStr = req.getParameter("discountId");
+        Discount selectedDiscount = null;
+        double discountAmount = 0;
+
+        if (discountIdStr != null && !discountIdStr.isEmpty()) {
+            int discountId = Integer.parseInt(discountIdStr);
+            Optional<Discount> discountOpt = discountService.getDiscountById(discountId);
+
+            if (discountOpt.isPresent()) {
+                Discount discount = discountOpt.get();
+                if (discountService.isDiscountValid(discount)) {
+                    selectedDiscount = discount;
+                    discountAmount = discount.getDiscountAmount(); // Ví dụ: 10 nghĩa là 10%
+                    double discountValue = cart.getTotalPrice() * discountAmount / 100.0;
+                    finalPrice -= discountValue;
+                }
+            }
+        }
 
     }
 }
