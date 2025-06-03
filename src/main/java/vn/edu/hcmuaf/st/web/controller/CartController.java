@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.edu.hcmuaf.st.web.entity.*;
+import vn.edu.hcmuaf.st.web.service.CouponService;
 import vn.edu.hcmuaf.st.web.service.ProductService;
 import vn.edu.hcmuaf.st.web.service.ProductVariantService;
 
@@ -19,6 +20,7 @@ public class CartController extends HttpServlet {
 
     private final ProductService productService = new ProductService();
     private final ProductVariantService productVariantService = new ProductVariantService();
+    private final CouponService couponService = new CouponService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -96,7 +98,34 @@ public class CartController extends HttpServlet {
                     resp.getWriter().write("ERROR: Invalid number format");
                 }
                 break;
-                
+
+            case "applyCoupon":
+                String code = req.getParameter("couponCode");
+
+                // Lấy giỏ hàng từ session
+                cart = (Cart) session.getAttribute("cart");
+                if (cart == null) {
+                    cart = new Cart();  // Trường hợp chưa có giỏ hàng
+                }
+
+                double productTotal = cart.getTotalPrice();     // Tổng tiền sản phẩm
+
+                // Gọi dịch vụ áp dụng mã giảm giá, không truyền shippingFee
+                CouponService.CouponResult result = couponService.applyCoupon(code, productTotal, 0.0, false); // false: áp dụng cho sản phẩm
+
+                if (result.isSuccess()) {
+                    cart.setProductDiscount(result.getDiscountAmount());   // Giảm giá cho sản phẩm
+                    cart.setAppliedCouponCode(code);                       // Ghi nhận mã đã dùng
+                    cart.setDiscountAmount(result.getDiscountAmount());    // Nếu bạn có phân biệt tổng tiền giảm
+
+                    session.setAttribute("cart", cart);
+                    req.setAttribute("message", result.getMessage());
+                } else {
+                    req.setAttribute("error", result.getMessage());
+                }
+
+                req.getRequestDispatcher("view/view-order/cart.jsp").forward(req, resp);
+                break;
 
             default:
                 resp.sendRedirect(req.getContextPath() + "/cart");

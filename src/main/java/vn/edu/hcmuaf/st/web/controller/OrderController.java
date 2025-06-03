@@ -23,7 +23,6 @@ public class OrderController extends HttpServlet {
     private final OrderService orderService = new OrderService();
     private final ProductVariantService productVariantService = new ProductVariantService();
     private final CouponService couponService = new CouponService();
-    private final DiscountService discountService = new DiscountService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,11 +46,7 @@ public class OrderController extends HttpServlet {
         req.setAttribute("cart", cart);
         req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
 
-        // Lấy danh sách discount đang còn hiệu lực
-        List<Discount> activeDiscounts = discountService.getActiveDiscounts();
-        req.setAttribute("activeDiscounts", activeDiscounts);
 
-        req.getRequestDispatcher("/view/view-order/place-order.jsp").forward(req, resp);
     }
 
     @Override
@@ -112,6 +107,32 @@ public class OrderController extends HttpServlet {
         int orderId = orderService.createOrder(order);
         order.setIdOrder(orderId);
 
+        String couponCode = req.getParameter("couponCode");
+        if (couponCode != null && !couponCode.isEmpty()) {
+            Optional<Coupon> couponOptional = couponService.getCouponByCode(couponCode);
+            if (couponOptional.isPresent()) {
+                Coupon coupon = couponOptional.get();
+
+                // ✅ Tăng số lượt sử dụng (không cần đánh dấu người dùng)
+                couponService.incrementUsedCount(coupon.getIdCoupon());
+
+                // ✅ Nếu giảm theo phần trăm
+                double relevantTotal = cart.getTotalPrice(); // bạn có thể thay đổi nếu chỉ áp dụng cho sản phẩm nào đó
+                double discount;
+                if (coupon.isPercentage()) {
+                    discount = relevantTotal * coupon.getDiscountAmount() / 100.0;
+                } else {
+                    discount = coupon.getDiscountAmount();
+                }
+
+                // Không cho vượt quá tổng tiền
+                discount = Math.min(discount, relevantTotal);
+
+                // ✅ Set giảm giá vào đơn hàng
+                order.setDiscountAmount(discount);
+            }
+        }
+
         //4.tao chi tiet don hang
         for(CartItem cartItem : cart.getCartItems().values()) {
             OrderDetail orderDetail = new OrderDetail();
@@ -153,26 +174,6 @@ public class OrderController extends HttpServlet {
 
         req.getRequestDispatcher("/view/view-order/order-complete.jsp").forward(req, resp);
 
-
-        // Lấy discountId từ form
-        String discountIdStr = req.getParameter("discountId");
-        Discount selectedDiscount = null;
-        double discountAmount = 0;
-
-        if (discountIdStr != null && !discountIdStr.isEmpty()) {
-            int discountId = Integer.parseInt(discountIdStr);
-            Optional<Discount> discountOpt = discountService.getDiscountById(discountId);
-
-            if (discountOpt.isPresent()) {
-                Discount discount = discountOpt.get();
-                if (discountService.isDiscountValid(discount)) {
-                    selectedDiscount = discount;
-                    discountAmount = discount.getDiscountAmount(); // Ví dụ: 10 nghĩa là 10%
-                    double discountValue = cart.getTotalPrice() * discountAmount / 100.0;
-                    finalPrice -= discountValue;
-                }
-            }
-        }
 
     }
 }

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Coupon implements Serializable {
-
     private int idCoupon;
     private String code;
     private double discountAmount;
@@ -14,14 +13,21 @@ public class Coupon implements Serializable {
     private LocalDateTime endDate;
     private int usageLimit;
     private int usedCount;
+    private DiscountType discountType;
 
-    // Constructor không tham số
+    public enum DiscountType {
+        PRODUCT,
+        SHIPPING
+    }
+
+    // Constructor không tham số (mặc định)
     public Coupon() {
     }
 
     // Constructor đầy đủ
     public Coupon(int idCoupon, String code, double discountAmount, boolean isPercentage,
-                  double minOrderValue, LocalDateTime startDate, LocalDateTime endDate, int usageLimit, int usedCount) {
+                  double minOrderValue, LocalDateTime startDate, LocalDateTime endDate,
+                  int usageLimit, int usedCount, DiscountType discountType) {
         this.idCoupon = idCoupon;
         this.code = code;
         this.discountAmount = discountAmount;
@@ -31,10 +37,10 @@ public class Coupon implements Serializable {
         this.endDate = endDate;
         this.usageLimit = usageLimit;
         this.usedCount = usedCount;
+        this.discountType = discountType;
     }
 
-    // Getters và Setters
-
+    // Getters and Setters
     public int getIdCoupon() {
         return idCoupon;
     }
@@ -63,8 +69,8 @@ public class Coupon implements Serializable {
         return isPercentage;
     }
 
-    public void setPercentage(boolean isPercentage) {
-        this.isPercentage = isPercentage;
+    public void setPercentage(boolean percentage) {
+        isPercentage = percentage;
     }
 
     public double getMinOrderValue() {
@@ -107,11 +113,20 @@ public class Coupon implements Serializable {
         this.usedCount = usedCount;
     }
 
+    public DiscountType getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(DiscountType discountType) {
+        this.discountType = discountType;
+    }
+
+
     @Override
     public String toString() {
         return "Coupon{" +
                 "idCoupon=" + idCoupon +
-                ", code='" + code +
+                ", code='" + code + '\'' +
                 ", discountAmount=" + discountAmount +
                 ", isPercentage=" + isPercentage +
                 ", minOrderValue=" + minOrderValue +
@@ -119,7 +134,7 @@ public class Coupon implements Serializable {
                 ", endDate=" + endDate +
                 ", usageLimit=" + usageLimit +
                 ", usedCount=" + usedCount +
+                ", discountType=" + discountType +
                 '}';
     }
-
 }

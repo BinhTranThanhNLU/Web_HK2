@@ -138,4 +138,7 @@ public class Order {
     public void setDiscount(Discount discount) {
         this.discount = discount;
     }
+
+    public void setDiscountAmount(double discount) {
+    }
 }

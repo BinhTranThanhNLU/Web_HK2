@@ -7,11 +7,14 @@ import java.util.*;
 public class Cart implements Serializable {
 
     private int idUser;
+
     private Map<Integer, CartItem> cartItems;
     private double totalPrice;
     private double discountAmount = 0.0;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private double productDiscount = 0;
+    private String appliedCouponCode;
 
     public Cart() {
         this.cartItems = new HashMap<>();
@@ -168,4 +171,22 @@ public class Cart implements Serializable {
                 ", updatedAt=" + updatedAt +
                 '}';
     }
+
+    public void setProductDiscount(double discount) {
+        this.productDiscount = discount;
+    }
+
+    public double getProductDiscount() {
+        return productDiscount;
+    }
+
+    public void setAppliedCouponCode(String code) {
+        this.appliedCouponCode = code;
+    }
+
+    public String getAppliedCouponCode() {
+        return appliedCouponCode;
+    }
+
+
 }
