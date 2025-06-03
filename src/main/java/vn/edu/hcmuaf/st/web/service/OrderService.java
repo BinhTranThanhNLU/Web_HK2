@@ -29,6 +29,33 @@ public class OrderService {
         orderDao.updateStatus(idOrder, status);
     }
 
+    public void refreshOrderStatusFromGhn(int idOrder) {
+        Order order = orderDao.getOrderById(idOrder);
+        if(order.getGhnOrderCode() == null) {
+            System.out.println("Đơn chưa có mã GHN, không thể lấy trạng thái");
+            return;
+        }
+        try {
+            String ghnStatus = GhnTrackingService.getGhnOrderStatus(order.getGhnOrderCode());
+            orderDao.updateGhnStatus(idOrder, ghnStatus);
+
+            // Map trạng thái GHN sang trạng thái đơn hàng của bạn
+            if ("Đã giao".equalsIgnoreCase(ghnStatus) || "Giao thành công".equalsIgnoreCase(ghnStatus)) {
+                orderDao.updateStatus(idOrder, "Hoàn thành");
+            } else if ("Đang giao".equalsIgnoreCase(ghnStatus)) {
+                orderDao.updateStatus(idOrder, "Đang giao");
+            }
+            // Thêm các trạng thái khác nếu muốn
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateGhnOrderCode(int idOrder, String ghnOrderCode) {
+        orderDao.updateGhnOrderCode(idOrder, ghnOrderCode);
+    }
+
+
     public static void main(String[] args) {
         OrderService orderService = new OrderService();
         Order order = orderService.getOrderById(5);
