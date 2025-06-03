@@ -328,51 +328,129 @@
 </script>
 
 <script>
-    let data = [];
+    const TOKEN_GHN = '16a9a441-3f8e-11f0-9b81-222185cb68c8'; // Token GHN của bạn
 
-    fetch('${pageContext.request.contextPath}/json/vietnam-location.json')
-        .then(res => res.json())
-        .then(json => {
-            data = json;
-            const provinceSelect = document.getElementById('province');
-            json.forEach(province => {
-                const option = document.createElement('option');
-                option.value = province.name;
-                option.textContent = province.name;
-                provinceSelect.appendChild(option);
-            });
-            onProvinceChange(); // Tự động load quận/huyện đầu tiên
-        });
+    // 1. Load danh sách tỉnh/thành khi trang load
+    window.addEventListener("DOMContentLoaded", () => {
+        fetch('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province', {
+            method: 'GET',
+            headers: { 'Token': TOKEN_GHN }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const provinceSelect = document.getElementById("province");
+                provinceSelect.innerHTML = ''; // Clear nếu có dữ liệu cũ
+                data.data.forEach(province => {
+                    const opt = new Option(province.ProvinceName, province.ProvinceID);
+                    provinceSelect.appendChild(opt);
+                });
 
+                if(provinceSelect.options.length > 0){
+                    provinceSelect.selectedIndex = 0;
+                    onProvinceChange();
+                }
+            })
+            .catch(err => console.error('Lỗi tải tỉnh:', err));
+    });
+
+    // 2. Khi chọn tỉnh → gọi API GHN lấy danh sách quận/huyện
     function onProvinceChange() {
-        const provinceName = document.getElementById('province').value;
-        const province = data.find(p => p.name === provinceName);
-        const districtSelect = document.getElementById('district');
-        districtSelect.innerHTML = '';
-        province?.districts.forEach(d => {
-            const option = document.createElement('option');
-            option.value = d.name;
-            option.textContent = d.name;
-            districtSelect.appendChild(option);
-        });
-        onDistrictChange();
+        const provinceId = document.getElementById("province").value;
+        fetch('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': TOKEN_GHN
+            },
+            body: JSON.stringify({ province_id: parseInt(provinceId) })
+        })
+            .then(res => res.json())
+            .then(data => {
+                const districtSelect = document.getElementById("district");
+                districtSelect.innerHTML = '';
+                data.data.forEach(district => {
+                    const opt = new Option(district.DistrictName, district.DistrictID);
+                    districtSelect.appendChild(opt);
+                });
+
+                if(districtSelect.options.length > 0){
+                    districtSelect.selectedIndex = 0;
+                    onDistrictChange();
+                }
+            })
+            .catch(err => console.error('Lỗi tải huyện:', err));
     }
 
+    // 3. Khi chọn quận → gọi API GHN lấy danh sách phường/xã
     function onDistrictChange() {
-        const provinceName = document.getElementById('province').value;
-        const districtName = document.getElementById('district').value;
-        const province = data.find(p => p.name === provinceName);
-        const district = province?.districts.find(d => d.name === districtName);
-        const wardSelect = document.getElementById('ward');
-        wardSelect.innerHTML = '';
-        district?.wards.forEach(w => {
-            const option = document.createElement('option');
-            option.value = w;
-            option.textContent = w;
-            wardSelect.appendChild(option);
-        });
+        const districtId = document.getElementById("district").value;
+
+        const url = "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + districtId;
+
+        fetch(url, {
+            method: 'GET',
+            headers: { 'Token': TOKEN_GHN }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const wardSelect = document.getElementById("ward");
+                wardSelect.innerHTML = '';
+                data.data.forEach(ward => {
+                    const opt = new Option(ward.WardName, ward.WardCode);
+                    wardSelect.appendChild(opt);
+                });
+            })
+            .catch(err => console.error('Lỗi tải xã:', err));
     }
 </script>
+
+
+<%--<script>--%>
+<%--    let data = [];--%>
+
+<%--    fetch('${pageContext.request.contextPath}/json/vietnam-location.json')--%>
+<%--        .then(res => res.json())--%>
+<%--        .then(json => {--%>
+<%--            data = json;--%>
+<%--            const provinceSelect = document.getElementById('province');--%>
+<%--            json.forEach(province => {--%>
+<%--                const option = document.createElement('option');--%>
+<%--                option.value = province.name;--%>
+<%--                option.textContent = province.name;--%>
+<%--                provinceSelect.appendChild(option);--%>
+<%--            });--%>
+<%--            onProvinceChange(); // Tự động load quận/huyện đầu tiên--%>
+<%--        });--%>
+
+<%--    function onProvinceChange() {--%>
+<%--        const provinceName = document.getElementById('province').value;--%>
+<%--        const province = data.find(p => p.name === provinceName);--%>
+<%--        const districtSelect = document.getElementById('district');--%>
+<%--        districtSelect.innerHTML = '';--%>
+<%--        province?.districts.forEach(d => {--%>
+<%--            const option = document.createElement('option');--%>
+<%--            option.value = d.name;--%>
+<%--            option.textContent = d.name;--%>
+<%--            districtSelect.appendChild(option);--%>
+<%--        });--%>
+<%--        onDistrictChange();--%>
+<%--    }--%>
+
+<%--    function onDistrictChange() {--%>
+<%--        const provinceName = document.getElementById('province').value;--%>
+<%--        const districtName = document.getElementById('district').value;--%>
+<%--        const province = data.find(p => p.name === provinceName);--%>
+<%--        const district = province?.districts.find(d => d.name === districtName);--%>
+<%--        const wardSelect = document.getElementById('ward');--%>
+<%--        wardSelect.innerHTML = '';--%>
+<%--        district?.wards.forEach(w => {--%>
+<%--            const option = document.createElement('option');--%>
+<%--            option.value = w;--%>
+<%--            option.textContent = w;--%>
+<%--            wardSelect.appendChild(option);--%>
+<%--        });--%>
+<%--    }--%>
+<%--</script>--%>
 
 <script>
     const shippingOptions = document.querySelectorAll('.shipping-option');

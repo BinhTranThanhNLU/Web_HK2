@@ -14,6 +14,8 @@ public class CouponService {
     }
 
 
+
+
     public static class CouponResult {
         private boolean success;
         private String message;
@@ -91,5 +93,12 @@ public class CouponService {
 
     public void increaseUsedCount(int idCoupon) {
         CouponDAO.incrementUsedCount(idCoupon);
+    }
+
+    public Optional<Coupon> getCouponByCode(String couponCode) {
+        return null;
+    }
+
+    public void incrementUsedCount(int idCoupon) {
     }
 }
