@@ -57,7 +57,7 @@
                                         <figcaption class="info">
                                             <a href="#" class="title text-dark">${item.productTitle}</a>
                                             <p>${item.idVariant}</p>
-<%--                                            <p class="text-muted small">Matrix: 25 Mpx <br> Brand: Canon</p>--%>
+                                                <%--                                            <p class="text-muted small">Matrix: 25 Mpx <br> Brand: Canon</p>--%>
                                         </figcaption>
                                     </figure>
                                 </td>
@@ -139,9 +139,9 @@
                             <div class="form-group">
                                 <label for="discountCode">Mã giảm giá</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="discountCode" name="discountCode" placeholder="Nhập mã...">
+                                    <input type="text" class="form-control" id="discountCode" name="code" placeholder="Nhập mã...">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-primary" type="submit">Áp dụng</button>
+                                        <button id="applyCoupon" class="btn btn-outline-primary" type="submit">Áp dụng</button>
                                     </div>
                                 </div>
                             </div>
@@ -228,6 +228,7 @@
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: "idVariant="+idVariant+"&quantity="+quantity
             })
+                //
                 .then(res => res.json())
                 .then(data => {
                     if (data.totalPrice) {
@@ -258,6 +259,7 @@
         }
     });
 </script>
+<script src="${pageContext.request.contextPath}/js/coupon.js"></script>
 
 
 <%@ include file="/view/view-index/footer.jsp" %>

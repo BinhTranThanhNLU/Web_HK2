@@ -7,14 +7,12 @@ import java.util.*;
 public class Cart implements Serializable {
 
     private int idUser;
-
     private Map<Integer, CartItem> cartItems;
     private double totalPrice;
     private double discountAmount = 0.0;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private double productDiscount = 0;
-    private String appliedCouponCode;
+    private double shippingFee = 0.0;
 
     public Cart() {
         this.cartItems = new HashMap<>();
@@ -110,7 +108,7 @@ public class Cart implements Serializable {
 
     //tong tien cuoi cung
     public double getFinalTotal() {
-        return totalPrice - discountAmount;
+        return totalPrice + shippingFee - discountAmount;
     }
 
     public int getIdUser() {
@@ -172,21 +170,24 @@ public class Cart implements Serializable {
                 '}';
     }
 
-    public void setProductDiscount(double discount) {
-        this.productDiscount = discount;
+    private String couponCode;
+    public String getCouponCode() {
+        return couponCode;
     }
 
-    public double getProductDiscount() {
-        return productDiscount;
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
 
-    public void setAppliedCouponCode(String code) {
-        this.appliedCouponCode = code;
+    public double getShippingFee() {
+        return shippingFee;
     }
 
-    public String getAppliedCouponCode() {
-        return appliedCouponCode;
+    public void setShippingFee(double shippingFee) {
+        this.shippingFee = shippingFee;
     }
 
 
+    public void setFinalTotal(double v) {
+    }
 }

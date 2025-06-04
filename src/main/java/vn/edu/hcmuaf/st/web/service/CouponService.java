@@ -7,24 +7,25 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class CouponService {
-    private final CouponDAO CouponDAO;
+    private final CouponDAO couponDAO = new CouponDAO();
 
-    public CouponService() {
-        this.CouponDAO = new CouponDAO();
+    public void incrementUsedCount(int idCoupon) {
+        couponDAO.incrementUsedCount(idCoupon);
     }
 
-
-
-
     public static class CouponResult {
-        private boolean success;
-        private String message;
-        private double discountAmount;
+        private final boolean success;
+        private final String message;
+        private final double discountAmount;
+        private final double finalTotal;
+        private final String couponCode;
 
-        public CouponResult(boolean success, String message, double discountAmount) {
+        public CouponResult(boolean success, String message, double discountAmount, double finalTotal, String couponCode) {
             this.success = success;
             this.message = message;
             this.discountAmount = discountAmount;
+            this.finalTotal = finalTotal;
+            this.couponCode = couponCode;
         }
 
         public boolean isSuccess() {
@@ -38,67 +39,81 @@ public class CouponService {
         public double getDiscountAmount() {
             return discountAmount;
         }
+
+        public double getFinalTotal() {
+            return finalTotal;
+        }
+
+        public String getCouponCode() {
+            return couponCode;
+        }
     }
+
     /**
-     * @param code Mã giảm giá người dùng nhập
-     * @param productTotal Tổng tiền sản phẩm
-     * @param shippingFee Phí vận chuyển
-     * @param applyToShipping true nếu áp dụng cho vận chuyển, false nếu áp dụng cho sản phẩm
-     * @return thông tin kết quả áp dụng mã
+     * Áp dụng mã giảm giá cho sản phẩm hoặc vận chuyển.
+     *
+     * @param code             Mã giảm giá người dùng nhập
+     * @param productTotal     Tổng tiền sản phẩm
+     * @param shippingFee      Phí vận chuyển
+     * @param applyToShipping  True nếu áp dụng cho phí ship, false nếu cho sản phẩm
+     * @return CouponResult
      */
     public CouponResult applyCoupon(String code, double productTotal, double shippingFee, boolean applyToShipping) {
-        Optional<Coupon> optionalCoupon = CouponDAO.getByCode(code);
-
+        Optional<Coupon> optionalCoupon = couponDAO.getByCode(code);
+        System.out.println("[DEBUG] Tìm mã: " + code);
 
         if (optionalCoupon.isEmpty()) {
-            return new CouponResult(false, "Mã giảm giá không tồn tại.", 0);
+            System.out.println("[DEBUG] Không tìm thấy mã trong DB");
+            return new CouponResult(false, "Mã giảm giá không tồn tại.", 0, productTotal + shippingFee, null);
         }
 
         Coupon coupon = optionalCoupon.get();
+        System.out.println("[DEBUG] Coupon tìm được: " + coupon);
 
-        // Kiểm tra loại mã (SHIPPING hoặc PRODUCT)
-        if (applyToShipping && coupon.getDiscountType() != Coupon.DiscountType.SHIPPING ||
-                !applyToShipping && coupon.getDiscountType() != Coupon.DiscountType.PRODUCT) {
-            return new CouponResult(false, "Mã không áp dụng cho phần này.", 0);
+        // Kiểm tra loại mã
+        if ((applyToShipping && coupon.getDiscountType() != Coupon.DiscountType.SHIPPING) ||
+                (!applyToShipping && coupon.getDiscountType() != Coupon.DiscountType.PRODUCT)) {
+            return new CouponResult(false, "Mã không áp dụng cho phần này.", 0, productTotal + shippingFee, code);
         }
 
-        // Kiểm tra giá trị đơn hàng
-        double relevantTotal = applyToShipping ? shippingFee : productTotal;
-        if (relevantTotal < coupon.getMinOrderValue()) {
-            return new CouponResult(false, "Không đủ giá trị tối thiểu để áp dụng mã.", 0);
+        // Kiểm tra thời gian hiệu lực
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(coupon.getStartDate()) || now.isAfter(coupon.getEndDate())) {
+            return new CouponResult(false, "Mã đã hết hạn hoặc chưa bắt đầu.", 0, productTotal + shippingFee, code);
         }
 
-        // Kiểm tra thời gian và số lượt dùng
-        if (!CouponDAO.isCouponValid(coupon)) {
-            return new CouponResult(false, "Mã đã hết hạn hoặc đã sử dụng tối đa số lượt.", 0);
+        // Kiểm tra số lượt dùng
+        if (coupon.getUsedCount() >= coupon.getUsageLimit()) {
+            return new CouponResult(false, "Mã đã hết lượt sử dụng.", 0, productTotal + shippingFee, code);
         }
 
-        // Tính giá trị giảm
-        double discount;
-        if (coupon.isPercentage()) {
-            discount = relevantTotal * coupon.getDiscountAmount() / 100.0;
-        } else {
-            discount = coupon.getDiscountAmount();
+        // Kiểm tra giá trị đơn hàng tối thiểu
+        double baseAmount = applyToShipping ? shippingFee : productTotal;
+        if (baseAmount < coupon.getMinOrderValue()) {
+            return new CouponResult(false, "Đơn hàng chưa đủ điều kiện áp dụng mã.", 0, productTotal + shippingFee, code);
         }
 
-        // Không vượt quá số tiền phải trả
-        discount = Math.min(discount, relevantTotal);
+        // Tính giảm giá
+        double discount = coupon.isPercentage()
+                ? baseAmount * coupon.getDiscountAmount() / 100.0
+                : coupon.getDiscountAmount();
+        discount = Math.min(discount, baseAmount); // Không vượt quá tổng phần áp dụng
 
-        // Cập nhật lượt sử dụng
-        CouponDAO.incrementUsedCount(coupon.getIdCoupon());
+        // Cập nhật lượt dùng
+        couponDAO.incrementUsedCount(coupon.getIdCoupon());
 
-        return new CouponResult(true, "Áp dụng mã thành công.", discount);
+        // Tổng sau giảm
+        double finalTotal = applyToShipping
+                ? productTotal + (shippingFee - discount)
+                : (productTotal - discount) + shippingFee;
+
+        return new CouponResult(true, "Áp dụng mã thành công.", discount, finalTotal, code);
     }
 
-
-    public void increaseUsedCount(int idCoupon) {
-        CouponDAO.incrementUsedCount(idCoupon);
-    }
-
-    public Optional<Coupon> getCouponByCode(String couponCode) {
-        return null;
-    }
-
-    public void incrementUsedCount(int idCoupon) {
+    /**
+     * Trả về coupon nếu tồn tại trong DB
+     */
+    public Optional<Coupon> getCouponByCode(String code) {
+        return couponDAO.getByCode(code);
     }
 }

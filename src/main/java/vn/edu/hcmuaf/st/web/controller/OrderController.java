@@ -107,32 +107,6 @@ public class OrderController extends HttpServlet {
         int orderId = orderService.createOrder(order);
         order.setIdOrder(orderId);
 
-        String couponCode = req.getParameter("couponCode");
-        if (couponCode != null && !couponCode.isEmpty()) {
-            Optional<Coupon> couponOptional = couponService.getCouponByCode(couponCode);
-            if (couponOptional.isPresent()) {
-                Coupon coupon = couponOptional.get();
-
-                // ✅ Tăng số lượt sử dụng (không cần đánh dấu người dùng)
-                couponService.incrementUsedCount(coupon.getIdCoupon());
-
-                // ✅ Nếu giảm theo phần trăm
-                double relevantTotal = cart.getTotalPrice(); // bạn có thể thay đổi nếu chỉ áp dụng cho sản phẩm nào đó
-                double discount;
-                if (coupon.isPercentage()) {
-                    discount = relevantTotal * coupon.getDiscountAmount() / 100.0;
-                } else {
-                    discount = coupon.getDiscountAmount();
-                }
-
-                // Không cho vượt quá tổng tiền
-                discount = Math.min(discount, relevantTotal);
-
-                // ✅ Set giảm giá vào đơn hàng
-                order.setDiscountAmount(discount);
-            }
-        }
-
         //4.tao chi tiet don hang
         for(CartItem cartItem : cart.getCartItems().values()) {
             OrderDetail orderDetail = new OrderDetail();

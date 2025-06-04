@@ -91,8 +91,18 @@
                         </div> <!-- row.// -->
                         <hr>
 
-                        <a href="${pageContext.request.contextPath}/view/view-order/cart.jsp" class="btn  btn-primary"> <span class="text">Thêm vào giỏ</span></a>
-                        <a href="${pageContext.request.contextPath}/view/view-order/place-order.jsp" class="btn  btn-primary"> <span class="text">Mua sản phẩm</span> </a>
+                        <form action="${pageContext.request.contextPath}/cart" method="post" style="display:inline;">
+                            <input type="hidden" name="action" value="add"/>
+                            <input type="hidden" name="idProduct" value="${product.idProduct}"/>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-shopping-cart"></i> Thêm vào giỏ
+                            </button>
+                        </form>
+
+                        <form action="${pageContext.request.contextPath}/place-order" method="get" style="display:inline;">
+                            <button type="submit" class="btn btn-primary">Mua sản phẩm</button>
+                        </form>
+
                     </article> <!-- product-info-aside .// -->
                 </main> <!-- col.// -->
             </div> <!-- row.// -->
@@ -175,6 +185,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
 
 </body>
 </html>
