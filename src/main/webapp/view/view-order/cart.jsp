@@ -228,6 +228,7 @@
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: "idVariant="+idVariant+"&quantity="+quantity
             })
+                //
                 .then(res => res.json())
                 .then(data => {
                     if (data.totalPrice) {
