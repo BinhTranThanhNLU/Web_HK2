@@ -134,6 +134,24 @@ public class OrderDao {
         );
     }
 
+    public void updateGhnOrderCode(int idOrder, String ghnOrderCode) {
+        String sql = "UPDATE orders SET ghnOrderCode = :ghnOrderCode WHERE idOrder = :idOrder";
+        jdbi.useHandle(handle -> handle.createUpdate(sql)
+                .bind("ghnOrderCode", ghnOrderCode)
+                .bind("idOrder", idOrder)
+                .execute()
+        );
+    }
+
+    public void updateGhnStatus(int idOrder, String ghnStatus) {
+        String sql = "UPDATE orders SET ghnStatus = :ghnStatus, lastUpdateStatus = NOW() WHERE idOrder = :idOrder";
+        jdbi.useHandle(handle -> handle.createUpdate(sql)
+                .bind("ghnStatus", ghnStatus)
+                .bind("idOrder", idOrder)
+                .execute()
+        );
+    }
+
     public static void main(String[] args) {
         OrderDao dao = new OrderDao();
         List<Order> orders = dao.getAllOrders();

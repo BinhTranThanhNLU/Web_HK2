@@ -121,6 +121,15 @@ public class OrderController extends HttpServlet {
             productVariantService.reduceQuantity(cartItem.getIdVariant(), cartItem.getQuantity());
         }
 
+        // 5. Tạo đơn vận chuyển GHN cho toàn bộ đơn hàng
+        try {
+            String ghnOrderCode = GhnShippingService.createShippingOrder(order);
+            orderService.updateGhnOrderCode(orderId, ghnOrderCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Xử lý lỗi (có thể log, thông báo admin hoặc người dùng)
+        }
+
         //5.tao thanh toan
         Payment payment = new Payment();
         payment.setOrder(order);

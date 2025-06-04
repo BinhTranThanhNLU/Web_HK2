@@ -18,6 +18,11 @@ public class Order {
     private double amountDelivery;  // Phí vận chuyển
     private double finalPrice;      // Tổng thanh toán (đã cộng phí vận chuyển và trừ giảm giá nếu có)
 
+    // Thêm các trường sau để lưu thông tin GHN
+    private String ghnOrderCode;    // Mã vận đơn GHN
+    private String ghnStatus;       // Trạng thái vận chuyển GHN
+    private LocalDateTime lastUpdateStatus; // Thời điểm cập nhật trạng thái GHN cuối cùng
+
     public Order() {
 
     }
@@ -28,6 +33,33 @@ public class Order {
         this.address = address;
         this.totalPrice = totalPrice;
         this.status = status;
+    }
+
+    // Getter và Setter cho ghnOrderCode
+    public String getGhnOrderCode() {
+        return ghnOrderCode;
+    }
+
+    public void setGhnOrderCode(String ghnOrderCode) {
+        this.ghnOrderCode = ghnOrderCode;
+    }
+
+    // Getter và Setter cho ghnStatus
+    public String getGhnStatus() {
+        return ghnStatus;
+    }
+
+    public void setGhnStatus(String ghnStatus) {
+        this.ghnStatus = ghnStatus;
+    }
+
+    // Getter và Setter cho lastUpdateStatus
+    public LocalDateTime getLastUpdateStatus() {
+        return lastUpdateStatus;
+    }
+
+    public void setLastUpdateStatus(LocalDateTime lastUpdateStatus) {
+        this.lastUpdateStatus = lastUpdateStatus;
     }
 
     public Date getCreatedAtAsDate() {
@@ -141,4 +173,6 @@ public class Order {
 
     public void setDiscountAmount(double discount) {
     }
+
+
 }
