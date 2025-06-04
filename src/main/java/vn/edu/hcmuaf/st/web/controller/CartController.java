@@ -7,9 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.edu.hcmuaf.st.web.entity.*;
-import vn.edu.hcmuaf.st.web.service.CouponService;
 import vn.edu.hcmuaf.st.web.service.ProductService;
 import vn.edu.hcmuaf.st.web.service.ProductVariantService;
+import vn.edu.hcmuaf.st.web.service.CouponService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -25,16 +25,12 @@ public class CartController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         req.getRequestDispatcher("view/view-order/cart.jsp").forward(req, resp);
-
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         HttpSession session = req.getSession();
-
         Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null) {
             cart = new Cart();
@@ -68,20 +64,16 @@ public class CartController extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/cart");
                 break;
 
-
             case "updateQuantity":
                 try {
-                    String idVariantStr = req.getParameter("idVariant");
-                    String quantityStr = req.getParameter("quantity");
-
-                    int idVariantUpdate = Integer.parseInt(idVariantStr);
-                    int newQuantity = Integer.parseInt(quantityStr);
+                    int idVariantUpdate = Integer.parseInt(req.getParameter("idVariant"));
+                    int newQuantity = Integer.parseInt(req.getParameter("quantity"));
 
                     cart.addQuantity(idVariantUpdate, newQuantity);
                     session.setAttribute("cart", cart);
 
                     double totalPrice = cart.getTotalPrice();
-                    double discountAmount = cart.getDiscountAmount(); // nếu có giảm giá
+                    double discountAmount = cart.getDiscountAmount();
                     double finalTotal = cart.getFinalTotal();
 
                     resp.setContentType("application/json");
@@ -99,6 +91,7 @@ public class CartController extends HttpServlet {
                     resp.getWriter().write("ERROR: Invalid number format");
                 }
                 break;
+
             case "coupon":
                 String code = req.getParameter("code");
                 boolean isAjax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
@@ -181,7 +174,6 @@ public class CartController extends HttpServlet {
                     }
                 }
                 break;
-
 
             default:
                 resp.sendRedirect(req.getContextPath() + "/cart");
